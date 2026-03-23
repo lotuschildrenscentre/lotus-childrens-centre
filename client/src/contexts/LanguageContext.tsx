@@ -91,6 +91,10 @@ const translations: Translations = {
     mn: "Гачуурт дахь хүүхдүүдийн амьдрах орон зайг засварлах, сайжруулахад тусалаарай."
   },
 
+  // Sponsors Section
+  "sponsors.subtitle": { en: "Our Partners", mn: "Манай түншүүд" },
+  "sponsors.title": { en: "Our Sponsors Help Us Care for the Children", mn: "Манай ивээн тэтгэгчид хүүхдүүдийг халамжлахад тусалдаг" },
+
   // CTA Section
   "cta.subtitle": { en: "Make a Difference Today", mn: "Өнөөдөр өөрчлөлт хийгээрэй" },
   "cta.title": { en: "Every Child Deserves a Loving Home", mn: "Хүүхэд бүр хайр дүүрэн гэр бүлийг хүртэх ёстой" },

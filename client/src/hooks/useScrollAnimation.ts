@@ -39,11 +39,12 @@ export function useCountUp(end: number, duration: number = 2000, isVisible: bool
       const progress = Math.min((timestamp - startTime) / duration, 1);
       // Use easeOutCubic for a more natural feel
       const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * end));
+      const currentCount = Math.round(eased * end);
+      setCount(currentCount);
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
       } else {
-        setCount(end);
+        setCount(end); // Ensure we always reach the exact final value
       }
     };
 

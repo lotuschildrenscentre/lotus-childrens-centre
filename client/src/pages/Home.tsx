@@ -3,7 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import ServiceCards from "@/components/ServiceCards";
 import AboutSection from "@/components/AboutSection";
 import ImpactStats from "@/components/ImpactStats";
-import CausesSection from "@/components/CausesSection";
+import SponsorsSection from "@/components/SponsorsSection";
 import CTASection from "@/components/CTASection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
@@ -17,7 +17,7 @@ export default function Home() {
         <ServiceCards />
         <AboutSection />
         <ImpactStats />
-        <CausesSection />
+        <SponsorsSection />
         <CTASection />
         <ContactSection />
       </main>
