@@ -144,22 +144,6 @@ const translations: Translations = {
   "about.sponsorsContent": { en: "Our sponsors play a vital role in supporting Lotus Children's Centre. Through their generosity and commitment, we are able to provide quality care, education, and opportunities for vulnerable children in Mongolia.", mn: "Манай ивээгчид Лотус хүүхдийн төвийг дэмжихэд чухал үүрэг гүйцэтгэдэг. Тэдний сайн сэтгэл, үүрэгтэйгээр дамжуулан бид Монголын эмзэг хүүхдүүдэд чанартай асрамж, боловсрол, боломжийг олгож чаддаг." },
   "about.sponsorsPartner": { en: "Become a Sponsor", mn: "Ивээгч болох" },
 
-  // Get Involved Page
-  "getInvolved.hero.title": { en: "Get Involved!", mn: "Оролцох!" },
-  "getInvolved.hero.desc": { en: "Have you gotten just as excited about Lotus as we are? Good news! There are multiple ways that you can help out.", mn: "Та Лотусын талаар бидэнтэй адил сонирхолтой болсон уу? Сайн мэдээ! Та туслах олн арга байдаг." },
-  "getInvolved.volunteer.title": { en: "Volunteer Opportunities", mn: "Сайн дурын ажлын боломжууд" },
-  "getInvolved.volunteer.desc": { en: "On-site or from further away, volunteers are always welcome at Lotus.", mn: "Газар дээр нь эсвэл алсаас, сайн дурын ажилтнуудыг Лотус үргэлж хүлээн авдаг." },
-  "getInvolved.volunteer.button": { en: "Register as a Volunteer", mn: "Сайн дурын ажилтан болгон бүртгүүлэх" },
-  "getInvolved.fundraise.title": { en: "Fundraising Opportunities", mn: "Хөрөнгө босгох боломжууд" },
-  "getInvolved.fundraise.desc": { en: "Take a look at the different events organised for Lotus.", mn: "Лотусын төлөө зохион байгуулсан янз бүрийн арга хэмжээг үзнэ үү." },
-  "getInvolved.fundraise.button": { en: "Explore Events", mn: "Арга хэмжээг үзэх" },
-  "getInvolved.donate.title": { en: "Make a Donation", mn: "Хандив өгөх" },
-  "getInvolved.donate.desc": { en: "Through money or objects, donations help with the running of Lotus.", mn: "Мөнгө эсвэл эд зүйлсээр дамжуулан хандив нь Лотусын үйл ажиллагаанд тусалдаг." },
-  "getInvolved.donate.button": { en: "Donate Now", mn: "Одоо хандив өгөх" },
-  "getInvolved.contact.title": { en: "Questions? Get in Touch", mn: "Асуулт байна уу? Холбоо барих" },
-  "getInvolved.contact.desc": { en: "If you have any questions, please feel free to reach out to us.", mn: "Асуулт байвал манай руу холбогдоно уу." },
-  "getInvolved.contact.email": { en: "Contact Us", mn: "Бидэнтэй холбогдох" },
-
   // Blog Page
   "blog.subtitle": { en: "Lotus Children's Centre", mn: "Лотус хүүхдийн төв" },
   "blog.title": { en: "News & Updates", mn: "Мэдээ & Шинэчлэл" },
