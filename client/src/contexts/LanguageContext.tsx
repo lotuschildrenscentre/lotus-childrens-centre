@@ -144,6 +144,12 @@ const translations: Translations = {
   "about.sponsorsContent": { en: "Our sponsors play a vital role in supporting Lotus Children's Centre. Through their generosity and commitment, we are able to provide quality care, education, and opportunities for vulnerable children in Mongolia.", mn: "Манай ивээгчид Лотус хүүхдийн төвийг дэмжихэд чухал үүрэг гүйцэтгэдэг. Тэдний сайн сэтгэл, үүрэгтэйгээр дамжуулан бид Монголын эмзэг хүүхдүүдэд чанартай асрамж, боловсрол, боломжийг олгож чаддаг." },
   "about.sponsorsPartner": { en: "Become a Sponsor", mn: "Ивээгч болох" },
 
+  // Blog Page
+  "blog.subtitle": { en: "Lotus Children's Centre", mn: "Лотус хүүхдийн төв" },
+  "blog.title": { en: "News & Updates", mn: "Мэдээ & Шинэчлэл" },
+  "blog.description": { en: "Stories, projects, and updates from the Lotus Children's Centre in Ulaanbaatar, Mongolia.", mn: "Улаанбаатар дахь Лотус хүүхдийн төвийн түүхүүд, төслүүд, шинэчлэлүүд." },
+  "blog.readMore": { en: "Read More", mn: "Дэлгэрэнгүй" },
+
   // Footer
   "footer.rights": { en: "All rights reserved.", mn: "Бүх эрх хуулиар хамгаалагдсан." },
   "footer.description": {
