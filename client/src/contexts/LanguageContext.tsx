@@ -143,18 +143,6 @@ const translations: Translations = {
   "about.sponsorsDesc": { en: "Priceless help from organizations that believe in our mission", mn: "Манай үзэл баримтлалд итгэдэг байгууллагуудын үнэлшгүй тусламж" },
   "about.sponsorsContent": { en: "Our sponsors play a vital role in supporting Lotus Children's Centre. Through their generosity and commitment, we are able to provide quality care, education, and opportunities for vulnerable children in Mongolia.", mn: "Манай ивээгчид Лотус хүүхдийн төвийг дэмжихэд чухал үүрэг гүйцэтгэдэг. Тэдний сайн сэтгэл, үүрэгтэйгээр дамжуулан бид Монголын эмзэг хүүхдүүдэд чанартай асрамж, боловсрол, боломжийг олгож чаддаг." },
   "about.sponsorsPartner": { en: "Become a Sponsor", mn: "Ивээгч болох" },
-  "about.whoWeAre": { en: "WHO WE ARE", mn: "БИД ХЭН БЭ" },
-  "about.helpTitle": { en: "We Help Vulnerable Children Get a Better Life", mn: "Бид эмзэг хүүхдүүдэд илүү сайн амьдрал олоход тусалдаг" },
-  "about.helpDesc1": { en: "The Lotus Children's Centre is an official Mongolian non-governmental organisation (NGO) that currently acts as a home for around 75 vulnerable and abused Mongolian children and also takes part in community out-reach projects.", mn: "Лотус хүүхдийн төв нь Монголын албан ёсны төрийн бус байгууллага (ТББ) бөгөөд одоогоор 75 орчим эмзэг, хүчирхийлэлд өртсөн Монгол хүүхдүүдийн гэр болж, нийгмийн хүрээнд хүрэх төслүүдэд оролцдог." },
-  "about.helpDesc2": { en: "Located in Gachuurt in the suburbs of Ulaanbaatar, it is not only a home but also a centre for development for abandoned and vulnerable children.", mn: "Улаанбаатарын захын Гачууртад байрладаг энэ төв нь зөвхөн гэр бүл төдийгүй орхигдсон, эмзэг хүүхдүүдийн хөгжлийн төв юм." },
-  "about.ourValues": { en: "OUR VALUES", mn: "МАНАЙ УНЭ ЦЭН" },
-  "about.applicationForm": { en: "Application Form", mn: "Өргөдлийн маягт" },
-  "about.faqButton": { en: "FAQ", mn: "Түгээмэл асуулт" },
-  "about.volunteerApplicationForm": { en: "Volunteer Application Form", mn: "Сайн дурын ажилтны өргөдлийн маягт" },
-  "about.faqTitle": { en: "Frequently Asked Questions", mn: "Түгээмэл асуулт" },
-  "common.cancel": { en: "Cancel", mn: "Цуцлах" },
-  "common.submit": { en: "Submit", mn: "Илгээх" },
-  "common.close": { en: "Close", mn: "Хаах" },
 
   // Footer
   "footer.rights": { en: "All rights reserved.", mn: "Бүх эрх хуулиар хамгаалагдсан." },

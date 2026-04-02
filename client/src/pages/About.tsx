@@ -1,7 +1,6 @@
-/**
- * About Page Component
+/*
  * Design: "Warm Embrace" — Organic Warmth
- * Features: Hero banner, Who We Are, History, Daily Staff, Volunteers (with Application Form & FAQ), Sponsors
+ * About Page: Hero banner, Who We Are, History, Meet the Team, Aims & Beliefs
  * Ends with Volunteer/Donation/Fundraise CTAs
  */
 import { useState } from "react";
@@ -9,83 +8,28 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { Heart, Users, Lightbulb, ArrowRight, ChevronDown, X } from "lucide-react";
+import { Heart, Users, Lightbulb, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 
-const staffMembers = [
-  { name: "Didi Ananda Kalika", role: "Director" },
-  { name: "Bolormaa", role: "Centre Manager" },
-  { name: "Suugi", role: "Administration" },
-  { name: "Otara, Delgermaa, Narantuya, Enkhtuvshin, Udval", role: "House Mothers" },
-  { name: "Batbileg", role: "Cook" },
-  { name: "Sainbuyan", role: "Doctor" },
-  { name: "Ganbat", role: "Driver" },
-  { name: "Bold, Bold, Batmunkh, Batjargal", role: "Maintenance & Boiler House" },
-];
-
-const applicationFormQuestions = [
-  { label: "Full name", type: "text", required: true },
-  { label: "Date of Birth", type: "date", required: true },
-  { label: "Nationality", type: "text", required: true },
-  { label: "Languages and level (beginner, intermediate, advanced)", type: "text", required: true },
-  { label: "Email address", type: "email", required: true },
-  { label: "Intended volunteering dates", type: "text", required: true },
-  { label: "How do you feel you can best help Lotus?", type: "textarea", required: true },
-  { label: "What relevant experience and/or qualifications do you have for volunteering at Lotus? (Please provide reference)", type: "textarea", required: true },
-  { label: "Why do you want to volunteer at Lotus?", type: "textarea", required: true },
-  { label: "Do you have a criminal record?", type: "select", options: ["Yes", "No"], required: true },
-  { label: "Do you have any previous convictions, warnings or court rulings that prevented you from working with children?", type: "select", options: ["Yes", "No"], required: true },
-  { label: "Have you read and understood the Lotus Children's Centre Code of Conduct?", type: "select", options: ["Yes", "No"], required: true },
-  { label: "How did you hear about Lotus?", type: "text", required: true },
-];
-
-const faqData = [
+const teamMembers = [
   {
-    question: "Can I volunteer if I haven't volunteered before?",
-    answer: "Obviously it is advantageous if you have experience of volunteering and working with children, but a lack of such experience does not mean you are ineligible to volunteer. The most important thing is your attitude towards taking on this new experience and learning as you go."
+    name: "Didi Ananda Kalika",
+    role: "Founder & Director",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-team-section-eq8z9wm5QEMZPgCxEz9HwH.webp",
+    bio: "Founder with deep compassion for vulnerable children",
   },
   {
-    question: "Can you help me obtain a visa?",
-    answer: "To volunteer you just need to apply for a standard tourist visa which, depending on your nationality, is usually valid for 30 days. This can be extended by a further 30 days if you register at the immigration office within 7 days of your arrival."
+    name: "Care Team",
+    role: "Caregivers & Educators",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-team-section-eq8z9wm5QEMZPgCxEz9HwH.webp",
+    bio: "Dedicated staff providing daily care and education",
   },
   {
-    question: "What happens when I arrive in Mongolia?",
-    answer: "It is strongly recommended that you spend at least one night in Ulaanbaatar when you arrive in Mongolia before coming out to Lotus. This gives you a chance to acclimatise, catch up on sleep, change money, buy a SIM card and register at immigration if necessary."
+    name: "Support Team",
+    role: "Counsellors & Coordinators",
+    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-team-section-eq8z9wm5QEMZPgCxEz9HwH.webp",
+    bio: "Professionals supporting child development",
   },
-  {
-    question: "What happens when I arrive at Lotus?",
-    answer: "When you arrive at Lotus you will usually be greeted by the volunteer coordinator. You will be shown to your accommodation and introduced to your new volunteer colleagues. Your orientation will involve a tour of the centre."
-  },
-  {
-    question: "How will I be managed as a volunteer?",
-    answer: "Our volunteer coordinator is on-site at least 5 days a week during the summer volunteer season, and is always contactable by phone and email. They will offer guidance for your project and ideas for other things you can work on."
-  },
-  {
-    question: "Do I need a specific project to work on at Lotus?",
-    answer: "Our volunteers work on a variety of projects, usually depending on their own skills or interests. It is very important that you have a specific project that will be your main focus during your volunteering period."
-  },
-  {
-    question: "Why should I have to pay to volunteer?",
-    answer: "At Lotus, we simply cannot afford to host volunteers without a financial contribution. Volunteers are provided with traditional ger accommodation with separate toilet and shower facilities, and three meals per day."
-  },
-  {
-    question: "How can I overcome the language barrier?",
-    answer: "Many of the Lotus children speak English at varying levels. The children help each other with languages and communicating with volunteers so if you find you cannot communicate clearly directly with a specific child then another child or staff member will be able to translate."
-  },
-];
-
-const sponsorLogos = [
-  { name: "Elite International School", url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/elite-international-school-3qVXMNFJFxgGpLLwLqKPdS.webp" },
-  { name: "Hobby School", url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/hobby-school-2xQvZXKvFrH9LqKPdS.webp" },
-  { name: "The English School of Mongolia", url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/english-school-mongolia-1xQvZXKvFrH9LqKPdS.webp" },
-  { name: "Gulf for Good", url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/gulf-for-good-2xQvZXKvFrH9LqKPdS.webp" },
-  { name: "Holiday Inn", url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/holiday-inn-1xQvZXKvFrH9LqKPdS.webp" },
-  { name: "Altan Taria", url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/altan-taria-3xQvZXKvFrH9LqKPdS.webp" },
-  { name: "IVCO", url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/ivco-2xQvZXKvFrH9LqKPdS.webp" },
-  { name: "AMURT", url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/amurt-1xQvZXKvFrH9LqKPdS.webp" },
-  { name: "Misheel Kids Foundation", url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/misheel-kids-foundation-2xQvZXKvFrH9LqKPdS.webp" },
 ];
 
 const historyTimeline = [
@@ -108,276 +52,421 @@ const historyTimeline = [
 
 export default function About() {
   const { t } = useLanguage();
+  const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation(0.1);
+  const { ref: aimsRef, isVisible: aimsVisible } = useScrollAnimation(0.1);
+  const { ref: historyRef, isVisible: historyVisible } = useScrollAnimation(0.1);
+  const { ref: teamRef, isVisible: teamVisible } = useScrollAnimation(0.1);
   const [activeTab, setActiveTab] = useState<"history" | "staff" | "volunteers" | "sponsors">("history");
-  const [showApplicationForm, setShowApplicationForm] = useState(false);
-  const [showFAQ, setShowFAQ] = useState(false);
-  const [formData, setFormData] = useState<Record<string, string>>({});
-
-  const handleFormChange = (label: string, value: string) => {
-    setFormData(prev => ({ ...prev, [label]: value }));
-  };
-
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Volunteer Application Submitted:", formData);
-    alert("Thank you for your application! We will contact you soon.");
-    setShowApplicationForm(false);
-    setFormData({});
-  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-
-      {/* Hero Section */}
-      <section className="relative h-96 bg-gradient-to-r from-orange-500 to-green-600 flex items-center justify-center text-center text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
-          <img 
-            src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&h=400&fit=crop" 
-            alt="Children" 
-            className="w-full h-full object-cover"
+      <main>
+        {/* Hero Section */}
+        <section
+          ref={heroRef}
+          className="relative h-96 lg:h-[500px] overflow-hidden bg-gradient-to-b from-lotus-cream to-background"
+        >
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-hero-banner-bsoBSJVmoGQXo4iEasaaKa.webp"
+            alt="Lotus Children's Centre"
+            className={`w-full h-full object-cover transition-all duration-700 ${
+              heroVisible ? "scale-100 opacity-100" : "scale-105 opacity-75"
+            }`}
           />
-        </div>
-        <div className="relative z-10">
-          <h1 className="text-5xl font-bold mb-4">{t("about.pageTitle")}</h1>
-          <p className="text-xl">{t("about.pageSubtitle")}</p>
-        </div>
-      </section>
-
-      {/* Who We Are Section */}
-      <section className="py-20 px-4 max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <p className="text-orange-500 font-semibold text-sm tracking-widest uppercase mb-4">{t("about.whoWeAre")}</p>
-          <h2 className="text-4xl font-bold mb-6">{t("about.helpTitle")}</h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <p className="text-gray-700 mb-4 leading-relaxed">{t("about.helpDesc1")}</p>
-            <p className="text-gray-700 leading-relaxed">{t("about.helpDesc2")}</p>
-          </div>
-          <div className="rounded-lg overflow-hidden shadow-lg">
-            <img 
-              src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop" 
-              alt="Team" 
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Aims and Beliefs Section */}
-      <section className="py-20 px-4 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-green-600 font-semibold text-sm tracking-widest uppercase mb-4">{t("about.ourValues")}</p>
-            <h2 className="text-4xl font-bold mb-4">{t("about.aimsTitle")}</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">{t("about.aimsDesc")}</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: <Heart className="w-8 h-8" />, title: t("about.primaryCare"), desc: t("about.primaryCareDesc") },
-              { icon: <Lightbulb className="w-8 h-8" />, title: t("about.development"), desc: t("about.developmentDesc") },
-              { icon: <Users className="w-8 h-8" />, title: t("about.familySupport"), desc: t("about.familySupportDesc") },
-            ].map((item, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-lg shadow-md border-t-4 border-orange-400">
-                <div className="text-orange-500 mb-4">{item.icon}</div>
-                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
-                <p className="text-gray-600">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tabs Section */}
-      <section className="py-20 px-4 max-w-6xl mx-auto">
-        {/* Tab Buttons */}
-        <div className="flex flex-wrap gap-4 mb-12 justify-center">
-          {[
-            { id: "history", label: t("about.historyTab"), color: "bg-orange-400" },
-            { id: "staff", label: t("about.staffTab"), color: "bg-green-500" },
-            { id: "volunteers", label: t("about.volunteersTab"), color: "bg-purple-500" },
-            { id: "sponsors", label: t("about.sponsorsTab"), color: "bg-orange-500" },
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`px-6 py-3 rounded-full font-semibold transition-all ${
-                activeTab === tab.id
-                  ? `${tab.color} text-white shadow-lg`
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* History Tab */}
-        {activeTab === "history" && (
-          <div className="space-y-12">
-            <h2 className="text-3xl font-bold text-center mb-12">{t("about.historyTitle")}</h2>
-            <div className="space-y-8">
-              {historyTimeline.map((item, idx) => (
-                <div key={idx} className="flex gap-8">
-                  <div className="flex flex-col items-center">
-                    <div className="w-12 h-12 bg-orange-400 rounded-full flex items-center justify-center text-white font-bold text-sm">{item.year}</div>
-                    {idx < historyTimeline.length - 1 && <div className="w-1 h-24 bg-orange-200 mt-4"></div>}
-                  </div>
-                  <div className="pb-8">
-                    <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                  </div>
-                </div>
-              ))}
+          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center text-white">
+              <h1 className="text-4xl lg:text-6xl font-bold mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {t("about.pageTitle") || "Our Story"}
+              </h1>
+              <p className="text-lg lg:text-xl max-w-2xl mx-auto px-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                {t("about.pageSubtitle") || "Building a loving home for vulnerable children since the early 2000s"}
+              </p>
             </div>
           </div>
-        )}
+        </section>
 
-        {/* Daily Staff Tab */}
-        {activeTab === "staff" && (
-          <div>
-            <h2 className="text-3xl font-bold text-center mb-12">{t("about.teamTitle")}</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {staffMembers.map((member, idx) => (
-                <div key={idx} className="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500 hover:shadow-lg transition-shadow">
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">{member.name}</h3>
-                  <p className="text-green-600 font-semibold text-sm">{member.role}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Volunteers Tab */}
-        {activeTab === "volunteers" && (
-          <div>
-            <h2 className="text-3xl font-bold text-center mb-4">{t("about.volunteersTitle")}</h2>
-            <p className="text-center text-gray-600 mb-12">{t("about.volunteersDesc")}</p>
-            <p className="text-center text-gray-700 mb-12 max-w-2xl mx-auto">{t("about.volunteersContent")}</p>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-              <Button 
-                onClick={() => setShowApplicationForm(true)}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-8 py-3 rounded-full font-semibold"
+        {/* Who We Are Section */}
+        <section className="py-20 lg:py-28 bg-background">
+          <div className="container">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div
+                className={`transition-all duration-700 ${
+                  heroVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+                }`}
               >
-                {t("about.applicationForm")}
-              </Button>
-              <Button 
-                onClick={() => setShowFAQ(true)}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-8 py-3 rounded-full font-semibold"
-              >
-                {t("about.faqButton")}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Sponsors Tab */}
-        {activeTab === "sponsors" && (
-          <div>
-            <h2 className="text-3xl font-bold text-center mb-4">{t("about.sponsorsTitle")}</h2>
-            <p className="text-center text-gray-600 mb-12">{t("about.sponsorsDesc")}</p>
-            <p className="text-center text-gray-700 mb-12 max-w-2xl mx-auto">{t("about.sponsorsContent")}</p>
-            
-            {/* Auto-scrolling sponsors marquee */}
-            <div className="relative overflow-hidden bg-white rounded-lg py-8">
-              <div className="flex gap-8 animate-scroll">
-                {[...sponsorLogos, ...sponsorLogos].map((sponsor, idx) => (
-                  <div key={idx} className="flex-shrink-0 w-40 h-24 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors">
-                    <img src={sponsor.url} alt={sponsor.name} className="w-32 h-20 object-contain" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-orange-400 to-green-500">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <h2 className="text-4xl font-bold mb-4">{t("about.ctaTitle")}</h2>
-          <p className="text-lg mb-8">{t("about.ctaDesc")}</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-8 py-3 rounded-full font-semibold">
-              {t("nav.volunteer")}
-            </Button>
-            <Button className="bg-white hover:bg-gray-100 text-orange-500 px-8 py-3 rounded-full font-semibold">
-              {t("nav.donate")}
-            </Button>
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full font-semibold">
-              {t("nav.fundraise")}
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Application Form Modal */}
-      <Dialog open={showApplicationForm} onOpenChange={setShowApplicationForm}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{t("about.volunteerApplicationForm")}</DialogTitle>
-            <DialogClose />
-          </DialogHeader>
-          <form onSubmit={handleFormSubmit} className="space-y-4">
-            {applicationFormQuestions.map((q, idx) => (
-              <div key={idx}>
-                <label className="block text-sm font-semibold mb-2">{q.label} {q.required && <span className="text-red-500">*</span>}</label>
-                {q.type === "textarea" ? (
-                  <textarea
-                    value={formData[q.label] || ""}
-                    onChange={(e) => handleFormChange(q.label, e.target.value)}
-                    className="w-full p-2 border rounded-md"
-                    rows={3}
-                    required={q.required}
-                  />
-                ) : q.type === "select" ? (
-                  <select
-                    value={formData[q.label] || ""}
-                    onChange={(e) => handleFormChange(q.label, e.target.value)}
-                    className="w-full p-2 border rounded-md"
-                    required={q.required}
+                <div className="inline-flex items-center gap-2 mb-4">
+                  <Heart className="w-5 h-5 text-lotus-orange" />
+                  <span
+                    className="text-sm font-semibold uppercase tracking-widest text-lotus-orange"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
                   >
-                    <option value="">Select...</option>
-                    {q.options?.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                  </select>
-                ) : (
-                  <input
-                    type={q.type}
-                    value={formData[q.label] || ""}
-                    onChange={(e) => handleFormChange(q.label, e.target.value)}
-                    className="w-full p-2 border rounded-md"
-                    required={q.required}
-                  />
-                )}
+                    {t("about.subtitle") || "Who We Are"}
+                  </span>
+                </div>
+                <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  {t("about.title") || "We Help Vulnerable Children Get a Better Life"}
+                </h2>
+                <p className="text-lg text-muted-foreground mb-6 leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  {t("about.description") ||
+                    "The Lotus Children's Centre is an official Mongolian non-governmental organisation (NGO) that currently acts as a home for around 75 vulnerable and abused Mongolian children and also takes part in community out-reach projects."}
+                </p>
+                <p className="text-lg text-muted-foreground leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  {t("about.locationDesc") ||
+                    "Located in Gachuurt in the suburbs of Ulaanbaatar, it is not only a home but also a centre for development for abandoned and vulnerable children."}
+                </p>
               </div>
-            ))}
-            <Button type="submit" className="w-full bg-purple-500 hover:bg-purple-600 text-white">
-              {t("common.submit")}
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+              <div
+                className={`transition-all duration-700 delay-300 ${
+                  heroVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+                }`}
+              >
+                <img
+                  src="https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-hero-banner-bsoBSJVmoGQXo4iEasaaKa.webp"
+                  alt="Children at Lotus"
+                  className="rounded-3xl shadow-lg w-full"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
 
-      {/* FAQ Modal */}
-      <Dialog open={showFAQ} onOpenChange={setShowFAQ}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{t("about.faqTitle")}</DialogTitle>
-            <DialogClose />
-          </DialogHeader>
-          <Accordion type="single" collapsible className="w-full">
-            {faqData.map((item, idx) => (
-              <AccordionItem key={idx} value={`faq-${idx}`}>
-                <AccordionTrigger className="text-left text-sm">{item.question}</AccordionTrigger>
-                <AccordionContent className="text-sm">{item.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </DialogContent>
-      </Dialog>
+        {/* Aims & Beliefs Section */}
+        <section ref={aimsRef} className="py-20 lg:py-28 bg-lotus-cream">
+          <div className="container">
+            <div className="text-center mb-14">
+              <div className="inline-flex items-center gap-2 mb-4">
+                <Lightbulb className="w-5 h-5 text-lotus-green" />
+                <span
+                  className="text-sm font-semibold uppercase tracking-widest text-lotus-green"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  {t("about.aimsSubtitle") || "Our Values"}
+                </span>
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {t("about.aimsTitle") || "Aims and Beliefs"}
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                {t("about.aimsIntro") ||
+                  "Whilst Lotus is not a religious organisation, many of the beliefs of the founder help the children to overcome their backgrounds through loving care and belief in their potential."}
+              </p>
+            </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: Heart,
+                  title: t("about.aim1Title") || "Primary Care",
+                  desc: t("about.aim1Desc") || "Provide food, healthcare, clothing and suitable accommodation",
+                },
+                {
+                  icon: Users,
+                  title: t("about.aim2Title") || "Development",
+                  desc: t("about.aim2Desc") || "Quality education, counselling, and life skills for breaking poverty cycles",
+                },
+                {
+                  icon: Lightbulb,
+                  title: t("about.aim3Title") || "Family Support",
+                  desc: t("about.aim3Desc") || "Love, attention, and family group support for every child",
+                },
+              ].map((aim, idx) => {
+                const Icon = aim.icon;
+                return (
+                  <div
+                    key={idx}
+                    className={`bg-white rounded-2xl p-8 shadow-md border border-border/50 transition-all duration-700 ${
+                      aimsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                    }`}
+                    style={{ transitionDelay: `${idx * 150}ms` }}
+                  >
+                    <div className="w-14 h-14 rounded-xl bg-lotus-green/10 flex items-center justify-center mb-6">
+                      <Icon className="w-7 h-7 text-lotus-green" />
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                      {aim.title}
+                    </h3>
+                    <p className="text-muted-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      {aim.desc}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* History & Team Tabs Section */}
+        <section ref={historyRef} className="py-20 lg:py-28 bg-background">
+          <div className="container">
+            {/* Tab Navigation */}
+            <div className="flex gap-4 mb-14 justify-center">
+              <button
+                onClick={() => setActiveTab("history")}
+                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  activeTab === "history"
+                    ? "bg-lotus-orange text-white shadow-lg"
+                    : "bg-lotus-cream text-foreground hover:bg-lotus-cream/80"
+                }`}
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {t("about.historyTab") || "History"}
+              </button>
+              <button
+                onClick={() => setActiveTab("staff")}
+                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  activeTab === "staff"
+                    ? "bg-lotus-green text-white shadow-lg"
+                    : "bg-lotus-cream text-foreground hover:bg-lotus-cream/80"
+                }`}
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {t("about.staffTab") || "Daily Staff"}
+              </button>
+              <button
+                onClick={() => setActiveTab("volunteers")}
+                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  activeTab === "volunteers"
+                    ? "bg-lotus-purple text-white shadow-lg"
+                    : "bg-lotus-cream text-foreground hover:bg-lotus-cream/80"
+                }`}
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {t("about.volunteersTab") || "Volunteers"}
+              </button>
+              <button
+                onClick={() => setActiveTab("sponsors")}
+                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  activeTab === "sponsors"
+                    ? "bg-lotus-orange text-white shadow-lg"
+                    : "bg-lotus-cream text-foreground hover:bg-lotus-cream/80"
+                }`}
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {t("about.sponsorsTab") || "Sponsors"}
+              </button>
+            </div>
+
+            {/* History Tab Content */}
+            {activeTab === "history" && (
+              <div className="space-y-12">
+                <div className="text-center mb-12">
+                  <h3 className="text-3xl font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {t("about.historyTitle") || "Our Journey"}
+                  </h3>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.historyDesc") || "Over two decades of dedicated service to vulnerable children in Mongolia"}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {historyTimeline.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className={`bg-white rounded-2xl p-8 border-l-4 border-lotus-orange shadow-md transition-all duration-700 ${
+                        historyVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                      }`}
+                      style={{ transitionDelay: `${idx * 150}ms` }}
+                    >
+                      <div className="text-3xl font-bold text-lotus-orange mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                        {item.year}
+                      </div>
+                      <h4 className="text-xl font-bold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                        {item.title}
+                      </h4>
+                      <p className="text-muted-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {item.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-12 rounded-2xl overflow-hidden shadow-lg">
+                  <img
+                    src="https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-history-section-Ndg4AeFggy2uhFzztj4uss.webp"
+                    alt="Lotus history timeline"
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Daily Staff Tab Content */}
+            {activeTab === "staff" && (
+              <div className="space-y-12">
+                <div className="text-center mb-12">
+                  <h3 className="text-3xl font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {t("about.teamTitle") || "Meet Our Dedicated Team"}
+                  </h3>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.teamDesc") || "Compassionate professionals committed to changing children's lives"}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {teamMembers.map((member, idx) => (
+                    <div
+                      key={idx}
+                      className={`bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-700 ${
+                        teamVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                      }`}
+                      style={{ transitionDelay: `${idx * 150}ms` }}
+                    >
+                      <div className="h-64 overflow-hidden bg-lotus-cream">
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      <div className="p-6">
+                        <h4 className="text-xl font-bold text-foreground mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+                          {member.name}
+                        </h4>
+                        <p className="text-lotus-orange font-semibold mb-3" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                          {member.role}
+                        </p>
+                        <p className="text-muted-foreground text-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                          {member.bio}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-12 rounded-2xl overflow-hidden shadow-lg">
+                  <img
+                    src="https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-team-section-kuWXNUuypJ6Gq8ZC8wTW2K.webp"
+                    alt="Lotus team with children"
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Volunteers Tab Content */}
+            {activeTab === "volunteers" && (
+              <div className="space-y-12">
+                <div className="text-center mb-12">
+                  <h3 className="text-3xl font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {t("about.volunteersTitle") || "Volunteers from Around the World"}
+                  </h3>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.volunteersDesc") || "International and local volunteers dedicate their time to support our mission"}
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-12 border border-border/50 shadow-md text-center">
+                  <p className="text-lg text-muted-foreground mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.volunteersContent") || "Volunteers from all over the world are always welcome at Lotus. Whether you can visit in person or contribute remotely, your support makes a real difference in the lives of vulnerable children."}
+                  </p>
+                  <Button className="bg-lotus-purple hover:bg-lotus-purple/90 text-white px-8 py-3 rounded-full font-semibold">
+                    {t("about.volunteersRegister") || "Register as a Volunteer"}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Sponsors Tab Content */}
+            {activeTab === "sponsors" && (
+              <div className="space-y-12">
+                <div className="text-center mb-12">
+                  <h3 className="text-3xl font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {t("about.sponsorsTitle") || "Our Generous Sponsors"}
+                  </h3>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.sponsorsDesc") || "Priceless help from organizations that believe in our mission"}
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-12 border border-border/50 shadow-md text-center">
+                  <p className="text-lg text-muted-foreground mb-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.sponsorsContent") || "Our sponsors play a vital role in supporting Lotus Children's Centre. Through their generosity and commitment, we are able to provide quality care, education, and opportunities for vulnerable children in Mongolia."}
+                  </p>
+                  <Button className="bg-lotus-orange hover:bg-lotus-orange/90 text-white px-8 py-3 rounded-full font-semibold">
+                    {t("about.sponsorsPartner") || "Become a Sponsor"}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* CTA Section - Volunteer/Donation/Fundraise */}
+        <section className="py-20 lg:py-28 bg-lotus-cream">
+          <div className="container">
+            <div className="text-center mb-14">
+              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {t("about.ctaTitle") || "Join Us in Making a Difference"}
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                {t("about.ctaDesc") || "There are many ways to support Lotus Children's Centre and help vulnerable children"}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  icon: Users,
+                  title: t("services.volunteer.title") || "Volunteer",
+                  desc: t("services.volunteer.desc") || "On-site or from further away, volunteers are always welcome at Lotus.",
+                  color: "text-lotus-yellow",
+                  bgColor: "bg-lotus-yellow/10",
+                  buttonColor: "bg-lotus-yellow hover:bg-lotus-yellow/90",
+                  cta: t("services.volunteer.cta") || "Register Now",
+                },
+                {
+                  icon: Heart,
+                  title: t("services.donation.title") || "Donation",
+                  desc: t("services.donation.desc") || "Through money or objects, donations help with the running of Lotus.",
+                  color: "text-lotus-orange",
+                  bgColor: "bg-lotus-orange/10",
+                  buttonColor: "bg-lotus-orange hover:bg-lotus-orange/90",
+                  cta: t("services.donation.cta") || "Donate Now",
+                },
+                {
+                  icon: Lightbulb,
+                  title: t("services.fundraise.title") || "Fundraise",
+                  desc: t("services.fundraise.desc") || "Take a look at the different events organised for Lotus Children's Centre.",
+                  color: "text-lotus-purple",
+                  bgColor: "bg-lotus-purple/10",
+                  buttonColor: "bg-lotus-purple hover:bg-lotus-purple/90",
+                  cta: t("services.fundraise.cta") || "Read More",
+                },
+              ].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={idx}
+                    className={`bg-white rounded-2xl p-8 border border-border/50 shadow-md hover:shadow-lg transition-all duration-300 ${
+                      aimsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                    }`}
+                    style={{ transitionDelay: `${idx * 150}ms` }}
+                  >
+                    <div className={`w-14 h-14 rounded-xl ${item.bgColor} flex items-center justify-center mb-6`}>
+                      <Icon className={`w-7 h-7 ${item.color}`} />
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      {item.desc}
+                    </p>
+                    <Button
+                      className={`w-full ${item.buttonColor} text-white font-semibold transition-all duration-300`}
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      {item.cta}
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      </main>
       <Footer />
     </div>
   );
