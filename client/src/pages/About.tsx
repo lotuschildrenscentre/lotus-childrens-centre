@@ -34,19 +34,19 @@ const teamMembers = [
 
 const historyTimeline = [
   {
-    year: "2000s",
-    title: "Foundation",
-    description: "Lotus Children's Centre established to provide shelter and care for vulnerable Mongolian children",
+    year: "1995",
+    title: "Founded",
+    description: "Founded by Didi Ananda Kalika, Lotus Children's Centre begins with a single apartment, driven by compassion for vulnerable children on the streets of Ulaanbaatar",
   },
   {
-    year: "2010s",
-    title: "Growth & Expansion",
-    description: "Expanded programs to include quality education, counselling, and community outreach",
+    year: "1990s-2000s",
+    title: "Growth",
+    description: "Lotus grows to house, feed, care for and educate hundreds of children. At one stage, caring for around 150 children including many abandoned babies",
   },
   {
-    year: "2020s",
-    title: "Present Day",
-    description: "Caring for 75+ children annually with comprehensive support for post-Lotus life",
+    year: "Present",
+    title: "Today",
+    description: "Caring for 65+ children directly, mostly young teenagers. Providing primary care, quality education, independence and life skills training, supporting children into young adulthood",
   },
 ];
 
@@ -56,7 +56,7 @@ export default function About() {
   const { ref: aimsRef, isVisible: aimsVisible } = useScrollAnimation(0.1);
   const { ref: historyRef, isVisible: historyVisible } = useScrollAnimation(0.1);
   const { ref: teamRef, isVisible: teamVisible } = useScrollAnimation(0.1);
-  const [activeTab, setActiveTab] = useState<"history" | "team">("history");
+  const [activeTab, setActiveTab] = useState<"history" | "staff" | "volunteers" | "sponsors">("history");
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -214,15 +214,37 @@ export default function About() {
                 {t("about.historyTab") || "History"}
               </button>
               <button
-                onClick={() => setActiveTab("team")}
+                onClick={() => setActiveTab("staff")}
                 className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
-                  activeTab === "team"
+                  activeTab === "staff"
                     ? "bg-lotus-green text-white shadow-lg"
                     : "bg-lotus-cream text-foreground hover:bg-lotus-cream/80"
                 }`}
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
-                {t("about.teamTab") || "Meet the Team"}
+                {t("about.staffTab") || "Daily Staff"}
+              </button>
+              <button
+                onClick={() => setActiveTab("volunteers")}
+                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  activeTab === "volunteers"
+                    ? "bg-lotus-purple text-white shadow-lg"
+                    : "bg-lotus-cream text-foreground hover:bg-lotus-cream/80"
+                }`}
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {t("about.volunteersTab") || "Volunteers"}
+              </button>
+              <button
+                onClick={() => setActiveTab("sponsors")}
+                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  activeTab === "sponsors"
+                    ? "bg-lotus-orange text-white shadow-lg"
+                    : "bg-lotus-cream text-foreground hover:bg-lotus-cream/80"
+                }`}
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {t("about.sponsorsTab") || "Sponsors"}
               </button>
             </div>
 
@@ -270,8 +292,8 @@ export default function About() {
               </div>
             )}
 
-            {/* Team Tab Content */}
-            {activeTab === "team" && (
+            {/* Daily Staff Tab Content */}
+            {activeTab === "staff" && (
               <div className="space-y-12">
                 <div className="text-center mb-12">
                   <h3 className="text-3xl font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -319,6 +341,52 @@ export default function About() {
                     alt="Lotus team with children"
                     className="w-full h-auto"
                   />
+                </div>
+              </div>
+            )}
+
+            {/* Volunteers Tab Content */}
+            {activeTab === "volunteers" && (
+              <div className="space-y-12">
+                <div className="text-center mb-12">
+                  <h3 className="text-3xl font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {t("about.volunteersTitle") || "Volunteers from Around the World"}
+                  </h3>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.volunteersDesc") || "International and local volunteers dedicate their time to support our mission"}
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-12 border border-border/50 shadow-md text-center">
+                  <p className="text-lg text-muted-foreground mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.volunteersContent") || "Volunteers from all over the world are always welcome at Lotus. Whether you can visit in person or contribute remotely, your support makes a real difference in the lives of vulnerable children."}
+                  </p>
+                  <Button className="bg-lotus-purple hover:bg-lotus-purple/90 text-white px-8 py-3 rounded-full font-semibold">
+                    {t("about.volunteersRegister") || "Register as a Volunteer"}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Sponsors Tab Content */}
+            {activeTab === "sponsors" && (
+              <div className="space-y-12">
+                <div className="text-center mb-12">
+                  <h3 className="text-3xl font-bold text-foreground mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {t("about.sponsorsTitle") || "Our Generous Sponsors"}
+                  </h3>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.sponsorsDesc") || "Priceless help from organizations that believe in our mission"}
+                  </p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-12 border border-border/50 shadow-md text-center">
+                  <p className="text-lg text-muted-foreground mb-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {t("about.sponsorsContent") || "Our sponsors play a vital role in supporting Lotus Children's Centre. Through their generosity and commitment, we are able to provide quality care, education, and opportunities for vulnerable children in Mongolia."}
+                  </p>
+                  <Button className="bg-lotus-orange hover:bg-lotus-orange/90 text-white px-8 py-3 rounded-full font-semibold">
+                    {t("about.sponsorsPartner") || "Become a Sponsor"}
+                  </Button>
                 </div>
               </div>
             )}
