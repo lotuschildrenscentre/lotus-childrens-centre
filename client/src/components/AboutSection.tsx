@@ -86,10 +86,9 @@ export default function AboutSection() {
 
             {/* Learn More Button */}
             <a
-              href="#"
+              href="/about"
               className="inline-flex items-center px-7 py-3 rounded-full bg-lotus-green text-white font-semibold hover:bg-lotus-green-dark transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
-              onClick={(e) => { e.preventDefault(); }}
             >
               {t("about.learnMore")}
             </a>

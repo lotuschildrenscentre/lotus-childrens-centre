@@ -48,13 +48,7 @@ const translations: Translations = {
   },
   "services.fundraise.cta": { en: "Read More", mn: "Дэлгэрэнгүй" },
 
-  // About Section
-  "about.subtitle": { en: "Welcome to Lotus Children's Centre", mn: "Лотус хүүхдийн төвд тавтай морил" },
-  "about.title": { en: "We Help Vulnerable Children Get a Better Life", mn: "Бид эмзэг хүүхдүүдэд илүү сайн амьдрал олоход тусалдаг" },
-  "about.description": {
-    en: "The Lotus Children's Centre is an official Mongolian non-governmental organisation (NGO) that currently acts as a home for around 75 vulnerable and abused Mongolian children and also takes part in community out-reach projects. Located in Gachuurt in the suburbs of Ulaanbaatar, it is not only a home but also a centre for development for abandoned and vulnerable children.",
-    mn: "Лотус хүүхдийн төв нь Монголын албан ёсны төрийн бус байгууллага (ТББ) бөгөөд одоогоор 75 орчим эмзэг, хүчирхийлэлд өртсөн Монгол хүүхдүүдийн гэр болж, нийгмийн хүрээнд хүрэх төслүүдэд оролцдог. Улаанбаатарын захын Гачууртад байрладаг энэ төв нь зөвхөн гэр бүл төдийгүй орхигдсон, эмзэг хүүхдүүдийн хөгжлийн төв юм."
-  },
+  // About Section (Home Page)
   "about.stat": { en: "We help more than 75 children every year", mn: "Бид жил бүр 75-аас дээш хүүхдэд тусалдаг" },
   "about.point1": { en: "Providing primary care including food, healthcare, and accommodation", mn: "Хоол, эрүүл мэнд, байр зэрэг анхан шатны тусламж үзүүлэх" },
   "about.point2": { en: "Quality education and counselling for every child", mn: "Хүүхэд бүрт чанартай боловсрол, зөвлөгөө" },
@@ -114,6 +108,31 @@ const translations: Translations = {
   "contact.message": { en: "Message", mn: "Мессеж" },
   "contact.submit": { en: "Submit", mn: "Илгээх" },
   "contact.address": { en: "Gachuurt, Ulaanbaatar, Mongolia", mn: "Гачуурт, Улаанбаатар, Монгол" },
+
+  // About Page
+  "about.pageTitle": { en: "Our Story", mn: "Манай түүх" },
+  "about.pageSubtitle": { en: "Building a loving home for vulnerable children since the early 2000s", mn: "2000-аад оны эхнээс эмзэг хүүхдүүдийн хайр дүүрэн гэр бий болгож байна" },
+  "about.subtitle": { en: "Who We Are", mn: "Бид хэн бэ" },
+  "about.title": { en: "We Help Vulnerable Children Get a Better Life", mn: "Бид эмзэг хүүхдүүдэд илүү сайн амьдрал олоход тусалдаг" },
+  "about.description": { en: "The Lotus Children's Centre is an official Mongolian non-governmental organisation (NGO) that currently acts as a home for around 75 vulnerable and abused Mongolian children and also takes part in community out-reach projects.", mn: "Лотус хүүхдийн төв нь Монголын албан ёсны төрийн бус байгууллага (ТББ) бөгөөд одоогоор 75 орчим эмзэг, хүчирхийлэлд өртсөн Монгол хүүхдүүдийн гэр болж, нийгмийн хүрээнд хүрэх төслүүдэд оролцдог." },
+  "about.locationDesc": { en: "Located in Gachuurt in the suburbs of Ulaanbaatar, it is not only a home but also a centre for development for abandoned and vulnerable children.", mn: "Улаанбаатарын захын Гачууртад байрладаг энэ төв нь зөвхөн гэр бүл төдийгүй орхигдсон, эмзэг хүүхдүүдийн хөгжлийн төв юм." },
+  "about.aimsSubtitle": { en: "Our Values", mn: "Манай үнэ цэнэ" },
+  "about.aimsTitle": { en: "Aims and Beliefs", mn: "Зорилго ба итгэл" },
+  "about.aimsIntro": { en: "Whilst Lotus is not a religious organisation, many of the beliefs of the founder help the children to overcome their backgrounds through loving care and belief in their potential.", mn: "Лотус нь шашны байгууллага биш боловч үүсгэгчийн итгэл нь хүүхдүүдэд хайр дүүрэн асрамж, тэдний чадавхийн итгэлээр дамжуулан өнгөрсөн үйл явдлыг даван туулахад тусалдаг." },
+  "about.aim1Title": { en: "Primary Care", mn: "Анхан шатны асрамж" },
+  "about.aim1Desc": { en: "Provide food, healthcare, clothing and suitable accommodation", mn: "Хоол, эрүүл мэнд, хувцас, тохиромжтой байр зэргийг үзүүлэх" },
+  "about.aim2Title": { en: "Development", mn: "Хөгжил" },
+  "about.aim2Desc": { en: "Quality education, counselling, and life skills for breaking poverty cycles", mn: "Ядуурлын мөчлөгөөс гарахын тулд чанартай боловсрол, зөвлөгөө, амьдралын ур чадвар" },
+  "about.aim3Title": { en: "Family Support", mn: "Гэр бүлийн дэмжлэг" },
+  "about.aim3Desc": { en: "Love, attention, and family group support for every child", mn: "Хүүхэд бүрт хайр, анхаарал, гэр бүлийн бүлгийн дэмжлэг" },
+  "about.historyTab": { en: "History", mn: "Түүх" },
+  "about.teamTab": { en: "Meet the Team", mn: "Багийн гишүүдтэй танилцах" },
+  "about.historyTitle": { en: "Our Journey", mn: "Манай аялал" },
+  "about.historyDesc": { en: "Over two decades of dedicated service to vulnerable children in Mongolia", mn: "Монголын эмзэг хүүхдүүдэд хоёр аравт жилийн нэрэгдэлтэй үйлчилгээ" },
+  "about.teamTitle": { en: "Meet Our Dedicated Team", mn: "Манай нэрэгдэлтэй багийг танилцуулъя" },
+  "about.teamDesc": { en: "Compassionate professionals committed to changing children's lives", mn: "Хүүхдүүдийн амьдралыг өөрчлөхөд үүрэгтэй сочирхолтой мэргэжилтнүүд" },
+  "about.ctaTitle": { en: "Join Us in Making a Difference", mn: "Өөрчлөлт хийхөд бидэнтэй нэгдээрэй" },
+  "about.ctaDesc": { en: "There are many ways to support Lotus Children's Centre and help vulnerable children", mn: "Лотус хүүхдийн төвийг дэмжих, эмзэг хүүхдүүдэд туслах олон арга байдаг" },
 
   // Footer
   "footer.rights": { en: "All rights reserved.", mn: "Бүх эрх хуулиар хамгаалагдсан." },
