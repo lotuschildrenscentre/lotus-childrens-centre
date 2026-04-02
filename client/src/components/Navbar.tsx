@@ -33,6 +33,7 @@ export default function Navbar() {
     setMobileOpen(false);
     if (link.isRoute) {
       setLocation(link.href);
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     } else if (link.href.startsWith("/#")) {
       const hash = link.href.substring(1);
       if (location !== "/") {
@@ -61,7 +62,10 @@ export default function Navbar() {
       <div className="container flex items-center justify-between h-18 lg:h-20">
         {/* Logo */}
         <button
-          onClick={() => setLocation("/")}
+          onClick={() => {
+            setLocation("/");
+            window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+          }}
           className="flex items-center gap-3 shrink-0"
         >
           <img
