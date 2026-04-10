@@ -6,11 +6,11 @@
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { Flower2, Mail, MapPin, Phone, Send } from "lucide-react";
+import { Flower2, Mail, MapPin, Phone, Send, AlertTriangle, Package } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ContactSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { ref, isVisible } = useScrollAnimation(0.1);
   const [formData, setFormData] = useState({
     name: "",
@@ -47,21 +47,26 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
           {/* Contact Info */}
           <div className={`lg:col-span-2 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}>
-            <div className="space-y-8">
+            <div className="space-y-7">
+              {/* Postal Address */}
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-lotus-green/10 flex items-center justify-center shrink-0">
                   <MapPin className="w-5 h-5 text-lotus-green" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-foreground mb-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    {t("contact.address")}
+                    {language === "mn" ? "Шуудангийн хаяг" : "Postal Address"}
                   </h4>
-                  <p className="text-sm text-muted-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    Lotus Children's Centre
+                  <p className="text-sm text-muted-foreground leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    PO Box 1018<br />
+                    Central Post Office<br />
+                    Ulaanbaatar<br />
+                    Mongolia
                   </p>
                 </div>
               </div>
 
+              {/* Email */}
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-lotus-orange/10 flex items-center justify-center shrink-0">
                   <Mail className="w-5 h-5 text-lotus-orange" />
@@ -80,21 +85,68 @@ export default function ContactSection() {
                 </div>
               </div>
 
+              {/* Phone Numbers */}
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-lotus-purple/10 flex items-center justify-center shrink-0">
                   <Phone className="w-5 h-5 text-lotus-purple" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-foreground mb-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    Social Media
+                  <h4 className="font-semibold text-foreground mb-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {language === "mn" ? "Утас" : "Phone"}
                   </h4>
-                  <div className="flex gap-3">
-                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                      Facebook
-                    </a>
-                    <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                      Twitter
-                    </a>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-medium text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Didi Ananda Kalika
+                      </p>
+                      <p className="text-xs text-muted-foreground mb-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {language === "mn" ? "Захирал (Англи хэл)" : "Director (English)"}
+                      </p>
+                      <a href="tel:+97699132100" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        (+976) 99132100
+                      </a>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Bolormaa
+                      </p>
+                      <p className="text-xs text-muted-foreground mb-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {language === "mn" ? "Төвийн менежер (Монгол, Англи хэл)" : "Centre Manager (Mongolian and English)"}
+                      </p>
+                      <a href="tel:+97699789750" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        (+976) 99789750
+                      </a>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Suugi
+                      </p>
+                      <p className="text-xs text-muted-foreground mb-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {language === "mn" ? "Ерөнхий лавлагаа (Монгол, Англи хэл)" : "General Enquiries (Mongolian and English)"}
+                      </p>
+                      <a href="tel:+97699789750" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        (+976) 99789750
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Postal Warning */}
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0 mt-0.5">
+                    <Package className="w-4 h-4 text-amber-600" />
+                  </div>
+                  <div>
+                    <h5 className="text-sm font-semibold text-amber-800 mb-1.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      {language === "mn" ? "Шуудангийн анхааруулга" : "Postal Notice"}
+                    </h5>
+                    <p className="text-xs text-amber-700 leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      {language === "mn"
+                        ? "Урьдчилан асуулгүйгээр шуудангаар юм илгээхгүй байхыг хүсье. Монголын шуудангийн систем заримдаа найдваргүй байдаг бөгөөд гаалийн газраас илгээмж авахад өндөр татвар төлөх шаардлагатай болдог. Хэрэв та ямар нэг зүйл илгээхийг хүсвэл бидэнд имэйлээр хандана уу — таны улсаас хэн нэгэн удахгүй ирэх байж магадгүй."
+                        : "Please don't send any items by post without asking first. The postal system in Mongolia is sometimes unreliable, and we often have to pay expensive tax to pick up parcels from the customs office. If you want to send something, please email us first as we may be able to arrange for someone coming from your country to bring it, or make other arrangements."}
+                    </p>
                   </div>
                 </div>
               </div>
