@@ -13,7 +13,7 @@ export default function Footer() {
   const quickLinks = [
     { key: "nav.home", href: "#home" },
     { key: "nav.about", href: "#about" },
-    { key: "nav.getInvolved", href: "#causes" },
+    { key: "nav.getInvolved", href: "/get-involved" },
     { key: "nav.contact", href: "#contact" },
   ];
 
