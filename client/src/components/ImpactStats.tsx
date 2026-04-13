@@ -1,7 +1,7 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * Impact Stats: 3 columns with animated counters, icons, and descriptions
- * CMS-enabled: stat values and labels editable from admin
+ * CMS-enabled: stat values, labels, and descriptions editable from admin
  */
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCmsContent } from "@/hooks/useCmsContent";
@@ -19,6 +19,7 @@ const defaultStats = [
     bgColor: "bg-lotus-green/10",
     cmsValueKey: "stat1Value",
     cmsLabelKey: "stat1Label",
+    cmsDescKey: "stat1Desc",
   },
   {
     labelKey: "stats.years.label",
@@ -30,6 +31,7 @@ const defaultStats = [
     bgColor: "bg-lotus-orange/10",
     cmsValueKey: "stat2Value",
     cmsLabelKey: "stat2Label",
+    cmsDescKey: "stat2Desc",
   },
   {
     labelKey: "stats.impact.label",
@@ -41,6 +43,7 @@ const defaultStats = [
     bgColor: "bg-lotus-purple/10",
     cmsValueKey: "stat3Value",
     cmsLabelKey: "stat3Label",
+    cmsDescKey: "stat3Desc",
   },
 ];
 
@@ -50,12 +53,14 @@ function StatCard({
   isVisible,
   cmsCountTo,
   cmsLabel,
+  cmsDesc,
 }: {
   stat: (typeof defaultStats)[0];
   index: number;
   isVisible: boolean;
   cmsCountTo: number;
   cmsLabel: string;
+  cmsDesc: string;
 }) {
   const { t } = useLanguage();
   const count = useCountUp(cmsCountTo, 2500, isVisible);
@@ -78,7 +83,7 @@ function StatCard({
         className="text-sm text-muted-foreground mb-5 max-w-xs mx-auto leading-relaxed"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        {t(stat.descKey)}
+        {cmsDesc || t(stat.descKey)}
       </p>
 
       {/* Number */}
@@ -108,6 +113,7 @@ export default function ImpactStats() {
           {defaultStats.map((stat, index) => {
             const cmsValue = cms.get("impact", `meta.${stat.cmsValueKey}`, "");
             const cmsLabel = cms.get("impact", `meta.${stat.cmsLabelKey}`, "");
+            const cmsDesc = cms.get("impact", `meta.${stat.cmsDescKey}`, "");
             const countTo = cmsValue ? parseInt(cmsValue, 10) || stat.countTo : stat.countTo;
 
             return (
@@ -118,6 +124,7 @@ export default function ImpactStats() {
                 isVisible={isVisible}
                 cmsCountTo={countTo}
                 cmsLabel={cmsLabel}
+                cmsDesc={cmsDesc}
               />
             );
           })}

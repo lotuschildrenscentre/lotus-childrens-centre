@@ -1,7 +1,7 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * CTA: Full-width section with background image, overlay, and call-to-action
- * CMS-enabled: background image, subtitle, heading, description editable from admin
+ * CMS-enabled: background image, subtitle, heading, description, button links & text editable from admin
  */
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCmsContent } from "@/hooks/useCmsContent";
@@ -9,6 +9,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Heart, Users } from "lucide-react";
 
 const DEFAULT_CTA_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/cta-bg-GJ9TxHXLq33nRpwT3icCsB.webp";
+const DEFAULT_DONATE_URL = "https://www.justgiving.com/charity/lotuschildren-centre";
 
 export default function CTASection() {
   const { t } = useLanguage();
@@ -16,6 +17,9 @@ export default function CTASection() {
   const { ref, isVisible } = useScrollAnimation(0.1);
 
   const ctaBg = cms.get("cta", "imageUrl", DEFAULT_CTA_BG);
+  const donateLink = cms.get("cta", "meta.donateLink", DEFAULT_DONATE_URL);
+  const donateBtnText = cms.get("cta", "meta.donateBtnText", t("cta.donate"));
+  const volunteerBtnText = cms.get("cta", "meta.volunteerBtnText", t("cta.volunteer"));
 
   return (
     <section id="donate" className="relative py-24 lg:py-32 overflow-hidden" ref={ref}>
@@ -52,14 +56,14 @@ export default function CTASection() {
 
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="https://www.justgiving.com/charity/lotuschildren-centre"
+              href={donateLink}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-lotus-orange text-white font-semibold text-lg hover:bg-lotus-orange/90 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               <Heart className="w-5 h-5" />
-              {t("cta.donate")}
+              {donateBtnText}
             </a>
             <a
               href="/about?tab=volunteers&view=form"
@@ -67,7 +71,7 @@ export default function CTASection() {
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               <Users className="w-5 h-5" />
-              {t("cta.volunteer")}
+              {volunteerBtnText}
             </a>
           </div>
         </div>

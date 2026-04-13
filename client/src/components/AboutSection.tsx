@@ -1,7 +1,7 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * About: Split layout with image (left) and text (right)
- * CMS-enabled: subtitle, heading, description, image, stat overlay editable from admin
+ * CMS-enabled: subtitle, heading, description, image, stat overlay, and 3 key points editable from admin
  */
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCmsContent } from "@/hooks/useCmsContent";
@@ -17,10 +17,11 @@ export default function AboutSection() {
 
   const aboutImg = cms.get("about", "imageUrl", DEFAULT_ABOUT_IMG);
 
+  // CMS-driven key points with translation fallback
   const points = [
-    "about.point1",
-    "about.point2",
-    "about.point3",
+    cms.get("about", "meta.point1", t("about.point1")),
+    cms.get("about", "meta.point2", t("about.point2")),
+    cms.get("about", "meta.point3", t("about.point3")),
   ];
 
   return (
@@ -75,14 +76,14 @@ export default function AboutSection() {
 
             {/* Points */}
             <div className="space-y-4 mb-8">
-              {points.map((pointKey) => (
-                <div key={pointKey} className="flex items-start gap-3">
+              {points.map((point, idx) => (
+                <div key={idx} className="flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-lotus-green mt-0.5 shrink-0" />
                   <p
                     className="text-foreground/80"
                     style={{ fontFamily: "'DM Sans', sans-serif" }}
                   >
-                    {t(pointKey)}
+                    {point}
                   </p>
                 </div>
               ))}

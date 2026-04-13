@@ -1,13 +1,14 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * Sponsors: Horizontal auto-scrolling logo marquee
- * Light cream background, subtle branding
+ * CMS-enabled: section title, partner names and logos editable from admin
  */
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Flower2 } from "lucide-react";
 
-const sponsors = [
+const defaultSponsors = [
   {
     name: "Ulaanbaatar Elite International School",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/elite-international-school_1cc7eabc.webp",
@@ -48,10 +49,23 @@ const sponsors = [
 
 export default function SponsorsSection() {
   const { t } = useLanguage();
+  const cms = useCmsContent("home");
   const { ref, isVisible } = useScrollAnimation(0.1);
 
+  // Build sponsors list from CMS with fallback to defaults
+  const sponsors: { name: string; logo: string }[] = [];
+  for (let i = 1; i <= 10; i++) {
+    const cmsName = cms.get("sponsors", `meta.partner${i}Name`, "");
+    const cmsLogo = cms.get("sponsors", `meta.partner${i}Logo`, "");
+    if (cmsName && cmsLogo) {
+      sponsors.push({ name: cmsName, logo: cmsLogo });
+    }
+  }
+  // If no CMS sponsors, use defaults
+  const displaySponsors = sponsors.length > 0 ? sponsors : defaultSponsors;
+
   // Duplicate the sponsors array for seamless infinite scroll
-  const duplicatedSponsors = [...sponsors, ...sponsors];
+  const duplicatedSponsors = [...displaySponsors, ...displaySponsors];
 
   return (
     <section className="py-20 lg:py-28 bg-background overflow-hidden" ref={ref}>
@@ -68,11 +82,11 @@ export default function SponsorsSection() {
               className="text-sm font-semibold uppercase tracking-widest text-lotus-orange"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
-              {t("sponsors.subtitle")}
+              {cms.get("sponsors", "title", t("sponsors.subtitle"))}
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight max-w-3xl mx-auto">
-            {t("sponsors.title")}
+            {cms.get("sponsors", "content", t("sponsors.title"))}
           </h2>
         </div>
       </div>

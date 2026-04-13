@@ -1,60 +1,62 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * Service Cards: 3 cards (Volunteer, Donation, Fundraise) with logo colors
- * Yellow card, Orange card, Purple card — matching the reference template layout
+ * CMS-enabled: titles, descriptions, button text, and links editable from admin
  */
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Users, Heart, HandHeart } from "lucide-react";
 
-const DONATE_URL = "https://www.justgiving.com/charity/lotuschildren-centre";
-const FUNDRAISE_URL = "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83";
-
-const cards = [
-  {
-    titleKey: "services.volunteer.title",
-    descKey: "services.volunteer.desc",
-    ctaKey: "services.volunteer.cta",
-    icon: Users,
-    bgClass: "bg-lotus-yellow",
-    textClass: "text-amber-900",
-    ctaClass: "text-amber-900 border-amber-900/30 hover:bg-amber-900/10",
-    iconBg: "bg-white/60",
-    iconColor: "text-amber-700",
-    href: "/about?tab=volunteers&view=form",
-    external: false,
-  },
-  {
-    titleKey: "services.donation.title",
-    descKey: "services.donation.desc",
-    ctaKey: "services.donation.cta",
-    icon: Heart,
-    bgClass: "bg-lotus-orange",
-    textClass: "text-white",
-    ctaClass: "text-white border-white/40 hover:bg-white/15",
-    iconBg: "bg-white/25",
-    iconColor: "text-white",
-    href: DONATE_URL,
-    external: true,
-  },
-  {
-    titleKey: "services.fundraise.title",
-    descKey: "services.fundraise.desc",
-    ctaKey: "services.fundraise.cta",
-    icon: HandHeart,
-    bgClass: "bg-lotus-purple",
-    textClass: "text-white",
-    ctaClass: "text-white border-white/40 hover:bg-white/15",
-    iconBg: "bg-white/25",
-    iconColor: "text-white",
-    href: FUNDRAISE_URL,
-    external: true,
-  },
-];
+const DEFAULT_DONATE_URL = "https://www.justgiving.com/charity/lotuschildren-centre";
+const DEFAULT_FUNDRAISE_URL = "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83";
 
 export default function ServiceCards() {
   const { t } = useLanguage();
+  const cms = useCmsContent("home");
   const { ref, isVisible } = useScrollAnimation(0.1);
+
+  const cards = [
+    {
+      title: cms.get("serviceCards", "meta.volunteerTitle", t("services.volunteer.title")),
+      desc: cms.get("serviceCards", "meta.volunteerDesc", t("services.volunteer.desc")),
+      cta: cms.get("serviceCards", "meta.volunteerBtnText", t("services.volunteer.cta")),
+      icon: Users,
+      bgClass: "bg-lotus-yellow",
+      textClass: "text-amber-900",
+      ctaClass: "text-amber-900 border-amber-900/30 hover:bg-amber-900/10",
+      iconBg: "bg-white/60",
+      iconColor: "text-amber-700",
+      href: "/about?tab=volunteers&view=form",
+      external: false,
+    },
+    {
+      title: cms.get("serviceCards", "meta.donateTitle", t("services.donation.title")),
+      desc: cms.get("serviceCards", "meta.donateDesc", t("services.donation.desc")),
+      cta: cms.get("serviceCards", "meta.donateBtnText", t("services.donation.cta")),
+      icon: Heart,
+      bgClass: "bg-lotus-orange",
+      textClass: "text-white",
+      ctaClass: "text-white border-white/40 hover:bg-white/15",
+      iconBg: "bg-white/25",
+      iconColor: "text-white",
+      href: cms.get("serviceCards", "meta.donateLink", DEFAULT_DONATE_URL),
+      external: true,
+    },
+    {
+      title: cms.get("serviceCards", "meta.fundraiseTitle", t("services.fundraise.title")),
+      desc: cms.get("serviceCards", "meta.fundraiseDesc", t("services.fundraise.desc")),
+      cta: cms.get("serviceCards", "meta.fundraiseBtnText", t("services.fundraise.cta")),
+      icon: HandHeart,
+      bgClass: "bg-lotus-purple",
+      textClass: "text-white",
+      ctaClass: "text-white border-white/40 hover:bg-white/15",
+      iconBg: "bg-white/25",
+      iconColor: "text-white",
+      href: cms.get("serviceCards", "meta.fundraiseLink", DEFAULT_FUNDRAISE_URL),
+      external: true,
+    },
+  ];
 
   return (
     <section className="relative -mt-16 z-10 pb-16" ref={ref}>
@@ -64,7 +66,7 @@ export default function ServiceCards() {
             const Icon = card.icon;
             return (
               <div
-                key={card.titleKey}
+                key={index}
                 className={`${card.bgClass} rounded-2xl p-8 lg:p-10 transition-all duration-700 hover:-translate-y-2 hover:shadow-2xl ${
                   isVisible
                     ? "opacity-100 translate-y-0"
@@ -79,7 +81,7 @@ export default function ServiceCards() {
 
                 {/* Title */}
                 <h3 className={`text-2xl font-bold ${card.textClass} mb-3`}>
-                  {t(card.titleKey)}
+                  {card.title}
                 </h3>
 
                 {/* Description */}
@@ -87,7 +89,7 @@ export default function ServiceCards() {
                   className={`${card.textClass} opacity-85 leading-relaxed mb-6`}
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {t(card.descKey)}
+                  {card.desc}
                 </p>
 
                 {/* CTA */}
@@ -98,7 +100,7 @@ export default function ServiceCards() {
                   className={`inline-flex items-center px-5 py-2 rounded-full border ${card.ctaClass} font-semibold text-sm uppercase tracking-wider transition-all duration-200`}
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {t(card.ctaKey)}
+                  {card.cta}
                 </a>
               </div>
             );

@@ -1,7 +1,7 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * Contact: Form section with contact info sidebar
- * CMS-enabled: contact details (email, phone, address) editable from admin
+ * CMS-enabled: all contact details (names, roles, phones, email, address, postal notice) editable from admin
  */
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 export default function ContactSection() {
   const { t, language } = useLanguage();
-  const cms = useCmsContent("contact");
+  const cms = useCmsContent("home");
   const { ref, isVisible } = useScrollAnimation(0.1);
   const [formData, setFormData] = useState({
     name: "",
@@ -28,10 +28,31 @@ export default function ContactSection() {
   };
 
   // CMS-driven contact details with defaults
-  const contactEmail = cms.get("info", "meta.email", "lotuschildrenscentre@gmail.com");
-  const contactPhone1 = cms.get("info", "meta.phone1", "Didi Ananda Kalika: (+976) 99132100");
-  const contactPhone2 = cms.get("info", "meta.phone2", "Bolormaa: (+976) 99789750");
-  const contactAddress = cms.get("info", "content", "PO Box 1018\nCentral Post Office\nUlaanbaatar\nMongolia");
+  const sectionSubtitle = cms.get("contact", "meta.sectionSubtitle", t("contact.subtitle"));
+  const sectionTitle = cms.get("contact", "title", t("contact.title"));
+  const contactAddress = cms.get("contact", "content", "PO Box 1018\nCentral Post Office\nUlaanbaatar\nMongolia");
+  const contactEmail = cms.get("contact", "meta.email", "lotuschildrenscentre@gmail.com");
+
+  // Contact persons
+  const phone1Name = cms.get("contact", "meta.phone1Name", "Didi Ananda Kalika");
+  const phone1Role = cms.get("contact", "meta.phone1Role", language === "mn" ? "Захирал (Англи хэл)" : "Director (English)");
+  const phone1Number = cms.get("contact", "meta.phone1Number", "(+976) 99132100");
+
+  const phone2Name = cms.get("contact", "meta.phone2Name", "Bolormaa");
+  const phone2Role = cms.get("contact", "meta.phone2Role", language === "mn" ? "Төвийн менежер (Монгол, Англи хэл)" : "Centre Manager (Mongolian and English)");
+  const phone2Number = cms.get("contact", "meta.phone2Number", "(+976) 99789750");
+
+  const phone3Name = cms.get("contact", "meta.phone3Name", "Suugi");
+  const phone3Role = cms.get("contact", "meta.phone3Role", language === "mn" ? "Ерөнхий лавлагаа (Монгол, Англи хэл)" : "General Enquiries (Mongolian and English)");
+  const phone3Number = cms.get("contact", "meta.phone3Number", "(+976) 99789750");
+
+  const postalNotice = cms.get(
+    "contact",
+    "meta.postalNotice",
+    language === "mn"
+      ? "Урьдчилан асуулгүйгээр шуудангаар юм илгээхгүй байхыг хүсье. Монголын шуудангийн систем заримдаа найдваргүй байдаг бөгөөд гаалийн газраас илгээмж авахад өндөр татвар төлөх шаардлагатай болдог. Хэрэв та ямар нэг зүйл илгээхийг хүсвэл бидэнд имэйлээр хандана уу — таны улсаас хэн нэгэн удахгүй ирэх байж магадгүй."
+      : "Please don't send any items by post without asking first. The postal system in Mongolia is sometimes unreliable, and we often have to pay expensive tax to pick up parcels from the customs office. If you want to send something, please email us first as we may be able to arrange for someone coming from your country to bring it, or make other arrangements."
+  );
 
   return (
     <section id="contact" className="py-20 lg:py-28 bg-lotus-cream" ref={ref}>
@@ -44,11 +65,11 @@ export default function ContactSection() {
               className="text-sm font-semibold uppercase tracking-widest text-lotus-orange"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
-              {t("contact.subtitle")}
+              {sectionSubtitle}
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-            {cms.get("info", "title", t("contact.title"))}
+            {sectionTitle}
           </h2>
         </div>
 
@@ -102,35 +123,35 @@ export default function ContactSection() {
                   <div className="space-y-3">
                     <div>
                       <p className="text-sm font-medium text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        Didi Ananda Kalika
+                        {phone1Name}
                       </p>
                       <p className="text-xs text-muted-foreground mb-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {language === "mn" ? "Захирал (Англи хэл)" : "Director (English)"}
+                        {phone1Role}
                       </p>
-                      <a href="tel:+97699132100" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {contactPhone1.includes(":") ? contactPhone1.split(":")[1]?.trim() : "(+976) 99132100"}
+                      <a href={`tel:${phone1Number.replace(/[^+\d]/g, "")}`} className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {phone1Number}
                       </a>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        Bolormaa
+                        {phone2Name}
                       </p>
                       <p className="text-xs text-muted-foreground mb-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {language === "mn" ? "Төвийн менежер (Монгол, Англи хэл)" : "Centre Manager (Mongolian and English)"}
+                        {phone2Role}
                       </p>
-                      <a href="tel:+97699789750" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {contactPhone2.includes(":") ? contactPhone2.split(":")[1]?.trim() : "(+976) 99789750"}
+                      <a href={`tel:${phone2Number.replace(/[^+\d]/g, "")}`} className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {phone2Number}
                       </a>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        Suugi
+                        {phone3Name}
                       </p>
                       <p className="text-xs text-muted-foreground mb-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {language === "mn" ? "Ерөнхий лавлагаа (Монгол, Англи хэл)" : "General Enquiries (Mongolian and English)"}
+                        {phone3Role}
                       </p>
-                      <a href="tel:+97699789750" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        (+976) 99789750
+                      <a href={`tel:${phone3Number.replace(/[^+\d]/g, "")}`} className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {phone3Number}
                       </a>
                     </div>
                   </div>
@@ -148,9 +169,7 @@ export default function ContactSection() {
                       {language === "mn" ? "Шуудангийн анхааруулга" : "Postal Notice"}
                     </h5>
                     <p className="text-xs text-amber-700 leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                      {language === "mn"
-                        ? "Урьдчилан асуулгүйгээр шуудангаар юм илгээхгүй байхыг хүсье. Монголын шуудангийн систем заримдаа найдваргүй байдаг бөгөөд гаалийн газраас илгээмж авахад өндөр татвар төлөх шаардлагатай болдог. Хэрэв та ямар нэг зүйл илгээхийг хүсвэл бидэнд имэйлээр хандана уу — таны улсаас хэн нэгэн удахгүй ирэх байж магадгүй."
-                        : "Please don't send any items by post without asking first. The postal system in Mongolia is sometimes unreliable, and we often have to pay expensive tax to pick up parcels from the customs office. If you want to send something, please email us first as we may be able to arrange for someone coming from your country to bring it, or make other arrangements."}
+                      {postalNotice}
                     </p>
                   </div>
                 </div>

@@ -53,3 +53,22 @@
 - [x] Update Contact section to load content from DB with defaults
 - [x] Update Blog page to load content from DB with defaults (Hero)
 - [x] Test full CMS flow and write vitest tests (24 tests pass)
+
+## CMS Expansion - Full Home Page Coverage
+- [x] Service Cards: Volunteer card (title, description, button text)
+- [x] Service Cards: Donation card (title, description, button text, button link)
+- [x] Service Cards: Fundraise card (title, description, button text, button link)
+- [x] Who We Are: 3 bullet points (primary care, education, life skills)
+- [x] Impact Stats: 3 description texts under the stats
+- [x] Partners/Sponsors section content
+- [x] Contact Us section (all fields)
+- [x] Footer content (address, phone, email, social links, description)
+- [x] Update cmsConfig.ts with all new sections
+- [x] Update AdminContent.tsx to handle new section types (links, bullet points) — generic editor already handles text/textarea/image
+- [x] Wire ServiceCards.tsx to CMS
+- [x] Wire AboutSection.tsx bullet points to CMS
+- [x] Wire ImpactStats.tsx descriptions to CMS
+- [x] Wire SponsorsSection.tsx to CMS
+- [x] Wire ContactSection.tsx fully to CMS
+- [x] Wire Footer.tsx to CMS
+- [x] Test all changes (24 tests pass)
