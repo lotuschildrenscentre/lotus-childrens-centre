@@ -11,6 +11,12 @@ import About from "./pages/About";
 import Blog from "./pages/Blog";
 import GetInvolved from "./pages/GetInvolved";
 import Login from "./pages/Login";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminSubmissions from "./pages/admin/AdminSubmissions";
+import AdminTestimonials from "./pages/admin/AdminTestimonials";
+import AdminContent from "./pages/admin/AdminContent";
+import AdminUsers from "./pages/admin/AdminUsers";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -19,8 +25,30 @@ function ScrollToTop() {
   }, [location]);
   return null;
 }
+
+function AdminRoutes() {
+  return (
+    <AdminLayout>
+      <Switch>
+        <Route path="/admin" component={AdminDashboard} />
+        <Route path="/admin/submissions" component={AdminSubmissions} />
+        <Route path="/admin/testimonials" component={AdminTestimonials} />
+        <Route path="/admin/content" component={AdminContent} />
+        <Route path="/admin/users" component={AdminUsers} />
+        <Route component={AdminDashboard} />
+      </Switch>
+    </AdminLayout>
+  );
+}
+
 function Router() {
-  // make sure to consider if you need authentication for certain routes
+  const [location] = useLocation();
+
+  // Admin routes use their own layout
+  if (location.startsWith("/admin")) {
+    return <AdminRoutes />;
+  }
+
   return (
     <Switch>
       <Route path={"/"} component={Home} />

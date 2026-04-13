@@ -8,6 +8,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import {
   Heart,
   Users,
@@ -18,6 +20,7 @@ import {
   ChevronDown,
   X,
   User,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -152,6 +155,34 @@ export default function About() {
   const [volunteerView, setVolunteerView] = useState<"main" | "form" | "faq">("main");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const teamSectionRef = useRef<HTMLDivElement>(null);
+
+  /* Testimonials from DB */
+  const { data: dbTestimonials } = trpc.testimonials.list.useQuery();
+
+  /* Fallback testimonials if DB is empty */
+  const fallbackTestimonials = [
+    { id: -1, name: "Antoine", duration: "2 weeks, Summer 2017", quote: "The best experience comes from the children themselves" },
+    { id: -2, name: "Sam", duration: "2 months, Summer 2016", quote: "The time I spent out at Lotus and Mongolia was equally both eye-opening and rewarding" },
+    { id: -3, name: "Max", duration: "2 months, Summer 2015", quote: "I spent my time there to entertain the children and help in the centre as much as I could" },
+    { id: -4, name: "Erica", duration: "2 months, Summer 2014", quote: "I learned patience and love. The children touched my heart with their positive energy and their affection" },
+  ];
+  const displayTestimonials = dbTestimonials && dbTestimonials.length > 0 ? dbTestimonials : fallbackTestimonials;
+
+  /* Volunteer form submission */
+  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submitMutation = trpc.volunteer.submit.useMutation({
+    onSuccess: () => {
+      toast.success("Application submitted successfully! We will review it and get back to you.");
+      setFormData({});
+      setVolunteerView("main");
+      setIsSubmitting(false);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit application. Please try again.");
+      setIsSubmitting(false);
+    },
+  });
 
   /* Auto-open volunteer form if URL has ?tab=volunteers&view=form */
   useEffect(() => {
@@ -592,33 +623,9 @@ export default function About() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {[
-                        {
-                          name: "Antoine",
-                          duration: "2 weeks, Summer 2017",
-                          quote: "The best experience comes from the children themselves",
-                        },
-                        {
-                          name: "Sam",
-                          duration: "2 months, Summer 2016",
-                          quote:
-                            "The time I spent out at Lotus and Mongolia was equally both eye-opening and rewarding",
-                        },
-                        {
-                          name: "Max",
-                          duration: "2 months, Summer 2015",
-                          quote:
-                            "I spent my time there to entertain the children and help in the centre as much as I could",
-                        },
-                        {
-                          name: "Erica",
-                          duration: "2 months, Summer 2014",
-                          quote:
-                            "I learned patience and love. The children touched my heart with their positive energy and their affection",
-                        },
-                      ].map((testimonial, idx) => (
+                      {displayTestimonials.map((testimonial) => (
                         <div
-                          key={idx}
+                          key={testimonial.id}
                           className="bg-white rounded-2xl p-8 shadow-md border border-border/50 hover:shadow-lg transition-all duration-300"
                         >
                           <div className="flex items-center gap-4 mb-4">
@@ -684,7 +691,29 @@ export default function About() {
                         </a>
                       </p>
 
-                      <form className="space-y-6">
+                      <form className="space-y-6" onSubmit={(e) => {
+                        e.preventDefault();
+                        if (!formData.fullName || !formData.email) {
+                          toast.error("Please fill in at least your name and email.");
+                          return;
+                        }
+                        setIsSubmitting(true);
+                        submitMutation.mutate({
+                          fullName: formData.fullName || "",
+                          email: formData.email || "",
+                          dateOfBirth: formData.dob || undefined,
+                          nationality: formData.nationality || undefined,
+                          languages: formData.languages || undefined,
+                          intendedDates: formData.dates || undefined,
+                          howHelp: formData.howHelp || undefined,
+                          experience: formData.experience || undefined,
+                          whyVolunteer: formData.whyVolunteer || undefined,
+                          criminalRecord: formData.criminalRecord || undefined,
+                          convictions: formData.convictions || undefined,
+                          codeOfConduct: formData.codeOfConduct || undefined,
+                          hearAbout: formData.hearAbout || undefined,
+                        });
+                      }}>
                         {applicationQuestions.map((q) => (
                           <div key={q.id}>
                             <label
@@ -697,14 +726,18 @@ export default function About() {
                               <textarea
                                 className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-lotus-green/50 focus:border-lotus-green transition-colors min-h-[100px] resize-y"
                                 style={{ fontFamily: "'DM Sans', sans-serif" }}
-                                placeholder={`Enter your answer...`}
+                                placeholder="Enter your answer..."
+                                value={formData[q.id] || ""}
+                                onChange={(e) => setFormData({ ...formData, [q.id]: e.target.value })}
                               />
                             ) : (
                               <input
                                 type={q.type}
                                 className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-lotus-green/50 focus:border-lotus-green transition-colors"
                                 style={{ fontFamily: "'DM Sans', sans-serif" }}
-                                placeholder={`Enter your answer...`}
+                                placeholder="Enter your answer..."
+                                value={formData[q.id] || ""}
+                                onChange={(e) => setFormData({ ...formData, [q.id]: e.target.value })}
                               />
                             )}
                           </div>
@@ -721,13 +754,12 @@ export default function About() {
                             Back
                           </Button>
                           <Button
-                            type="button"
-                            className="bg-lotus-green hover:bg-lotus-green/90 text-white px-8 py-3 rounded-full font-semibold"
+                            type="submit"
+                            className="bg-lotus-green hover:bg-lotus-green/90 text-white px-8 py-3 rounded-full font-semibold gap-2"
                             style={{ fontFamily: "'DM Sans', sans-serif" }}
-                            onClick={() => {
-                              window.location.href = "mailto:volunteering@lotuschild.org";
-                            }}
+                            disabled={isSubmitting}
                           >
+                            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                             Submit Application
                           </Button>
                         </div>

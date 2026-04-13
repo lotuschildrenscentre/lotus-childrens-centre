@@ -25,3 +25,18 @@
 ## UI Changes
 - [x] Remove "Ready to Make a Difference" section from Get Involved page
 - [x] Connect all Volunteer buttons to the existing volunteer application form
+
+## Admin Panel
+- [x] Database schema: volunteer_submissions table
+- [x] Database schema: testimonials table
+- [x] Database schema: page_content table
+- [x] Server: DB helpers for all admin tables
+- [x] Server: tRPC admin procedures (protected by admin role)
+- [x] Admin panel: Dashboard layout with sidebar navigation
+- [x] Admin panel: Volunteer submissions viewer (list + detail view)
+- [x] Admin panel: Testimonials CRUD (add/edit/delete volunteer stories)
+- [x] Admin panel: Page content management
+- [x] Admin panel: User management with admin role assignment
+- [x] Frontend: Wire volunteer application form to save submissions to DB
+- [x] Frontend: Display testimonials from DB on About page volunteers section
+- [x] Write vitest tests for admin procedures

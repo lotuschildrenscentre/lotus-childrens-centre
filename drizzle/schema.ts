@@ -1,17 +1,10 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
- * Extend this file with additional tables as your product grows.
- * Columns use camelCase to match both database fields and generated types.
  */
 export const users = mysqlTable("users", {
-  /**
-   * Surrogate primary key. Auto-incremented numeric value managed by the database.
-   * Use this for relations between tables.
-   */
   id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
@@ -25,4 +18,66 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+/**
+ * Volunteer application submissions.
+ * Stores all form fields as a JSON blob for flexibility.
+ */
+export const volunteerSubmissions = mysqlTable("volunteer_submissions", {
+  id: int("id").autoincrement().primaryKey(),
+  fullName: varchar("fullName", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  dateOfBirth: varchar("dateOfBirth", { length: 64 }),
+  nationality: varchar("nationality", { length: 128 }),
+  languages: text("languages"),
+  intendedDates: varchar("intendedDates", { length: 255 }),
+  howHelp: text("howHelp"),
+  experience: text("experience"),
+  whyVolunteer: text("whyVolunteer"),
+  criminalRecord: varchar("criminalRecord", { length: 255 }),
+  convictions: varchar("convictions", { length: 255 }),
+  codeOfConduct: varchar("codeOfConduct", { length: 255 }),
+  hearAbout: varchar("hearAbout", { length: 255 }),
+  status: mysqlEnum("status", ["pending", "reviewed", "approved", "rejected"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type VolunteerSubmission = typeof volunteerSubmissions.$inferSelect;
+export type InsertVolunteerSubmission = typeof volunteerSubmissions.$inferInsert;
+
+/**
+ * Volunteer testimonials / stories displayed on the About page.
+ */
+export const testimonials = mysqlTable("testimonials", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  duration: varchar("duration", { length: 255 }).notNull(),
+  quote: text("quote").notNull(),
+  isPublished: boolean("isPublished").default(true).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Testimonial = typeof testimonials.$inferSelect;
+export type InsertTestimonial = typeof testimonials.$inferInsert;
+
+/**
+ * Page content management — key-value store for editable page sections.
+ * Each row represents a content block identified by pageKey + sectionKey.
+ */
+export const pageContent = mysqlTable("page_content", {
+  id: int("id").autoincrement().primaryKey(),
+  pageKey: varchar("pageKey", { length: 64 }).notNull(),
+  sectionKey: varchar("sectionKey", { length: 128 }).notNull(),
+  title: text("title"),
+  content: text("content"),
+  metadata: json("metadata"),
+  updatedBy: int("updatedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PageContent = typeof pageContent.$inferSelect;
+export type InsertPageContent = typeof pageContent.$inferInsert;
