@@ -21,3 +21,6 @@
 
 ## Notes
 - Do NOT build admin panel yet — will be done after authentication is confirmed working
+
+## UI Changes
+- [x] Remove "Ready to Make a Difference" section from Get Involved page

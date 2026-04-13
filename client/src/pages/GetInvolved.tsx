@@ -7,17 +7,15 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { Users, Zap, Heart, ArrowRight, Mail, Phone, MapPin } from "lucide-react";
+import { Users, Zap, Heart, ArrowRight } from "lucide-react";
 
 const VOLUNTEER_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/volunteer-section-CAm5pkJEC6fgK8AV9MZukV.webp";
-const CTA_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/cta-bg-GJ9TxHXLq33nRpwT3icCsB.webp";
 
 export default function GetInvolved() {
   const { t } = useLanguage();
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation(0.1);
   const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation(0.1);
   const { ref: detailRef, isVisible: detailVisible } = useScrollAnimation(0.1);
-  const { ref: ctaRef, isVisible: ctaVisible } = useScrollAnimation(0.1);
 
   const opportunities = [
     {
@@ -258,68 +256,6 @@ export default function GetInvolved() {
           </div>
         </section>
 
-        {/* Contact CTA Section */}
-        <section className="relative py-20 lg:py-28 overflow-hidden" ref={ctaRef}>
-          <div className="absolute inset-0">
-            <img src={CTA_BG} alt="" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-lotus-dark/85" />
-          </div>
-
-          <div className="relative container">
-            <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-              <h2
-                className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
-                {t("getInvolved.ctaTitle")}
-              </h2>
-
-              <p
-                className="text-lg text-white/80 leading-relaxed mb-10"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
-              >
-                {t("getInvolved.ctaDesc")}
-              </p>
-
-              {/* Contact info cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-                <a
-                  href="mailto:lotuschildrenscentre@gmail.com"
-                  className="flex items-center justify-center gap-3 px-5 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-all duration-300"
-                >
-                  <Mail className="w-5 h-5 text-lotus-orange" />
-                  <span className="text-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    {t("getInvolved.emailUs")}
-                  </span>
-                </a>
-                <a
-                  href="tel:+97611461477"
-                  className="flex items-center justify-center gap-3 px-5 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition-all duration-300"
-                >
-                  <Phone className="w-5 h-5 text-lotus-orange" />
-                  <span className="text-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    {t("getInvolved.callUs")}
-                  </span>
-                </a>
-                <div className="flex items-center justify-center gap-3 px-5 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white">
-                  <MapPin className="w-5 h-5 text-lotus-orange" />
-                  <span className="text-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    {t("getInvolved.visitUs")}
-                  </span>
-                </div>
-              </div>
-
-              <a
-                href="mailto:lotuschildrenscentre@gmail.com"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-lotus-orange text-white font-semibold text-lg hover:bg-lotus-orange/90 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
-              >
-                <Mail className="w-5 h-5" />
-                {t("getInvolved.contactBtn")}
-              </a>
-            </div>
-          </div>
-        </section>
       </main>
       <Footer />
     </div>
