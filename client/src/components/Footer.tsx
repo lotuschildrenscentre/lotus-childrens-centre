@@ -5,7 +5,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
-import { Heart, Facebook, Twitter, Mail, LogIn, LogOut, User } from "lucide-react";
+import { Heart, Facebook, Twitter, Mail, LogIn, LogOut, User, Shield } from "lucide-react";
 
 const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/lotus-logo_b560f626.png";
 
@@ -125,6 +125,16 @@ export default function Footer() {
                       {user.name || user.email || t("auth.myAccount")}
                     </span>
                   </div>
+                  {user.role === "admin" && (
+                    <button
+                      onClick={() => setLocation("/admin")}
+                      className="flex items-center gap-2 text-sm text-white/60 hover:text-lotus-green transition-colors duration-200"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      <Shield className="w-3.5 h-3.5" />
+                      Admin Panel
+                    </button>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="flex items-center gap-2 text-sm text-white/50 hover:text-lotus-orange transition-colors duration-200"

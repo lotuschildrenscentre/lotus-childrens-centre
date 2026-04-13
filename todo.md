@@ -40,3 +40,4 @@
 - [x] Frontend: Wire volunteer application form to save submissions to DB
 - [x] Frontend: Display testimonials from DB on About page volunteers section
 - [x] Write vitest tests for admin procedures
+- [x] Ensure admin panel link is clearly visible in footer and links to /admin
