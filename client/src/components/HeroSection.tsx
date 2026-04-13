@@ -51,7 +51,9 @@ export default function HeroSection() {
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-500">
             <a
-              href="#donate"
+              href="https://www.justgiving.com/charity/lotuschildren-centre"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-lotus-orange text-white font-semibold text-lg hover:bg-lotus-orange/90 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >

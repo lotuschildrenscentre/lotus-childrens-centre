@@ -892,6 +892,8 @@ export default function About() {
                   bgColor: "bg-lotus-yellow/10",
                   buttonColor: "bg-lotus-yellow hover:bg-lotus-yellow/90",
                   cta: t("services.volunteer.cta") || "Register Now",
+                  href: "/get-involved",
+                  external: false,
                 },
                 {
                   icon: Heart,
@@ -903,6 +905,8 @@ export default function About() {
                   bgColor: "bg-lotus-orange/10",
                   buttonColor: "bg-lotus-orange hover:bg-lotus-orange/90",
                   cta: t("services.donation.cta") || "Donate Now",
+                  href: "https://www.justgiving.com/charity/lotuschildren-centre",
+                  external: true,
                 },
                 {
                   icon: Lightbulb,
@@ -914,6 +918,8 @@ export default function About() {
                   bgColor: "bg-lotus-purple/10",
                   buttonColor: "bg-lotus-purple hover:bg-lotus-purple/90",
                   cta: t("services.fundraise.cta") || "Read More",
+                  href: "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83",
+                  external: true,
                 },
               ].map((item, idx) => {
                 const Icon = item.icon;
@@ -937,13 +943,16 @@ export default function About() {
                     <p className="text-muted-foreground mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                       {item.desc}
                     </p>
-                    <Button
-                      className={`w-full ${item.buttonColor} text-white font-semibold transition-all duration-300`}
+                    <a
+                      href={item.href}
+                      target={item.external ? "_blank" : undefined}
+                      rel={item.external ? "noopener noreferrer" : undefined}
+                      className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-md ${item.buttonColor} text-white font-semibold transition-all duration-300`}
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
                       {item.cta}
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
+                      <ArrowRight className="w-4 h-4" />
+                    </a>
                   </div>
                 );
               })}

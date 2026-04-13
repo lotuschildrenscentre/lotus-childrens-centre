@@ -48,19 +48,19 @@ export default function CTASection() {
 
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="#"
+              href="https://www.justgiving.com/charity/lotuschildren-centre"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-lotus-orange text-white font-semibold text-lg hover:bg-lotus-orange/90 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
-              onClick={(e) => { e.preventDefault(); }}
             >
               <Heart className="w-5 h-5" />
               {t("cta.donate")}
             </a>
             <a
-              href="#"
+              href="/get-involved"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-white font-semibold text-lg hover:bg-white/25 transition-all duration-300"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
-              onClick={(e) => { e.preventDefault(); }}
             >
               <Users className="w-5 h-5" />
               {t("cta.volunteer")}

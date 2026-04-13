@@ -127,7 +127,9 @@ export default function CausesSection() {
 
                   {/* Donate Button */}
                   <a
-                    href="#donate"
+                    href="https://www.justgiving.com/charity/lotuschildren-centre"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center px-5 py-2.5 rounded-full border-2 border-lotus-green text-lotus-green font-semibold text-sm hover:bg-lotus-green hover:text-white transition-all duration-300"
                     style={{ fontFamily: "'DM Sans', sans-serif" }}
                   >

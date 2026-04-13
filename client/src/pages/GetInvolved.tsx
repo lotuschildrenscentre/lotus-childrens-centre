@@ -8,7 +8,6 @@ import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Users, Zap, Heart, ArrowRight, Mail, Phone, MapPin } from "lucide-react";
-import { toast } from "sonner";
 
 const VOLUNTEER_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/volunteer-section-CAm5pkJEC6fgK8AV9MZukV.webp";
 const CTA_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/cta-bg-GJ9TxHXLq33nRpwT3icCsB.webp";
@@ -36,6 +35,8 @@ export default function GetInvolved() {
         "getInvolved.volunteerDetail2",
         "getInvolved.volunteerDetail3",
       ],
+      href: "/about",
+      external: false,
     },
     {
       icon: Zap,
@@ -52,6 +53,8 @@ export default function GetInvolved() {
         "getInvolved.fundraiseDetail2",
         "getInvolved.fundraiseDetail3",
       ],
+      href: "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83",
+      external: true,
     },
     {
       icon: Heart,
@@ -68,6 +71,8 @@ export default function GetInvolved() {
         "getInvolved.donateDetail2",
         "getInvolved.donateDetail3",
       ],
+      href: "https://www.justgiving.com/charity/lotuschildren-centre",
+      external: true,
     },
   ];
 
@@ -154,14 +159,16 @@ export default function GetInvolved() {
                       ))}
                     </ul>
 
-                    <button
+                    <a
+                      href={opp.href}
+                      target={opp.external ? "_blank" : undefined}
+                      rel={opp.external ? "noopener noreferrer" : undefined}
                       className={`w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full ${opp.color} text-white font-semibold text-sm ${opp.hoverColor} transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5`}
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
-                      onClick={() => toast("Feature coming soon!")}
                     >
                       {t(opp.ctaKey)}
                       <ArrowRight className="w-4 h-4" />
-                    </button>
+                    </a>
                   </div>
                 );
               })}

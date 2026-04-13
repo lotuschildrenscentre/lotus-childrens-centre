@@ -7,6 +7,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Users, Heart, HandHeart } from "lucide-react";
 
+const DONATE_URL = "https://www.justgiving.com/charity/lotuschildren-centre";
+const FUNDRAISE_URL = "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83";
+
 const cards = [
   {
     titleKey: "services.volunteer.title",
@@ -18,6 +21,8 @@ const cards = [
     ctaClass: "text-amber-900 border-amber-900/30 hover:bg-amber-900/10",
     iconBg: "bg-white/60",
     iconColor: "text-amber-700",
+    href: "/get-involved",
+    external: false,
   },
   {
     titleKey: "services.donation.title",
@@ -29,6 +34,8 @@ const cards = [
     ctaClass: "text-white border-white/40 hover:bg-white/15",
     iconBg: "bg-white/25",
     iconColor: "text-white",
+    href: DONATE_URL,
+    external: true,
   },
   {
     titleKey: "services.fundraise.title",
@@ -40,6 +47,8 @@ const cards = [
     ctaClass: "text-white border-white/40 hover:bg-white/15",
     iconBg: "bg-white/25",
     iconColor: "text-white",
+    href: FUNDRAISE_URL,
+    external: true,
   },
 ];
 
@@ -83,10 +92,11 @@ export default function ServiceCards() {
 
                 {/* CTA */}
                 <a
-                  href="#"
+                  href={card.href}
+                  target={card.external ? "_blank" : undefined}
+                  rel={card.external ? "noopener noreferrer" : undefined}
                   className={`inline-flex items-center px-5 py-2 rounded-full border ${card.ctaClass} font-semibold text-sm uppercase tracking-wider transition-all duration-200`}
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
-                  onClick={(e) => { e.preventDefault(); }}
                 >
                   {t(card.ctaKey)}
                 </a>

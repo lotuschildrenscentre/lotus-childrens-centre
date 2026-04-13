@@ -116,24 +116,15 @@ export default function Navbar() {
           </button>
 
           {/* Donate Button */}
-          <button
-            onClick={() => {
-              if (location !== "/") {
-                setLocation("/");
-                setTimeout(() => {
-                  const el = document.querySelector("#donate");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }, 300);
-              } else {
-                const el = document.querySelector("#donate");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
+          <a
+            href="https://www.justgiving.com/charity/lotuschildren-centre"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-full bg-lotus-green text-white text-sm font-semibold hover:bg-lotus-green-dark transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
             {t("nav.donate")}
-          </button>
+          </a>
 
           {/* Mobile Menu Toggle */}
           <button
@@ -163,25 +154,16 @@ export default function Navbar() {
                 {t(link.key)}
               </button>
             ))}
-            <button
-              onClick={() => {
-                setMobileOpen(false);
-                if (location !== "/") {
-                  setLocation("/");
-                  setTimeout(() => {
-                    const el = document.querySelector("#donate");
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                  }, 300);
-                } else {
-                  const el = document.querySelector("#donate");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
+            <a
+              href="https://www.justgiving.com/charity/lotuschildren-centre"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileOpen(false)}
               className="block w-full mx-4 mt-3 px-5 py-3 rounded-full bg-lotus-green text-white text-sm font-semibold text-center hover:bg-lotus-green-dark transition-colors"
               style={{ fontFamily: "'DM Sans', sans-serif", width: "calc(100% - 2rem)" }}
             >
               {t("nav.donate")}
-            </button>
+            </a>
           </div>
         </div>
       )}
