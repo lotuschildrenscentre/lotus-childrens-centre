@@ -101,3 +101,17 @@
 - [x] useCmsContent hook: serve MN content when language === "mn", fallback to EN
 - [x] All frontend components: pass current language to useCmsContent for MN serving (via useCmsContent hook)
 - [x] Write vitest tests for translation pipeline (11 new tests, 35 total)
+
+## Blog Post Management (News & Updates)
+
+- [x] Add blog_posts table to DB schema with EN + MN bilingual fields
+- [x] Push DB migration
+- [x] Add blog DB helpers: getBlogPosts, getBlogPostBySlug, getBlogPostById, createBlogPost, updateBlogPost, deleteBlogPost, generateSlug
+- [x] Add public tRPC procedures: blog.list, blog.getBySlug
+- [x] Add admin tRPC procedures: admin.blog.list, create, update, delete, togglePublish, uploadCoverImage
+- [x] Auto-translate EN fields to MN on create/update
+- [x] Build AdminBlogPosts page with list view, create/edit editor, publish toggle, delete
+- [x] Add "Blog Posts" sidebar item to admin layout
+- [x] Register /admin/blog route in App.tsx
+- [x] Rewrite Blog.tsx to load posts from DB; fall back to static posts when no DB posts are published
+- [x] Write vitest tests for blog procedures (19 tests, 54 total)

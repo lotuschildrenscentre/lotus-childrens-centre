@@ -9,6 +9,8 @@ import {
   InsertTestimonial,
   pageContent,
   InsertPageContent,
+  blogPosts,
+  InsertBlogPost,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -230,6 +232,64 @@ export async function getAllPageContent() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(pageContent).orderBy(asc(pageContent.pageKey), asc(pageContent.sectionKey));
+}
+
+// ─── Blog Post Helpers ─────────────────────────────────────
+
+/** Generate a URL-safe slug from a title string */
+export function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .substring(0, 200);
+}
+
+export async function getBlogPosts(publishedOnly = true) {
+  const db = await getDb();
+  if (!db) return [];
+  const query = db.select().from(blogPosts);
+  if (publishedOnly) {
+    return query.where(eq(blogPosts.isPublished, true)).orderBy(desc(blogPosts.publishedAt), desc(blogPosts.createdAt));
+  }
+  return query.orderBy(desc(blogPosts.createdAt));
+}
+
+export async function getBlogPostBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function getBlogPostById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function createBlogPost(data: InsertBlogPost) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(blogPosts).values(data);
+}
+
+export async function updateBlogPost(
+  id: number,
+  data: Partial<InsertBlogPost>
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(blogPosts).set(data).where(eq(blogPosts.id, id));
+}
+
+export async function deleteBlogPost(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(blogPosts).where(eq(blogPosts.id, id));
 }
 
 // ─── Dashboard Stats ────────────────────────────────────────

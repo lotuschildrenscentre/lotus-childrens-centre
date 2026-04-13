@@ -50,6 +50,18 @@ export const appRouter = router({
     }),
   }),
 
+  // ─── Public: Blog posts (News & Updates) ─────────────────────
+  blog: router({
+    list: publicProcedure.query(async () => {
+      return db.getBlogPosts(true);
+    }),
+    getBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        return db.getBlogPostBySlug(input.slug);
+      }),
+  }),
+
   // ─── Public: Get page content ───────────────────────────────
   content: router({
     getPage: publicProcedure
@@ -149,6 +161,172 @@ export const appRouter = router({
         .mutation(async ({ input }) => {
           await db.deleteTestimonial(input.id);
           return { success: true };
+        }),
+    }),
+
+    // Blog post management
+    blog: router({
+      list: adminProcedure.query(async () => {
+        return db.getBlogPosts(false);
+      }),
+
+      getById: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .query(async ({ input }) => {
+          return db.getBlogPostById(input.id);
+        }),
+
+      create: adminProcedure
+        .input(
+          z.object({
+            title: z.string().min(1),
+            summary: z.string().optional(),
+            content: z.string().min(1),
+            category: z.string().optional(),
+            author: z.string().optional(),
+            coverImageUrl: z.string().optional(),
+            isPublished: z.boolean().optional(),
+            // Optional MN overrides
+            titleMn: z.string().optional(),
+            summaryMn: z.string().optional(),
+            contentMn: z.string().optional(),
+            categoryMn: z.string().optional(),
+            skipAutoTranslate: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input, ctx }) => {
+          const { translateToMongolian } = await import("./translate");
+
+          let titleMn = input.titleMn;
+          let summaryMn = input.summaryMn;
+          let contentMn = input.contentMn;
+          let categoryMn = input.categoryMn;
+
+          if (!input.skipAutoTranslate) {
+            if (input.title && !titleMn) titleMn = await translateToMongolian(input.title);
+            if (input.summary && !summaryMn) summaryMn = await translateToMongolian(input.summary);
+            if (input.content && !contentMn) contentMn = await translateToMongolian(input.content);
+            if (input.category && !categoryMn) categoryMn = await translateToMongolian(input.category);
+          }
+
+          // Generate unique slug from title
+          const baseSlug = db.generateSlug(input.title);
+          const timestamp = Date.now();
+          const slug = `${baseSlug}-${timestamp}`;
+
+          await db.createBlogPost({
+            slug,
+            title: input.title,
+            summary: input.summary,
+            content: input.content,
+            category: input.category,
+            author: input.author,
+            coverImageUrl: input.coverImageUrl,
+            isPublished: input.isPublished ?? false,
+            publishedAt: input.isPublished ? new Date() : undefined,
+            titleMn,
+            summaryMn,
+            contentMn,
+            categoryMn,
+            createdBy: ctx.user.id,
+            updatedBy: ctx.user.id,
+          });
+          return { success: true };
+        }),
+
+      update: adminProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            title: z.string().min(1).optional(),
+            summary: z.string().optional(),
+            content: z.string().optional(),
+            category: z.string().optional(),
+            author: z.string().optional(),
+            coverImageUrl: z.string().optional(),
+            isPublished: z.boolean().optional(),
+            // Optional MN overrides
+            titleMn: z.string().optional(),
+            summaryMn: z.string().optional(),
+            contentMn: z.string().optional(),
+            categoryMn: z.string().optional(),
+            skipAutoTranslate: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input, ctx }) => {
+          const { translateToMongolian } = await import("./translate");
+          const { id, skipAutoTranslate, ...fields } = input;
+
+          const updateData: Record<string, unknown> = { ...fields, updatedBy: ctx.user.id };
+
+          // Auto-translate changed EN fields if MN not explicitly provided
+          if (!skipAutoTranslate) {
+            if (fields.title && fields.titleMn === undefined) {
+              updateData.titleMn = await translateToMongolian(fields.title);
+            }
+            if (fields.summary && fields.summaryMn === undefined) {
+              updateData.summaryMn = await translateToMongolian(fields.summary);
+            }
+            if (fields.content && fields.contentMn === undefined) {
+              updateData.contentMn = await translateToMongolian(fields.content);
+            }
+            if (fields.category && fields.categoryMn === undefined) {
+              updateData.categoryMn = await translateToMongolian(fields.category);
+            }
+          }
+
+          // Set publishedAt when publishing for the first time
+          if (fields.isPublished === true) {
+            const existing = await db.getBlogPostById(id);
+            if (existing && !existing.publishedAt) {
+              updateData.publishedAt = new Date();
+            }
+          }
+
+          await db.updateBlogPost(id, updateData);
+          return { success: true };
+        }),
+
+      delete: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          await db.deleteBlogPost(input.id);
+          return { success: true };
+        }),
+
+      togglePublish: adminProcedure
+        .input(z.object({ id: z.number(), isPublished: z.boolean() }))
+        .mutation(async ({ input, ctx }) => {
+          const updateData: Record<string, unknown> = {
+            isPublished: input.isPublished,
+            updatedBy: ctx.user.id,
+          };
+          if (input.isPublished) {
+            const existing = await db.getBlogPostById(input.id);
+            if (existing && !existing.publishedAt) {
+              updateData.publishedAt = new Date();
+            }
+          }
+          await db.updateBlogPost(input.id, updateData);
+          return { success: true };
+        }),
+
+      uploadCoverImage: adminProcedure
+        .input(
+          z.object({
+            base64: z.string(),
+            fileName: z.string(),
+            contentType: z.string(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { storagePut } = await import("./storage");
+          const buffer = Buffer.from(input.base64, "base64");
+          const timestamp = Date.now();
+          const randomSuffix = Math.random().toString(36).substring(2, 8);
+          const key = `blog-covers/${timestamp}-${randomSuffix}-${input.fileName}`;
+          const { url } = await storagePut(key, buffer, input.contentType);
+          return { url };
         }),
     }),
 

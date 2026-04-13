@@ -96,3 +96,42 @@ export const pageContent = mysqlTable("page_content", {
 
 export type PageContent = typeof pageContent.$inferSelect;
 export type InsertPageContent = typeof pageContent.$inferInsert;
+
+/**
+ * Blog posts for the News & Updates page.
+ * Supports bilingual content (EN + MN auto-translated).
+ * Slug is a URL-friendly identifier derived from the title.
+ */
+export const blogPosts = mysqlTable("blog_posts", {
+  id: int("id").autoincrement().primaryKey(),
+
+  // URL-friendly slug (e.g. "lotus-bakery-project")
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+
+  // English (admin-entered)
+  title: varchar("title", { length: 512 }).notNull(),
+  summary: text("summary"),
+  content: text("content").notNull(),
+  category: varchar("category", { length: 128 }),
+  author: varchar("author", { length: 255 }),
+  coverImageUrl: text("coverImageUrl"),
+
+  // Mongolian (auto-translated + admin-editable)
+  titleMn: varchar("titleMn", { length: 512 }),
+  summaryMn: text("summaryMn"),
+  contentMn: text("contentMn"),
+  categoryMn: varchar("categoryMn", { length: 128 }),
+
+  // Publishing
+  isPublished: boolean("isPublished").default(false).notNull(),
+  publishedAt: timestamp("publishedAt"),
+
+  // Metadata
+  createdBy: int("createdBy"),
+  updatedBy: int("updatedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BlogPost = typeof blogPosts.$inferSelect;
+export type InsertBlogPost = typeof blogPosts.$inferInsert;

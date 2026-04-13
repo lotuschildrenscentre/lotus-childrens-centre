@@ -28,6 +28,7 @@ import {
   MessageSquare,
   Users,
   FileEdit,
+  Newspaper,
   LogOut,
   PanelLeft,
   ArrowLeft,
@@ -42,6 +43,7 @@ const menuItems = [
   { icon: FileText, label: "Applications", path: "/admin/submissions" },
   { icon: MessageSquare, label: "Testimonials", path: "/admin/testimonials" },
   { icon: FileEdit, label: "Page Content", path: "/admin/content" },
+  { icon: Newspaper, label: "Blog Posts", path: "/admin/blog" },
   { icon: Users, label: "Users", path: "/admin/users" },
 ];
 
