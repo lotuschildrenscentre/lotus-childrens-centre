@@ -204,15 +204,22 @@ export async function upsertPageContent(data: InsertPageContent) {
     .limit(1);
 
   if (existing.length > 0) {
+    const updateSet: Record<string, unknown> = {
+      title: data.title,
+      content: data.content,
+      imageUrl: data.imageUrl,
+      metadata: data.metadata,
+      updatedBy: data.updatedBy,
+    };
+
+    // Only update MN fields if explicitly provided
+    if (data.titleMn !== undefined) updateSet.titleMn = data.titleMn;
+    if (data.contentMn !== undefined) updateSet.contentMn = data.contentMn;
+    if (data.metadataMn !== undefined) updateSet.metadataMn = data.metadataMn;
+
     await db
       .update(pageContent)
-      .set({
-        title: data.title,
-        content: data.content,
-        imageUrl: data.imageUrl,
-        metadata: data.metadata,
-        updatedBy: data.updatedBy,
-      })
+      .set(updateSet)
       .where(eq(pageContent.id, existing[0].id));
   } else {
     await db.insert(pageContent).values(data);

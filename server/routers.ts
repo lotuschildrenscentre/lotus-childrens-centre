@@ -157,6 +157,12 @@ export const appRouter = router({
       list: adminProcedure.query(async () => {
         return db.getAllPageContent();
       }),
+
+      /**
+       * Upsert content with optional MN overrides.
+       * If titleMn/contentMn/metadataMn are not provided, the server will
+       * auto-translate the EN fields and store the result.
+       */
       upsert: adminProcedure
         .input(
           z.object({
@@ -166,15 +172,90 @@ export const appRouter = router({
             content: z.string().optional(),
             imageUrl: z.string().optional(),
             metadata: z.any().optional(),
+            // Optional MN overrides (from admin manual edit)
+            titleMn: z.string().optional(),
+            contentMn: z.string().optional(),
+            metadataMn: z.any().optional(),
+            // If true, skip auto-translation (admin manually set MN values)
+            skipAutoTranslate: z.boolean().optional(),
           })
         )
         .mutation(async ({ input, ctx }) => {
+          const { translateToMongolian, translateMetadata } = await import("./translate");
+
+          let titleMn = input.titleMn;
+          let contentMn = input.contentMn;
+          let metadataMn = input.metadataMn;
+
+          // Auto-translate EN fields if MN not explicitly provided
+          if (!input.skipAutoTranslate) {
+            if (input.title && titleMn === undefined) {
+              titleMn = await translateToMongolian(input.title);
+            }
+            if (input.content && contentMn === undefined) {
+              contentMn = await translateToMongolian(input.content);
+            }
+            if (input.metadata && metadataMn === undefined) {
+              metadataMn = await translateMetadata(input.metadata as Record<string, unknown>);
+            }
+          }
+
           await db.upsertPageContent({
-            ...input,
+            pageKey: input.pageKey,
+            sectionKey: input.sectionKey,
+            title: input.title,
+            content: input.content,
+            imageUrl: input.imageUrl,
+            metadata: input.metadata,
+            titleMn,
+            contentMn,
+            metadataMn,
             updatedBy: ctx.user.id,
           });
           return { success: true };
         }),
+
+      /**
+       * Re-translate a specific section from EN to MN.
+       * Called when admin clicks "Re-translate" button.
+       */
+      retranslate: adminProcedure
+        .input(
+          z.object({
+            pageKey: z.string().min(1),
+            sectionKey: z.string().min(1),
+          })
+        )
+        .mutation(async ({ input, ctx }) => {
+          const { translateToMongolian, translateMetadata } = await import("./translate");
+
+          // Get current EN content
+          const rows = await db.getPageContent(input.pageKey);
+          const row = rows.find((r) => r.sectionKey === input.sectionKey);
+          if (!row) throw new Error("Section not found");
+
+          const titleMn = row.title ? await translateToMongolian(row.title) : undefined;
+          const contentMn = row.content ? await translateToMongolian(row.content) : undefined;
+          const metadataMn = row.metadata
+            ? await translateMetadata(row.metadata as Record<string, unknown>)
+            : undefined;
+
+          await db.upsertPageContent({
+            pageKey: input.pageKey,
+            sectionKey: input.sectionKey,
+            title: row.title ?? undefined,
+            content: row.content ?? undefined,
+            imageUrl: row.imageUrl ?? undefined,
+            metadata: row.metadata ?? undefined,
+            titleMn,
+            contentMn,
+            metadataMn,
+            updatedBy: ctx.user.id,
+          });
+
+          return { titleMn, contentMn, metadataMn };
+        }),
+
       // Upload image for content sections
       uploadImage: adminProcedure
         .input(
