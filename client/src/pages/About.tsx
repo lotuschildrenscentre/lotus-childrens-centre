@@ -1,3 +1,4 @@
+// About Page
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * About Page: Hero banner, Who We Are, History, Meet the Team, Aims & Beliefs
@@ -257,28 +258,28 @@ export default function About() {
                     className="text-sm font-semibold uppercase tracking-widest text-lotus-orange"
                     style={{ fontFamily: "'DM Sans', sans-serif" }}
                   >
-                    {t("about.subtitle") || "Who We Are"}
+                    {cms.get("whoWeAre", "title", t("about.subtitle") || "Who We Are")}
                   </span>
                 </div>
                 <h2
                   className="text-3xl lg:text-4xl font-bold text-foreground mb-6 leading-tight"
                   style={{ fontFamily: "'Playfair Display', serif" }}
                 >
-                  {t("about.title") || "We Help Vulnerable Children Get a Better Life"}
+                  {cms.get("whoWeAre", "content", t("about.title") || "We Help Vulnerable Children Get a Better Life")}
                 </h2>
                 <p
                   className="text-lg text-muted-foreground mb-6 leading-relaxed"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {t("about.description") ||
-                    "The Lotus Children's Centre is an official Mongolian non-governmental organisation (NGO) that currently acts as a home for around 75 vulnerable and abused Mongolian children and also takes part in community out-reach projects."}
+                  {cms.get("whoWeAre", "meta.paragraph1", t("about.description") ||
+                    "The Lotus Children's Centre is an official Mongolian non-governmental organisation (NGO) that currently acts as a home for around 75 vulnerable and abused Mongolian children and also takes part in community out-reach projects.")}
                 </p>
                 <p
                   className="text-lg text-muted-foreground leading-relaxed"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {t("about.locationDesc") ||
-                    "Located in Gachuurt in the suburbs of Ulaanbaatar, it is not only a home but also a centre for development for abandoned and vulnerable children."}
+                  {cms.get("whoWeAre", "meta.paragraph2", t("about.locationDesc") ||
+                    "Located in Gachuurt in the suburbs of Ulaanbaatar, it is not only a home but also a centre for development for abandoned and vulnerable children.")}
                 </p>
               </div>
               <div
@@ -287,7 +288,7 @@ export default function About() {
                 }`}
               >
                 <img
-                  src={cms.get("mission", "imageUrl", "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-hero-banner-bsoBSJVmoGQXo4iEasaaKa.webp")}
+                  src={cms.get("whoWeAre", "imageUrl", "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-hero-banner-bsoBSJVmoGQXo4iEasaaKa.webp")}
                   alt="Children at Lotus"
                   className="rounded-3xl shadow-lg w-full"
                 />
@@ -302,50 +303,44 @@ export default function About() {
             <div className="text-center mb-14">
               <div className="inline-flex items-center gap-2 mb-4">
                 <Lightbulb className="w-5 h-5 text-lotus-green" />
-                <span
-                  className="text-sm font-semibold uppercase tracking-widest text-lotus-green"
+              <span
+                    className="text-sm font-semibold uppercase tracking-widest text-lotus-green"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    {cms.get("aims", "title", t("about.aimsSubtitle") || "Our Values")}
+                  </span>
+                </div>
+              <h2
+                  className="text-3xl lg:text-4xl font-bold text-foreground mb-6"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  {cms.get("aims", "content", t("about.aimsTitle") || "Aims and Beliefs")}
+                </h2>
+              <p
+                  className="text-lg text-muted-foreground max-w-3xl mx-auto"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {t("about.aimsSubtitle") || "Our Values"}
-                </span>
-              </div>
-              <h2
-                className="text-3xl lg:text-4xl font-bold text-foreground mb-6"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
-                {t("about.aimsTitle") || "Aims and Beliefs"}
-              </h2>
-              <p
-                className="text-lg text-muted-foreground max-w-3xl mx-auto"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
-              >
-                {t("about.aimsIntro") ||
-                  "Whilst Lotus is not a religious organisation, many of the beliefs of the founder help the children to overcome their backgrounds through loving care and belief in their potential."}
-              </p>
+                  {cms.get("aims", "meta.intro", t("about.aimsIntro") ||
+                    "Whilst Lotus is not a religious organisation, many of the beliefs of the founder help the children to overcome their backgrounds through loving care and belief in their potential.")}
+                </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
+                {[
                 {
                   icon: Heart,
-                  title: t("about.aim1Title") || "Primary Care",
-                  desc:
-                    t("about.aim1Desc") ||
-                    "Provide food, healthcare, clothing and suitable accommodation",
+                  title: cms.get("aims", "meta.aim1Title", t("about.aim1Title") || "Primary Care"),
+                  desc: cms.get("aims", "meta.aim1Desc", t("about.aim1Desc") || "Provide food, healthcare, clothing and suitable accommodation"),
                 },
                 {
                   icon: Users,
-                  title: t("about.aim2Title") || "Development",
-                  desc:
-                    t("about.aim2Desc") ||
-                    "Quality education, counselling, and life skills for breaking poverty cycles",
+                  title: cms.get("aims", "meta.aim2Title", t("about.aim2Title") || "Development"),
+                  desc: cms.get("aims", "meta.aim2Desc", t("about.aim2Desc") || "Quality education, counselling, and life skills for breaking poverty cycles"),
                 },
                 {
                   icon: Lightbulb,
-                  title: t("about.aim3Title") || "Family Support",
-                  desc:
-                    t("about.aim3Desc") ||
-                    "Love, attention, and family group support for every child",
+                  title: cms.get("aims", "meta.aim3Title", t("about.aim3Title") || "Family Support"),
+                  desc: cms.get("aims", "meta.aim3Desc", t("about.aim3Desc") || "Love, attention, and family group support for every child"),
                 },
               ].map((aim, idx) => {
                 const Icon = aim.icon;
@@ -430,19 +425,23 @@ export default function About() {
                     className="text-3xl font-bold text-foreground mb-4"
                     style={{ fontFamily: "'Playfair Display', serif" }}
                   >
-                    {t("about.historyTitle") || "Our Journey"}
+                    {cms.get("historyTimeline", "title", t("about.historyTitle") || "Our Journey")}
                   </h3>
                   <p
                     className="text-lg text-muted-foreground max-w-2xl mx-auto"
                     style={{ fontFamily: "'DM Sans', sans-serif" }}
                   >
-                    {t("about.historyDesc") ||
-                      "Over two decades of dedicated service to vulnerable children in Mongolia"}
+                    {cms.get("historyTimeline", "content", t("about.historyDesc") ||
+                      "Over two decades of dedicated service to vulnerable children in Mongolia")}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {historyTimeline.map((item, idx) => (
+                  {[
+                    { year: cms.get("historyTimeline", "meta.entry1Year", historyTimeline[0].year), title: cms.get("historyTimeline", "meta.entry1Title", historyTimeline[0].title), description: cms.get("historyTimeline", "meta.entry1Desc", historyTimeline[0].description) },
+                    { year: cms.get("historyTimeline", "meta.entry2Year", historyTimeline[1].year), title: cms.get("historyTimeline", "meta.entry2Title", historyTimeline[1].title), description: cms.get("historyTimeline", "meta.entry2Desc", historyTimeline[1].description) },
+                    { year: cms.get("historyTimeline", "meta.entry3Year", historyTimeline[2].year), title: cms.get("historyTimeline", "meta.entry3Title", historyTimeline[2].title), description: cms.get("historyTimeline", "meta.entry3Desc", historyTimeline[2].description) },
+                  ].map((item, idx) => (
                     <div
                       key={idx}
                       className={`bg-white rounded-2xl p-8 border-l-4 border-lotus-orange shadow-md transition-all duration-700 ${
@@ -471,7 +470,7 @@ export default function About() {
 
                 <div className="mt-12 rounded-2xl overflow-hidden shadow-lg">
                   <img
-                    src="https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-history-section-Ndg4AeFggy2uhFzztj4uss.webp"
+                    src={cms.get("historyTimeline", "imageUrl", "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-history-section-Ndg4AeFggy2uhFzztj4uss.webp")}
                     alt="Lotus history timeline"
                     className="w-full h-auto"
                   />
@@ -489,19 +488,24 @@ export default function About() {
                     className="text-3xl font-bold text-foreground mb-4"
                     style={{ fontFamily: "'Playfair Display', serif" }}
                   >
-                    {t("about.teamTitle") || "Meet Our Dedicated Team"}
+                    {cms.get("staff", "title", t("about.teamTitle") || "Meet Our Dedicated Team")}
                   </h3>
                   <p
                     className="text-lg text-muted-foreground max-w-2xl mx-auto"
                     style={{ fontFamily: "'DM Sans', sans-serif" }}
                   >
-                    {t("about.teamDesc") ||
-                      "Compassionate professionals committed to changing children's lives"}
+                    {cms.get("staff", "content", t("about.teamDesc") ||
+                      "Compassionate professionals committed to changing children's lives")}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                  {dailyStaff.map((member, idx) => (
+                  {dailyStaff.map((member, idx) => {
+                    const n = idx + 1;
+                    const cmsName = cms.get("staff", `meta.staff${n}Name`, member.name);
+                    const cmsRole = cms.get("staff", `meta.staff${n}Role`, member.role);
+                    const initials = cmsName.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
+                    return (
                     <div
                       key={idx}
                       className={`bg-white rounded-2xl p-6 shadow-md border border-border/50 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-500 ${
@@ -517,28 +521,29 @@ export default function About() {
                           className="text-white text-xl font-bold"
                           style={{ fontFamily: "'Playfair Display', serif" }}
                         >
-                          {member.initials}
+                          {initials}
                         </span>
                       </div>
                       <h4
                         className="text-base font-bold text-foreground mb-1 leading-tight"
                         style={{ fontFamily: "'Playfair Display', serif" }}
                       >
-                        {member.name}
+                        {cmsName}
                       </h4>
                       <p
                         className="text-sm text-lotus-green font-semibold"
                         style={{ fontFamily: "'DM Sans', sans-serif" }}
                       >
-                        {member.role}
+                        {cmsRole}
                       </p>
                     </div>
-                  ))}
+                  );
+                  })}
                 </div>
 
                 <div className="mt-12 rounded-2xl overflow-hidden shadow-lg">
                   <img
-                    src="https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-team-section-kuWXNUuypJ6Gq8ZC8wTW2K.webp"
+                    src={cms.get("staff", "imageUrl", "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-team-section-kuWXNUuypJ6Gq8ZC8wTW2K.webp")}
                     alt="Lotus team with children"
                     className="w-full h-auto"
                   />
@@ -559,7 +564,7 @@ export default function About() {
                         className="text-3xl font-bold text-foreground mb-4"
                         style={{ fontFamily: "'Playfair Display', serif" }}
                       >
-                        Volunteering at Lotus
+                        {cms.get("volunteers", "title", "Volunteering at Lotus")}
                       </h3>
                     </div>
 
@@ -568,13 +573,7 @@ export default function About() {
                         className="text-lg text-muted-foreground leading-relaxed mb-8"
                         style={{ fontFamily: "'DM Sans', sans-serif" }}
                       >
-                        At Lotus we employ a small team of local staff, therefore there are many ways
-                        in which volunteers can help us throughout the year. The greatest need for
-                        volunteers is in the summer months June-August as this is when the children
-                        are on holiday from school. Our volunteers help out with a range of things
-                        from organising activities and events for the children, to teaching
-                        extra-curricular classes such as sports or languages, to helping with cooking,
-                        maintenance, administration and fundraising.
+                        {cms.get("volunteers", "content", "At Lotus we employ a small team of local staff, therefore there are many ways in which volunteers can help us throughout the year. The greatest need for volunteers is in the summer months June-August as this is when the children are on holiday from school. Our volunteers help out with a range of things from organising activities and events for the children, to teaching extra-curricular classes such as sports or languages, to helping with cooking, maintenance, administration and fundraising.")}
                       </p>
 
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -603,13 +602,13 @@ export default function About() {
                         className="text-sm font-semibold uppercase tracking-widest text-lotus-purple"
                         style={{ fontFamily: "'DM Sans', sans-serif" }}
                       >
-                        Testimonials
+                        {cms.get("volunteers", "meta.testimonialsLabel", "Testimonials")}
                       </span>
                       <h4
                         className="text-2xl font-bold text-foreground mt-2"
                         style={{ fontFamily: "'Playfair Display', serif" }}
                       >
-                        Stories from our volunteers
+                        {cms.get("volunteers", "meta.testimonialsTitle", "Stories from our volunteers")}
                       </h4>
                     </div>
 
@@ -767,7 +766,7 @@ export default function About() {
                         className="text-3xl font-bold text-foreground"
                         style={{ fontFamily: "'Playfair Display', serif" }}
                       >
-                        Common Questions
+                        {cms.get("faq", "title", "Common Questions")}
                       </h3>
                       <button
                         onClick={() => setVolunteerView("main")}
@@ -778,7 +777,11 @@ export default function About() {
                     </div>
 
                     <div className="space-y-4">
-                      {faqData.map((faq, idx) => (
+                      {faqData.map((faq, idx) => {
+                        const n = idx + 1;
+                        const q = cms.get("faq", `meta.faq${n}Q`, faq.q);
+                        const a = cms.get("faq", `meta.faq${n}A`, faq.a);
+                        return (
                         <div
                           key={idx}
                           className="bg-white rounded-2xl shadow-md border border-border/50 overflow-hidden transition-all duration-300"
@@ -791,7 +794,7 @@ export default function About() {
                               className="text-base font-semibold text-foreground pr-4"
                               style={{ fontFamily: "'DM Sans', sans-serif" }}
                             >
-                              {faq.q}
+                              {q}
                             </span>
                             <ChevronDown
                               className={`w-5 h-5 text-lotus-purple flex-shrink-0 transition-transform duration-300 ${
@@ -809,12 +812,13 @@ export default function About() {
                                 className="text-muted-foreground leading-relaxed"
                                 style={{ fontFamily: "'DM Sans', sans-serif" }}
                               >
-                                {faq.a}
+                                {a}
                               </p>
                             </div>
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     <div className="text-center mt-8">
@@ -822,8 +826,7 @@ export default function About() {
                         className="text-muted-foreground mb-4"
                         style={{ fontFamily: "'DM Sans', sans-serif" }}
                       >
-                        Is your question not on the F.A.Q. list? Don't hesitate to just send us a
-                        message!
+                        {cms.get("faq", "content", "Is your question not on the F.A.Q. list? Don't hesitate to just send us a message!")}
                       </p>
                       <Button
                         onClick={() => setVolunteerView("main")}
@@ -854,14 +857,14 @@ export default function About() {
                 className="text-3xl lg:text-4xl font-bold text-foreground mb-4"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                {t("about.ctaTitle") || "Join Us in Making a Difference"}
+                {cms.get("cta", "title", t("about.ctaTitle") || "Join Us in Making a Difference")}
               </h2>
               <p
                 className="text-lg text-muted-foreground max-w-2xl mx-auto"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
-                {t("about.ctaDesc") ||
-                  "There are many ways to support Lotus Children's Centre and help vulnerable children"}
+                {cms.get("cta", "content", t("about.ctaDesc") ||
+                  "There are many ways to support Lotus Children's Centre and help vulnerable children")}
               </p>
             </div>
 
@@ -869,41 +872,35 @@ export default function About() {
               {[
                 {
                   icon: Users,
-                  title: t("services.volunteer.title") || "Volunteer",
-                  desc:
-                    t("services.volunteer.desc") ||
-                    "On-site or from further away, volunteers are always welcome at Lotus.",
+                  title: cms.get("cta", "meta.volunteerTitle", t("services.volunteer.title") || "Volunteer"),
+                  desc: cms.get("cta", "meta.volunteerDesc", t("services.volunteer.desc") || "On-site or from further away, volunteers are always welcome at Lotus."),
                   color: "text-lotus-yellow",
                   bgColor: "bg-lotus-yellow/10",
                   buttonColor: "bg-lotus-yellow hover:bg-lotus-yellow/90",
-                  cta: t("services.volunteer.cta") || "Register Now",
+                  cta: cms.get("cta", "meta.volunteerCta", t("services.volunteer.cta") || "Register Now"),
                   href: "/about?tab=volunteers&view=form",
                   external: false,
                 },
                 {
                   icon: Heart,
-                  title: t("services.donation.title") || "Donation",
-                  desc:
-                    t("services.donation.desc") ||
-                    "Through money or objects, donations help with the running of Lotus.",
+                  title: cms.get("cta", "meta.donateTitle", t("services.donation.title") || "Donation"),
+                  desc: cms.get("cta", "meta.donateDesc", t("services.donation.desc") || "Through money or objects, donations help with the running of Lotus."),
                   color: "text-lotus-orange",
                   bgColor: "bg-lotus-orange/10",
                   buttonColor: "bg-lotus-orange hover:bg-lotus-orange/90",
-                  cta: t("services.donation.cta") || "Donate Now",
-                  href: "https://www.justgiving.com/charity/lotuschildren-centre",
+                  cta: cms.get("cta", "meta.donateCta", t("services.donation.cta") || "Donate Now"),
+                  href: cms.get("cta", "meta.donateLink", "https://www.justgiving.com/charity/lotuschildren-centre"),
                   external: true,
                 },
                 {
                   icon: Lightbulb,
-                  title: t("services.fundraise.title") || "Fundraise",
-                  desc:
-                    t("services.fundraise.desc") ||
-                    "Take a look at the different events organised for Lotus Children's Centre.",
+                  title: cms.get("cta", "meta.fundraiseTitle", t("services.fundraise.title") || "Fundraise"),
+                  desc: cms.get("cta", "meta.fundraiseDesc", t("services.fundraise.desc") || "Take a look at the different events organised for Lotus Children's Centre."),
                   color: "text-lotus-purple",
                   bgColor: "bg-lotus-purple/10",
                   buttonColor: "bg-lotus-purple hover:bg-lotus-purple/90",
-                  cta: t("services.fundraise.cta") || "Read More",
-                  href: "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83",
+                  cta: cms.get("cta", "meta.fundraiseCta", t("services.fundraise.cta") || "Read More"),
+                  href: cms.get("cta", "meta.fundraiseLink", "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83"),
                   external: true,
                 },
               ].map((item, idx) => {

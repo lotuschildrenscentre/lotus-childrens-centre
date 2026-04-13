@@ -72,3 +72,15 @@
 - [x] Wire ContactSection.tsx fully to CMS
 - [x] Wire Footer.tsx to CMS
 - [x] Test all changes (24 tests pass)
+
+## About Page CMS Expansion
+- [ ] Audit full About page content structure
+- [ ] Add Hero section (title, subtitle, background image)
+- [ ] Add Mission section (heading, description, image)
+- [ ] Add History timeline (3 entries: year, title, description)
+- [ ] Add Staff list (names, roles)
+- [ ] Add Aims & Beliefs section (heading, 3 belief cards with title/description)
+- [ ] Add Volunteer section (heading, description, image, fee info)
+- [ ] Add FAQ items (questions and answers)
+- [ ] Add CTA cards (Volunteer, Donate, Fundraise - titles, descriptions, button text, links)
+- [ ] Wire About page to load all content from CMS with fallback to defaults
