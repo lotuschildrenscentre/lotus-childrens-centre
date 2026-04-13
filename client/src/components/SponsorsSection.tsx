@@ -2,6 +2,7 @@
  * Design: "Warm Embrace" — Organic Warmth
  * Sponsors: Horizontal auto-scrolling logo marquee
  * CMS-enabled: section title, partner names and logos editable from admin
+ * Supports unlimited dynamic partners stored in metadata as JSON array
  */
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCmsContent } from "@/hooks/useCmsContent";
@@ -52,20 +53,54 @@ export default function SponsorsSection() {
   const cms = useCmsContent("home");
   const { ref, isVisible } = useScrollAnimation(0.1);
 
-  // Build sponsors list from CMS with fallback to defaults
+  // Build sponsors list from CMS.
+  // New format: metadata.partnersJson = JSON array of {name, logo}
+  // Legacy format: metadata.partner1Name / partner1Logo ... partner10Name / partner10Logo
   const sponsors: { name: string; logo: string }[] = [];
-  for (let i = 1; i <= 10; i++) {
-    const cmsName = cms.get("sponsors", `meta.partner${i}Name`, "");
-    const cmsLogo = cms.get("sponsors", `meta.partner${i}Logo`, "");
-    if (cmsName && cmsLogo) {
-      sponsors.push({ name: cmsName, logo: cmsLogo });
+
+  // Try new JSON array format first
+  const partnersJson = cms.get("sponsors", "meta.partnersJson", "");
+  if (partnersJson) {
+    try {
+      const parsed = JSON.parse(partnersJson) as { name: string; logo: string }[];
+      if (Array.isArray(parsed)) {
+        for (const p of parsed) {
+          if (p.name && p.logo) {
+            sponsors.push({ name: p.name, logo: p.logo });
+          }
+        }
+      }
+    } catch {
+      // fall through to legacy format
     }
   }
-  // If no CMS sponsors, use defaults
-  const displaySponsors = sponsors.length > 0 ? sponsors : defaultSponsors;
 
-  // Duplicate the sponsors array for seamless infinite scroll
-  const duplicatedSponsors = [...displaySponsors, ...displaySponsors];
+  // Legacy format: partner1Name/partner1Logo ... partner10Name/partner10Logo
+  if (sponsors.length === 0) {
+    for (let i = 1; i <= 10; i++) {
+      const cmsName = cms.get("sponsors", `meta.partner${i}Name`, "");
+      const cmsLogo = cms.get("sponsors", `meta.partner${i}Logo`, "");
+      if (cmsName && cmsLogo) {
+        sponsors.push({ name: cmsName, logo: cmsLogo });
+      }
+    }
+  }
+
+  // Only use CMS sponsors if they have proper CDN/HTTP URLs (not base64 data URIs)
+  const validCmsSponsors = sponsors.filter(
+    (s) => s.name && s.logo && s.logo.startsWith("http")
+  );
+
+  // If no valid CMS sponsors, fall back to defaults
+  const displaySponsors = validCmsSponsors.length > 0 ? validCmsSponsors : defaultSponsors;
+
+  // Duplicate the sponsors array for seamless infinite scroll.
+  // Need at least enough items to fill the viewport — duplicate multiple times if few items.
+  const minItems = 8;
+  let duplicatedSponsors = [...displaySponsors, ...displaySponsors];
+  while (duplicatedSponsors.length < minItems * 2) {
+    duplicatedSponsors = [...duplicatedSponsors, ...displaySponsors];
+  }
 
   return (
     <section className="py-20 lg:py-28 bg-background overflow-hidden" ref={ref}>

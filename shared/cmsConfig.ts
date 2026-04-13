@@ -18,6 +18,7 @@ export interface CmsSection {
   sectionKey: string;
   label: string;
   description: string;
+  type?: string; // optional: "dynamic-partners" for special rendering
   fields: CmsField[];
 }
 
@@ -100,30 +101,13 @@ export const CMS_PAGES: CmsPage[] = [
       {
         sectionKey: "sponsors",
         label: "Our Partners Section",
-        description: "The partners/sponsors marquee section. Edit section title and up to 10 partner logos.",
+        description: "The partners/sponsors marquee section. Edit section title and manage partner logos dynamically.",
+        type: "dynamic-partners",
         fields: [
           { key: "subtitle", label: "Section Subtitle", type: "text", storageKey: "title", placeholder: "e.g. Our Partners" },
           { key: "heading", label: "Section Heading", type: "text", storageKey: "content", placeholder: "e.g. Supported By Amazing Partners" },
-          { key: "partner1Name", label: "Partner 1 — Name", type: "text", storageKey: "metadata.partner1Name", placeholder: "e.g. Ulaanbaatar Elite International School" },
-          { key: "partner1Logo", label: "Partner 1 — Logo", type: "image", storageKey: "metadata.partner1Logo" },
-          { key: "partner2Name", label: "Partner 2 — Name", type: "text", storageKey: "metadata.partner2Name", placeholder: "e.g. Hobby School" },
-          { key: "partner2Logo", label: "Partner 2 — Logo", type: "image", storageKey: "metadata.partner2Logo" },
-          { key: "partner3Name", label: "Partner 3 — Name", type: "text", storageKey: "metadata.partner3Name", placeholder: "e.g. The English School of Mongolia" },
-          { key: "partner3Logo", label: "Partner 3 — Logo", type: "image", storageKey: "metadata.partner3Logo" },
-          { key: "partner4Name", label: "Partner 4 — Name", type: "text", storageKey: "metadata.partner4Name", placeholder: "e.g. Gulf for Good" },
-          { key: "partner4Logo", label: "Partner 4 — Logo", type: "image", storageKey: "metadata.partner4Logo" },
-          { key: "partner5Name", label: "Partner 5 — Name", type: "text", storageKey: "metadata.partner5Name", placeholder: "e.g. Holiday Inn Ulaanbaatar" },
-          { key: "partner5Logo", label: "Partner 5 — Logo", type: "image", storageKey: "metadata.partner5Logo" },
-          { key: "partner6Name", label: "Partner 6 — Name", type: "text", storageKey: "metadata.partner6Name", placeholder: "e.g. Алтан Тариа" },
-          { key: "partner6Logo", label: "Partner 6 — Logo", type: "image", storageKey: "metadata.partner6Logo" },
-          { key: "partner7Name", label: "Partner 7 — Name", type: "text", storageKey: "metadata.partner7Name", placeholder: "e.g. IVCO Joint Venture Company" },
-          { key: "partner7Logo", label: "Partner 7 — Logo", type: "image", storageKey: "metadata.partner7Logo" },
-          { key: "partner8Name", label: "Partner 8 — Name", type: "text", storageKey: "metadata.partner8Name", placeholder: "e.g. AMURT" },
-          { key: "partner8Logo", label: "Partner 8 — Logo", type: "image", storageKey: "metadata.partner8Logo" },
-          { key: "partner9Name", label: "Partner 9 — Name", type: "text", storageKey: "metadata.partner9Name", placeholder: "e.g. Misheel Kids Foundation" },
-          { key: "partner9Logo", label: "Partner 9 — Logo", type: "image", storageKey: "metadata.partner9Logo" },
-          { key: "partner10Name", label: "Partner 10 — Name", type: "text", storageKey: "metadata.partner10Name", placeholder: "Leave empty if not needed" },
-          { key: "partner10Logo", label: "Partner 10 — Logo", type: "image", storageKey: "metadata.partner10Logo" },
+          // partnersJson is managed by the dynamic partner editor in AdminContent
+          { key: "partnersJson", label: "Partners (JSON)", type: "text", storageKey: "metadata.partnersJson", placeholder: "[]" },
         ],
       },
       // ─── CTA Section ───
