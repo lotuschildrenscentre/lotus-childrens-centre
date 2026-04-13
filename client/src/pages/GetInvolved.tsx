@@ -33,7 +33,7 @@ export default function GetInvolved() {
         "getInvolved.volunteerDetail2",
         "getInvolved.volunteerDetail3",
       ],
-      href: "/about",
+      href: "/about?tab=volunteers&view=form",
       external: false,
     },
     {

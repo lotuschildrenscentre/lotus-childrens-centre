@@ -58,7 +58,7 @@ export default function CTASection() {
               {t("cta.donate")}
             </a>
             <a
-              href="/get-involved"
+              href="/about?tab=volunteers&view=form"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-white font-semibold text-lg hover:bg-white/25 transition-all duration-300"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >

@@ -24,3 +24,4 @@
 
 ## UI Changes
 - [x] Remove "Ready to Make a Difference" section from Get Involved page
+- [x] Connect all Volunteer buttons to the existing volunteer application form

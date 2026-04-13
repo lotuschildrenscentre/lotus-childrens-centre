@@ -21,7 +21,7 @@ const cards = [
     ctaClass: "text-amber-900 border-amber-900/30 hover:bg-amber-900/10",
     iconBg: "bg-white/60",
     iconColor: "text-amber-700",
-    href: "/get-involved",
+    href: "/about?tab=volunteers&view=form",
     external: false,
   },
   {

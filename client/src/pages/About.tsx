@@ -3,7 +3,7 @@
  * About Page: Hero banner, Who We Are, History, Meet the Team, Aims & Beliefs
  * Ends with Volunteer/Donation/Fundraise CTAs
  */
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -151,6 +151,26 @@ export default function About() {
   /* Volunteers sub-view state */
   const [volunteerView, setVolunteerView] = useState<"main" | "form" | "faq">("main");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const teamSectionRef = useRef<HTMLDivElement>(null);
+
+  /* Auto-open volunteer form if URL has ?tab=volunteers&view=form */
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
+    const view = params.get("view");
+    if (tab === "volunteers") {
+      setActiveTab("volunteers");
+      if (view === "form") {
+        setVolunteerView("form");
+      } else if (view === "faq") {
+        setVolunteerView("faq");
+      }
+      // Scroll to the team section after a short delay
+      setTimeout(() => {
+        teamSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    }
+  }, []);
 
   const duplicatedSponsors = [...sponsors, ...sponsors];
 
@@ -325,7 +345,7 @@ export default function About() {
         </section>
 
         {/* History & Team Tabs Section */}
-        <section ref={historyRef} className="py-20 lg:py-28 bg-background">
+        <section ref={(el: HTMLDivElement | null) => { (historyRef as React.MutableRefObject<HTMLDivElement | null>).current = el; teamSectionRef.current = el; }} className="py-20 lg:py-28 bg-background">
           <div className="container">
             {/* Tab Navigation */}
             <div className="flex flex-wrap gap-3 sm:gap-4 mb-14 justify-center">
@@ -892,7 +912,7 @@ export default function About() {
                   bgColor: "bg-lotus-yellow/10",
                   buttonColor: "bg-lotus-yellow hover:bg-lotus-yellow/90",
                   cta: t("services.volunteer.cta") || "Register Now",
-                  href: "/get-involved",
+                  href: "/about?tab=volunteers&view=form",
                   external: false,
                 },
                 {
