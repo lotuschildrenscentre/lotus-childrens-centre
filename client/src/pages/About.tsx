@@ -151,7 +151,7 @@ export default function About() {
   const { ref: historyRef, isVisible: historyVisible } = useScrollAnimation(0.1);
   // teamVisible is always true since tab content renders conditionally
   const teamVisible = true;
-  const [activeTab, setActiveTab] = useState<"history" | "staff" | "volunteers" | "sponsors">("history");
+  const [activeTab, setActiveTab] = useState<"history" | "staff" | "volunteers">("history");
 
   /* Volunteers sub-view state */
   const [volunteerView, setVolunteerView] = useState<"main" | "form" | "faq">("main");
@@ -417,17 +417,7 @@ export default function About() {
               >
                 {t("about.volunteersTab") || "Volunteers"}
               </button>
-              <button
-                onClick={() => setActiveTab("sponsors")}
-                className={`px-6 sm:px-8 py-3 rounded-full font-semibold transition-all duration-300 text-sm sm:text-base ${
-                  activeTab === "sponsors"
-                    ? "bg-lotus-orange text-white shadow-lg"
-                    : "bg-lotus-cream text-foreground hover:bg-lotus-cream/80"
-                }`}
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
-              >
-                {t("about.sponsorsTab") || "Sponsors"}
-              </button>
+
             </div>
 
             {/* ═══════════════════════════════════════════════ */}
@@ -852,65 +842,7 @@ export default function About() {
             {/* ═══════════════════════════════════════════════ */}
             {/* Sponsors Tab Content — UPDATED (same as front page) */}
             {/* ═══════════════════════════════════════════════ */}
-            {activeTab === "sponsors" && (
-              <div className="space-y-10">
-                <div className="text-center mb-8">
-                  <h3
-                    className="text-3xl font-bold text-foreground mb-4"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
-                  >
-                    {t("sponsors.title") || "Our Sponsors Help Us Care for the Children"}
-                  </h3>
-                  <p
-                    className="text-lg text-muted-foreground max-w-2xl mx-auto"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
-                  >
-                    {t("about.sponsorsDesc") ||
-                      "Priceless help from organizations that believe in our mission"}
-                  </p>
-                </div>
 
-                {/* Auto-scrolling sponsor logos — same as front page */}
-                <div className="relative overflow-hidden">
-                  {/* Gradient fade edges */}
-                  <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-                  <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-
-                  {/* Scrolling track */}
-                  <div className="flex animate-marquee-about hover:[animation-play-state:paused]">
-                    {duplicatedSponsors.map((sponsor, index) => (
-                      <div key={`${sponsor.name}-${index}`} className="flex-shrink-0 mx-6 sm:mx-10">
-                        <div className="w-36 h-36 sm:w-44 sm:h-44 bg-white rounded-2xl shadow-md border border-border/50 flex items-center justify-center p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 group">
-                          <img
-                            src={sponsor.logo}
-                            alt={sponsor.name}
-                            className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
-                            loading="lazy"
-                          />
-                        </div>
-                        <p
-                          className="text-xs text-muted-foreground text-center mt-3 max-w-36 sm:max-w-44 mx-auto leading-tight"
-                          style={{ fontFamily: "'DM Sans', sans-serif" }}
-                        >
-                          {sponsor.name}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Inline keyframes for marquee animation */}
-                <style>{`
-                  @keyframes marqueeAbout {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-50%); }
-                  }
-                  .animate-marquee-about {
-                    animation: marqueeAbout 35s linear infinite;
-                  }
-                `}</style>
-              </div>
-            )}
           </div>
         </section>
 
