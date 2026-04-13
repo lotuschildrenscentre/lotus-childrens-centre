@@ -65,30 +65,17 @@ export type InsertTestimonial = typeof testimonials.$inferInsert;
 /**
  * Page content management — structured content for each page section.
  * Each row = one content block identified by pageKey + sectionKey.
- *
- * Bilingual support:
- *   - title / content / metadata  → English (admin-entered)
- *   - titleMn / contentMn / metadataMn → Mongolian (auto-translated + admin-editable)
- *
- * Translation is triggered automatically when admin saves English content.
- * Admin can review and manually correct the Mongolian translation in the panel.
+ * Supports text fields (title, content) and an optional image URL.
+ * The metadata JSON field stores extra structured data per section.
  */
 export const pageContent = mysqlTable("page_content", {
   id: int("id").autoincrement().primaryKey(),
   pageKey: varchar("pageKey", { length: 64 }).notNull(),
   sectionKey: varchar("sectionKey", { length: 128 }).notNull(),
-
-  // English (source) fields
   title: text("title"),
   content: text("content"),
   imageUrl: text("imageUrl"),
   metadata: json("metadata"),
-
-  // Mongolian (translated) fields
-  titleMn: text("titleMn"),
-  contentMn: text("contentMn"),
-  metadataMn: json("metadataMn"),
-
   updatedBy: int("updatedBy"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
