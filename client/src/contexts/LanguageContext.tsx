@@ -186,6 +186,23 @@ const translations: Translations = {
   "getInvolved.visitUs": { en: "Gachuurt, UB", mn: "Гачуурт, УБ" },
   "getInvolved.contactBtn": { en: "Contact Us Today", mn: "Өнөөдөр бидэнтэй холбогдоорой" },
 
+  // Auth
+  "auth.login": { en: "Login", mn: "Нэвтрэх" },
+  "auth.signup": { en: "Sign Up", mn: "Бүртгүүлэх" },
+  "auth.logout": { en: "Logout", mn: "Гарах" },
+  "auth.loginTitle": { en: "Welcome Back", mn: "Тавтай морил" },
+  "auth.loginSubtitle": { en: "Sign in to your Lotus Children's Centre account", mn: "Лотус хүүхдийн төвийн бүртгэлдээ нэвтрэх" },
+  "auth.signupTitle": { en: "Join Our Community", mn: "Манай нийгэмлэгт нэгдэх" },
+  "auth.signupSubtitle": { en: "Create an account to stay connected with Lotus Children's Centre", mn: "Лотус хүүхдийн төвтэй холбоотой байхын тулд бүртгэл үүсгэх" },
+  "auth.loginWithManus": { en: "Continue with Manus", mn: "Manus-аар нэвтрэх" },
+  "auth.loginDesc": { en: "Sign in securely using your Manus account. Your information is always protected.", mn: "Manus бүртгэлээ ашиглан аюулгүй нэвтрэх. Таны мэдээлэл үргэлж хамгаалагдсан." },
+  "auth.noAccount": { en: "Don't have an account?", mn: "Бүртгэл байхгүй юу?" },
+  "auth.haveAccount": { en: "Already have an account?", mn: "Бүртгэлтэй юу?" },
+  "auth.backToHome": { en: "Back to Home", mn: "Нүүр хуудас руу буцах" },
+  "auth.staffLogin": { en: "Staff Login", mn: "Ажилтны нэвтрэлт" },
+  "auth.myAccount": { en: "My Account", mn: "Миний бүртгэл" },
+  "auth.welcome": { en: "Welcome", mn: "Тавтай морил" },
+
   // Footer
   "footer.rights": { en: "All rights reserved.", mn: "Бүх эрх хуулиар хамгаалагдсан." },
   "footer.description": {

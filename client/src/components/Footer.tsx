@@ -1,21 +1,30 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
- * Footer: Dark background with logo, links, social, and copyright
+ * Footer: Dark background with logo, links, social, copyright, and staff login
  */
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Heart, Facebook, Twitter, Mail } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { useLocation } from "wouter";
+import { Heart, Facebook, Twitter, Mail, LogIn, LogOut, User } from "lucide-react";
 
 const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/lotus-logo_b560f626.png";
 
 export default function Footer() {
   const { t } = useLanguage();
+  const { user, isAuthenticated, logout } = useAuth();
+  const [, setLocation] = useLocation();
 
   const quickLinks = [
-    { key: "nav.home", href: "#home" },
-    { key: "nav.about", href: "#about" },
+    { key: "nav.home", href: "/" },
+    { key: "nav.about", href: "/about" },
     { key: "nav.getInvolved", href: "/get-involved" },
-    { key: "nav.contact", href: "#contact" },
+    { key: "nav.contact", href: "/#contact" },
   ];
+
+  const handleLogout = async () => {
+    await logout();
+    setLocation("/");
+  };
 
   return (
     <footer className="bg-lotus-dark text-white/80">
@@ -92,7 +101,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact Info + Auth */}
           <div>
             <h4 className="text-white font-semibold mb-5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               {t("nav.contact")}
@@ -105,6 +114,37 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
+
+            {/* Auth Section */}
+            <div className="mt-6 pt-6 border-t border-white/10">
+              {isAuthenticated && user ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm text-white/70">
+                    <User className="w-4 h-4 text-lotus-green" />
+                    <span style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      {user.name || user.email || t("auth.myAccount")}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 text-sm text-white/50 hover:text-lotus-orange transition-colors duration-200"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    {t("auth.logout")}
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setLocation("/login")}
+                  className="flex items-center gap-2 text-sm text-white/60 hover:text-lotus-green transition-colors duration-200"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  <LogIn className="w-4 h-4" />
+                  {t("auth.staffLogin")}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
