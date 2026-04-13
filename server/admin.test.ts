@@ -153,6 +153,66 @@ describe("public procedures - testimonials", () => {
   });
 });
 
+describe("public procedures - CMS content", () => {
+  it("allows unauthenticated users to get page content", async () => {
+    const { ctx } = createUnauthenticatedContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.content.getPage({ pageKey: "home" });
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("returns empty array for non-existent page", async () => {
+    const { ctx } = createUnauthenticatedContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.content.getPage({ pageKey: "nonexistent" });
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(0);
+  });
+});
+
+describe("admin procedures - CMS content access control", () => {
+  it("denies unauthenticated users access to admin.content.upsert", async () => {
+    const { ctx } = createUnauthenticatedContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.admin.content.upsert({
+        pageKey: "home",
+        sectionKey: "hero",
+        title: "Test",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("denies regular users access to admin.content.upsert", async () => {
+    const { ctx } = createRegularUserContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.admin.content.upsert({
+        pageKey: "home",
+        sectionKey: "hero",
+        title: "Test",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("denies regular users access to admin.content.uploadImage", async () => {
+    const { ctx } = createRegularUserContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(
+      caller.admin.content.uploadImage({
+        base64: "dGVzdA==",
+        fileName: "test.png",
+        contentType: "image/png",
+      })
+    ).rejects.toThrow();
+  });
+});
+
 describe("admin procedures - input validation", () => {
   it("validates admin.users.updateRole requires valid role", async () => {
     const { ctx } = createAdminContext();

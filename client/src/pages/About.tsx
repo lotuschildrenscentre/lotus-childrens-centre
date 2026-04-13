@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import {
@@ -144,6 +145,7 @@ const historyTimeline = [
 
 export default function About() {
   const { t } = useLanguage();
+  const cms = useCmsContent("about");
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation(0.1);
   const { ref: aimsRef, isVisible: aimsVisible } = useScrollAnimation(0.1);
   const { ref: historyRef, isVisible: historyVisible } = useScrollAnimation(0.1);
@@ -215,7 +217,7 @@ export default function About() {
           className="relative h-96 lg:h-[500px] overflow-hidden bg-gradient-to-b from-lotus-cream to-background"
         >
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-hero-banner-bsoBSJVmoGQXo4iEasaaKa.webp"
+            src={cms.get("hero", "imageUrl", "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-hero-banner-bsoBSJVmoGQXo4iEasaaKa.webp")}
             alt="Lotus Children's Centre"
             className={`w-full h-full object-cover transition-all duration-700 ${
               heroVisible ? "scale-100 opacity-100" : "scale-105 opacity-75"
@@ -228,14 +230,13 @@ export default function About() {
                 className="text-4xl lg:text-6xl font-bold mb-4"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                {t("about.pageTitle") || "Our Story"}
+                {cms.get("hero", "title", t("about.pageTitle") || "Our Story")}
               </h1>
               <p
                 className="text-lg lg:text-xl max-w-2xl mx-auto px-4"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
-                {t("about.pageSubtitle") ||
-                  "Building a loving home for vulnerable children since the early 2000s"}
+                {cms.get("hero", "content", t("about.pageSubtitle") || "Building a loving home for vulnerable children since the early 2000s")}
               </p>
             </div>
           </div>
@@ -286,7 +287,7 @@ export default function About() {
                 }`}
               >
                 <img
-                  src="https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-hero-banner-bsoBSJVmoGQXo4iEasaaKa.webp"
+                  src={cms.get("mission", "imageUrl", "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-hero-banner-bsoBSJVmoGQXo4iEasaaKa.webp")}
                   alt="Children at Lotus"
                   className="rounded-3xl shadow-lg w-full"
                 />

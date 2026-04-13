@@ -1,21 +1,25 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
- * Get Involved Page: Hero + 3 opportunity cards + why section + contact CTA
- * Colors: Green, orange, purple cards matching the service cards on home
+ * Get Involved Page: Hero + 3 opportunity cards + why section
+ * CMS-enabled: hero title/description, why section title/description/image editable from admin
  */
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Users, Zap, Heart, ArrowRight } from "lucide-react";
 
-const VOLUNTEER_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/volunteer-section-CAm5pkJEC6fgK8AV9MZukV.webp";
+const DEFAULT_VOLUNTEER_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/volunteer-section-CAm5pkJEC6fgK8AV9MZukV.webp";
 
 export default function GetInvolved() {
   const { t } = useLanguage();
+  const cms = useCmsContent("get-involved");
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation(0.1);
   const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation(0.1);
   const { ref: detailRef, isVisible: detailVisible } = useScrollAnimation(0.1);
+
+  const volunteerImg = cms.get("why-involved", "imageUrl", DEFAULT_VOLUNTEER_IMG);
 
   const opportunities = [
     {
@@ -94,14 +98,14 @@ export default function GetInvolved() {
                 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-lotus-dark leading-tight mb-6"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                {t("getInvolved.heroTitle")}
+                {cms.get("hero", "title", t("getInvolved.heroTitle"))}
               </h1>
 
               <p
                 className="text-lg sm:text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
-                {t("getInvolved.heroDesc")}
+                {cms.get("hero", "content", t("getInvolved.heroDesc"))}
               </p>
             </div>
           </div>
@@ -182,7 +186,7 @@ export default function GetInvolved() {
               <div className="relative">
                 <div className="rounded-2xl overflow-hidden shadow-2xl">
                   <img
-                    src={VOLUNTEER_IMG}
+                    src={volunteerImg}
                     alt="Volunteers at Lotus Children's Centre"
                     className="w-full h-[400px] lg:h-[500px] object-cover"
                   />
@@ -210,7 +214,7 @@ export default function GetInvolved() {
                   className="text-sm font-semibold uppercase tracking-widest text-lotus-green mb-4 block"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {t("getInvolved.whyTitle")}
+                  {cms.get("why-involved", "title", t("getInvolved.whyTitle"))}
                 </span>
 
                 <h2
@@ -224,7 +228,7 @@ export default function GetInvolved() {
                   className="text-foreground/70 leading-relaxed mb-6"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {t("getInvolved.whyDesc1")}
+                  {cms.get("why-involved", "content", t("getInvolved.whyDesc1"))}
                 </p>
 
                 <p

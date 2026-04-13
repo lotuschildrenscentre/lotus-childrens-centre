@@ -1,16 +1,18 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * Contact: Form section with contact info sidebar
- * Light background, green accents
+ * CMS-enabled: contact details (email, phone, address) editable from admin
  */
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { Flower2, Mail, MapPin, Phone, Send, AlertTriangle, Package } from "lucide-react";
+import { Flower2, Mail, MapPin, Phone, Send, Package } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ContactSection() {
   const { t, language } = useLanguage();
+  const cms = useCmsContent("contact");
   const { ref, isVisible } = useScrollAnimation(0.1);
   const [formData, setFormData] = useState({
     name: "",
@@ -24,6 +26,12 @@ export default function ContactSection() {
     toast.success("Thank you for your message! We'll get back to you soon.");
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
+
+  // CMS-driven contact details with defaults
+  const contactEmail = cms.get("info", "meta.email", "lotuschildrenscentre@gmail.com");
+  const contactPhone1 = cms.get("info", "meta.phone1", "Didi Ananda Kalika: (+976) 99132100");
+  const contactPhone2 = cms.get("info", "meta.phone2", "Bolormaa: (+976) 99789750");
+  const contactAddress = cms.get("info", "content", "PO Box 1018\nCentral Post Office\nUlaanbaatar\nMongolia");
 
   return (
     <section id="contact" className="py-20 lg:py-28 bg-lotus-cream" ref={ref}>
@@ -40,7 +48,7 @@ export default function ContactSection() {
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-            {t("contact.title")}
+            {cms.get("info", "title", t("contact.title"))}
           </h2>
         </div>
 
@@ -57,11 +65,8 @@ export default function ContactSection() {
                   <h4 className="font-semibold text-foreground mb-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {language === "mn" ? "Шуудангийн хаяг" : "Postal Address"}
                   </h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    PO Box 1018<br />
-                    Central Post Office<br />
-                    Ulaanbaatar<br />
-                    Mongolia
+                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {contactAddress}
                   </p>
                 </div>
               </div>
@@ -76,11 +81,11 @@ export default function ContactSection() {
                     Email
                   </h4>
                   <a
-                    href="mailto:lotuschildrenscentre@gmail.com"
+                    href={`mailto:${contactEmail}`}
                     className="text-sm text-lotus-green hover:underline"
                     style={{ fontFamily: "'DM Sans', sans-serif" }}
                   >
-                    lotuschildrenscentre@gmail.com
+                    {contactEmail}
                   </a>
                 </div>
               </div>
@@ -103,7 +108,7 @@ export default function ContactSection() {
                         {language === "mn" ? "Захирал (Англи хэл)" : "Director (English)"}
                       </p>
                       <a href="tel:+97699132100" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        (+976) 99132100
+                        {contactPhone1.includes(":") ? contactPhone1.split(":")[1]?.trim() : "(+976) 99132100"}
                       </a>
                     </div>
                     <div>
@@ -114,7 +119,7 @@ export default function ContactSection() {
                         {language === "mn" ? "Төвийн менежер (Монгол, Англи хэл)" : "Centre Manager (Mongolian and English)"}
                       </p>
                       <a href="tel:+97699789750" className="text-sm text-lotus-green hover:underline" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        (+976) 99789750
+                        {contactPhone2.includes(":") ? contactPhone2.split(":")[1]?.trim() : "(+976) 99789750"}
                       </a>
                     </div>
                     <div>

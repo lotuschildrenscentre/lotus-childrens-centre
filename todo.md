@@ -41,3 +41,15 @@
 - [x] Frontend: Display testimonials from DB on About page volunteers section
 - [x] Write vitest tests for admin procedures
 - [x] Ensure admin panel link is clearly visible in footer and links to /admin
+
+## Content Management System (CMS) Rebuild
+- [x] Audit all pages to map editable text fields and images per section
+- [x] Redesign DB schema for section-based content with image support
+- [x] Build admin content editor UI with page selector and section forms
+- [x] Add image upload support (S3) for admin content editing
+- [x] Update Home page to load content from DB with defaults (Hero, About, Impact, CTA, Contact)
+- [x] Update About page to load content from DB with defaults (Hero, Mission image)
+- [x] Update Get Involved page to load content from DB with defaults (Hero, Why section)
+- [x] Update Contact section to load content from DB with defaults
+- [x] Update Blog page to load content from DB with defaults (Hero)
+- [x] Test full CMS flow and write vitest tests (24 tests pass)

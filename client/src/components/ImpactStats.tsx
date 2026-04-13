@@ -1,13 +1,14 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * Impact Stats: 3 columns with animated counters, icons, and descriptions
- * Warm cream background with lotus-colored accents
+ * CMS-enabled: stat values and labels editable from admin
  */
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import { useScrollAnimation, useCountUp } from "@/hooks/useScrollAnimation";
 import { Home, Calendar, Sparkles } from "lucide-react";
 
-const stats = [
+const defaultStats = [
   {
     labelKey: "stats.children.label",
     descKey: "stats.children.desc",
@@ -16,6 +17,8 @@ const stats = [
     suffix: "+",
     color: "text-lotus-green",
     bgColor: "bg-lotus-green/10",
+    cmsValueKey: "stat1Value",
+    cmsLabelKey: "stat1Label",
   },
   {
     labelKey: "stats.years.label",
@@ -25,6 +28,8 @@ const stats = [
     suffix: "+",
     color: "text-lotus-orange",
     bgColor: "bg-lotus-orange/10",
+    cmsValueKey: "stat2Value",
+    cmsLabelKey: "stat2Label",
   },
   {
     labelKey: "stats.impact.label",
@@ -34,6 +39,8 @@ const stats = [
     suffix: "+",
     color: "text-lotus-purple",
     bgColor: "bg-lotus-purple/10",
+    cmsValueKey: "stat3Value",
+    cmsLabelKey: "stat3Label",
   },
 ];
 
@@ -41,13 +48,17 @@ function StatCard({
   stat,
   index,
   isVisible,
+  cmsCountTo,
+  cmsLabel,
 }: {
-  stat: (typeof stats)[0];
+  stat: (typeof defaultStats)[0];
   index: number;
   isVisible: boolean;
+  cmsCountTo: number;
+  cmsLabel: string;
 }) {
   const { t } = useLanguage();
-  const count = useCountUp(stat.countTo, 2500, isVisible);
+  const count = useCountUp(cmsCountTo, 2500, isVisible);
   const Icon = stat.icon;
 
   return (
@@ -80,7 +91,7 @@ function StatCard({
         className="text-sm font-semibold uppercase tracking-wider text-foreground/70"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        {t(stat.labelKey)}
+        {cmsLabel || t(stat.labelKey)}
       </p>
     </div>
   );
@@ -88,19 +99,28 @@ function StatCard({
 
 export default function ImpactStats() {
   const { ref, isVisible } = useScrollAnimation(0.1);
+  const cms = useCmsContent("home");
 
   return (
     <section className="py-20 lg:py-28 bg-lotus-cream" ref={ref}>
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
-          {stats.map((stat, index) => (
-            <StatCard
-              key={stat.labelKey}
-              stat={stat}
-              index={index}
-              isVisible={isVisible}
-            />
-          ))}
+          {defaultStats.map((stat, index) => {
+            const cmsValue = cms.get("impact", `meta.${stat.cmsValueKey}`, "");
+            const cmsLabel = cms.get("impact", `meta.${stat.cmsLabelKey}`, "");
+            const countTo = cmsValue ? parseInt(cmsValue, 10) || stat.countTo : stat.countTo;
+
+            return (
+              <StatCard
+                key={stat.labelKey}
+                stat={stat}
+                index={index}
+                isVisible={isVisible}
+                cmsCountTo={countTo}
+                cmsLabel={cmsLabel}
+              />
+            );
+          })}
         </div>
       </div>
     </section>

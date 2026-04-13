@@ -152,7 +152,7 @@ export const appRouter = router({
         }),
     }),
 
-    // Page content management
+    // Page content management — section-based editing with image support
     content: router({
       list: adminProcedure.query(async () => {
         return db.getAllPageContent();
@@ -164,6 +164,7 @@ export const appRouter = router({
             sectionKey: z.string().min(1),
             title: z.string().optional(),
             content: z.string().optional(),
+            imageUrl: z.string().optional(),
             metadata: z.any().optional(),
           })
         )
@@ -173,6 +174,24 @@ export const appRouter = router({
             updatedBy: ctx.user.id,
           });
           return { success: true };
+        }),
+      // Upload image for content sections
+      uploadImage: adminProcedure
+        .input(
+          z.object({
+            base64: z.string(),
+            fileName: z.string(),
+            contentType: z.string(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { storagePut } = await import("./storage");
+          const buffer = Buffer.from(input.base64, "base64");
+          const timestamp = Date.now();
+          const randomSuffix = Math.random().toString(36).substring(2, 8);
+          const key = `cms-images/${timestamp}-${randomSuffix}-${input.fileName}`;
+          const { url } = await storagePut(key, buffer, input.contentType);
+          return { url };
         }),
     }),
   }),

@@ -5,6 +5,7 @@
  */
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { X, Calendar, Clock, User, ChevronRight } from "lucide-react";
@@ -179,6 +180,7 @@ const blogImages: Record<string, string> = {
 
 export default function Blog() {
   const { language, t } = useLanguage();
+  const cms = useCmsContent("blog");
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
@@ -217,7 +219,7 @@ export default function Blog() {
       <section className="relative pt-20 lg:pt-24">
         <div className="relative h-[280px] lg:h-[360px] overflow-hidden">
           <img
-            src={HERO_BG}
+            src={cms.get("hero", "imageUrl", HERO_BG)}
             alt="News & Updates"
             className="w-full h-full object-cover"
           />
@@ -234,13 +236,13 @@ export default function Blog() {
                 className="text-3xl lg:text-5xl font-bold text-white mb-4 max-w-xl"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                {t("blog.title")}
+                {cms.get("hero", "title", t("blog.title"))}
               </h1>
               <p
                 className="text-white/80 text-base lg:text-lg max-w-lg"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
-                {t("blog.description")}
+                {cms.get("hero", "content", t("blog.description"))}
               </p>
             </div>
           </div>

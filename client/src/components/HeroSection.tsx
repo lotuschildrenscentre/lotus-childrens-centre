@@ -2,21 +2,26 @@
  * Design: "Warm Embrace" — Organic Warmth
  * Hero: Full-width hero with warm background image, overlay, heading, and CTA
  * Dark background image -> white/light text
+ * CMS-enabled: background image, subtitle, title, description editable from admin
  */
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import { Heart } from "lucide-react";
 
-const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/hero-bg-VoVTJLkkPAnrB6FadEp2TK.webp";
+const DEFAULT_HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/hero-bg-VoVTJLkkPAnrB6FadEp2TK.webp";
 
 export default function HeroSection() {
   const { t } = useLanguage();
+  const cms = useCmsContent("home");
+
+  const heroBg = cms.get("hero", "imageUrl", DEFAULT_HERO_BG);
 
   return (
     <section id="home" className="relative min-h-[90vh] flex items-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src={HERO_BG}
+          src={heroBg}
           alt="Mongolian children reading together"
           className="w-full h-full object-cover"
         />
@@ -31,13 +36,13 @@ export default function HeroSection() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <Heart className="w-4 h-4 text-lotus-orange" fill="currentColor" />
             <span className="text-sm font-medium text-white/90" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              {t("hero.subtitle")}
+              {cms.get("hero", "title", t("hero.subtitle"))}
             </span>
           </div>
 
           {/* Main Heading */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight mb-6 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-150">
-            {t("hero.title")}
+            {cms.get("hero", "content", t("hero.title"))}
           </h1>
 
           {/* Description */}
@@ -45,7 +50,7 @@ export default function HeroSection() {
             className="text-lg sm:text-xl text-white/85 leading-relaxed mb-10 max-w-xl animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
-            {t("hero.description")}
+            {cms.get("hero", "meta.description", t("hero.description"))}
           </p>
 
           {/* CTA Buttons */}

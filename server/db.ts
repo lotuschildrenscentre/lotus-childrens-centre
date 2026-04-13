@@ -209,6 +209,7 @@ export async function upsertPageContent(data: InsertPageContent) {
       .set({
         title: data.title,
         content: data.content,
+        imageUrl: data.imageUrl,
         metadata: data.metadata,
         updatedBy: data.updatedBy,
       })

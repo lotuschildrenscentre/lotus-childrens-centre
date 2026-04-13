@@ -20,7 +20,6 @@ export type InsertUser = typeof users.$inferInsert;
 
 /**
  * Volunteer application submissions.
- * Stores all form fields as a JSON blob for flexibility.
  */
 export const volunteerSubmissions = mysqlTable("volunteer_submissions", {
   id: int("id").autoincrement().primaryKey(),
@@ -64,8 +63,10 @@ export type Testimonial = typeof testimonials.$inferSelect;
 export type InsertTestimonial = typeof testimonials.$inferInsert;
 
 /**
- * Page content management — key-value store for editable page sections.
- * Each row represents a content block identified by pageKey + sectionKey.
+ * Page content management — structured content for each page section.
+ * Each row = one content block identified by pageKey + sectionKey.
+ * Supports text fields (title, content) and an optional image URL.
+ * The metadata JSON field stores extra structured data per section.
  */
 export const pageContent = mysqlTable("page_content", {
   id: int("id").autoincrement().primaryKey(),
@@ -73,6 +74,7 @@ export const pageContent = mysqlTable("page_content", {
   sectionKey: varchar("sectionKey", { length: 128 }).notNull(),
   title: text("title"),
   content: text("content"),
+  imageUrl: text("imageUrl"),
   metadata: json("metadata"),
   updatedBy: int("updatedBy"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

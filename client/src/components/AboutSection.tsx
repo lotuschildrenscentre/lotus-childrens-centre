@@ -1,17 +1,21 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * About: Split layout with image (left) and text (right)
- * Includes stat overlay on image and bullet points with lotus-colored dots
+ * CMS-enabled: subtitle, heading, description, image, stat overlay editable from admin
  */
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { CheckCircle, Flower2 } from "lucide-react";
 
-const ABOUT_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-section-4aLVCU3JgHnUwUPHwF3mg6.webp";
+const DEFAULT_ABOUT_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/about-section-4aLVCU3JgHnUwUPHwF3mg6.webp";
 
 export default function AboutSection() {
   const { t } = useLanguage();
+  const cms = useCmsContent("home");
   const { ref, isVisible } = useScrollAnimation(0.1);
+
+  const aboutImg = cms.get("about", "imageUrl", DEFAULT_ABOUT_IMG);
 
   const points = [
     "about.point1",
@@ -30,11 +34,11 @@ export default function AboutSection() {
               className="text-sm font-semibold uppercase tracking-widest text-lotus-orange"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
-              {t("about.subtitle")}
+              {cms.get("about", "title", t("about.subtitle"))}
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight max-w-3xl mx-auto">
-            {t("about.title")}
+            {cms.get("about", "content", t("about.title"))}
           </h2>
         </div>
 
@@ -44,14 +48,14 @@ export default function AboutSection() {
           <div className={`relative transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}>
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <img
-                src={ABOUT_IMG}
+                src={aboutImg}
                 alt="Children playing outdoors in Mongolia"
                 className="w-full h-auto object-cover aspect-[4/3]"
               />
               {/* Stat overlay */}
               <div className="absolute bottom-6 left-6 bg-lotus-green text-white px-6 py-4 rounded-2xl shadow-lg">
                 <p className="text-sm font-medium opacity-90" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                  {t("about.stat")}
+                  {cms.get("about", "meta.stat", t("about.stat"))}
                 </p>
               </div>
             </div>
@@ -66,7 +70,7 @@ export default function AboutSection() {
               className="text-lg text-muted-foreground leading-relaxed mb-8"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
-              {t("about.description")}
+              {cms.get("about", "meta.description", t("about.description"))}
             </p>
 
             {/* Points */}

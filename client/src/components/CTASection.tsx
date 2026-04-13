@@ -1,24 +1,28 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * CTA: Full-width section with background image, overlay, and call-to-action
- * Dark background image -> white text
+ * CMS-enabled: background image, subtitle, heading, description editable from admin
  */
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCmsContent } from "@/hooks/useCmsContent";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Heart, Users } from "lucide-react";
 
-const CTA_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/cta-bg-GJ9TxHXLq33nRpwT3icCsB.webp";
+const DEFAULT_CTA_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/cta-bg-GJ9TxHXLq33nRpwT3icCsB.webp";
 
 export default function CTASection() {
   const { t } = useLanguage();
+  const cms = useCmsContent("home");
   const { ref, isVisible } = useScrollAnimation(0.1);
+
+  const ctaBg = cms.get("cta", "imageUrl", DEFAULT_CTA_BG);
 
   return (
     <section id="donate" className="relative py-24 lg:py-32 overflow-hidden" ref={ref}>
       {/* Background */}
       <div className="absolute inset-0">
         <img
-          src={CTA_BG}
+          src={ctaBg}
           alt="Mongolian countryside"
           className="w-full h-full object-cover"
         />
@@ -32,18 +36,18 @@ export default function CTASection() {
             className="text-sm font-semibold uppercase tracking-widest text-lotus-orange mb-4 block"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
-            {t("cta.subtitle")}
+            {cms.get("cta", "title", t("cta.subtitle"))}
           </span>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
-            {t("cta.title")}
+            {cms.get("cta", "content", t("cta.title"))}
           </h2>
 
           <p
             className="text-lg text-white/80 leading-relaxed mb-10 max-w-2xl mx-auto"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
-            {t("cta.description")}
+            {cms.get("cta", "meta.description", t("cta.description"))}
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
