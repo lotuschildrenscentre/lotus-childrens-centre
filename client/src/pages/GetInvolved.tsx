@@ -1,7 +1,7 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * Get Involved Page: Hero + 3 opportunity cards + why section
- * CMS-enabled: hero title/description, why section title/description/image editable from admin
+ * CMS-enabled: all sections fully editable from admin panel
  */
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -19,61 +19,85 @@ export default function GetInvolved() {
   const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation(0.1);
   const { ref: detailRef, isVisible: detailVisible } = useScrollAnimation(0.1);
 
+  // ─── Why Section ───
   const volunteerImg = cms.get("why-involved", "imageUrl", DEFAULT_VOLUNTEER_IMG);
+  const whySectionLabel = cms.get("why-involved", "title", t("getInvolved.whyTitle"));
+  const whyHeading = cms.get("why-involved", "meta.heading", t("getInvolved.whyHeading"));
+  const whyParagraph1 = cms.get("why-involved", "content", t("getInvolved.whyDesc1"));
+  const whyParagraph2 = cms.get("why-involved", "meta.paragraph2", t("getInvolved.whyDesc2"));
+  const badgeCount = cms.get("why-involved", "meta.badgeCount", "75+");
+  const badgeLabel = cms.get("why-involved", "meta.badgeLabel", t("getInvolved.childrenHelped"));
 
+  // ─── Quick Stats ───
+  const stats = [
+    {
+      number: cms.get("gi-stats", "meta.stat1Number", "75+"),
+      label: cms.get("gi-stats", "meta.stat1Label", t("getInvolved.statChildren")),
+    },
+    {
+      number: cms.get("gi-stats", "meta.stat2Number", "20+"),
+      label: cms.get("gi-stats", "meta.stat2Label", t("getInvolved.statYears")),
+    },
+    {
+      number: cms.get("gi-stats", "meta.stat3Number", "500+"),
+      label: cms.get("gi-stats", "meta.stat3Label", t("getInvolved.statLives")),
+    },
+  ];
+
+  // ─── Opportunity Cards ───
   const opportunities = [
     {
       icon: Users,
-      titleKey: "getInvolved.volunteerTitle",
-      descKey: "getInvolved.volunteerDesc",
-      ctaKey: "getInvolved.volunteerCta",
+      title: cms.get("card-volunteer", "title", t("getInvolved.volunteerTitle")),
+      desc: cms.get("card-volunteer", "content", t("getInvolved.volunteerDesc")),
+      cta: cms.get("card-volunteer", "meta.btnText", t("getInvolved.volunteerCta")),
       color: "bg-lotus-green",
       hoverColor: "hover:bg-lotus-green-dark",
       iconBg: "bg-lotus-green/10",
       iconColor: "text-lotus-green",
       borderColor: "border-lotus-green/20",
       details: [
-        "getInvolved.volunteerDetail1",
-        "getInvolved.volunteerDetail2",
-        "getInvolved.volunteerDetail3",
+        cms.get("card-volunteer", "meta.detail1", t("getInvolved.volunteerDetail1")),
+        cms.get("card-volunteer", "meta.detail2", t("getInvolved.volunteerDetail2")),
+        cms.get("card-volunteer", "meta.detail3", t("getInvolved.volunteerDetail3")),
       ],
       href: "/about?tab=volunteers&view=form",
       external: false,
     },
     {
       icon: Zap,
-      titleKey: "getInvolved.fundraiseTitle",
-      descKey: "getInvolved.fundraiseDesc",
-      ctaKey: "getInvolved.fundraiseCta",
+      title: cms.get("card-fundraise", "title", t("getInvolved.fundraiseTitle")),
+      desc: cms.get("card-fundraise", "content", t("getInvolved.fundraiseDesc")),
+      cta: cms.get("card-fundraise", "meta.btnText", t("getInvolved.fundraiseCta")),
       color: "bg-lotus-orange",
       hoverColor: "hover:bg-lotus-orange/90",
       iconBg: "bg-lotus-orange/10",
       iconColor: "text-lotus-orange",
       borderColor: "border-lotus-orange/20",
       details: [
-        "getInvolved.fundraiseDetail1",
-        "getInvolved.fundraiseDetail2",
-        "getInvolved.fundraiseDetail3",
+        cms.get("card-fundraise", "meta.detail1", t("getInvolved.fundraiseDetail1")),
+        cms.get("card-fundraise", "meta.detail2", t("getInvolved.fundraiseDetail2")),
+        cms.get("card-fundraise", "meta.detail3", t("getInvolved.fundraiseDetail3")),
       ],
-      href: "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83",
+      href: cms.get("card-fundraise", "meta.btnLink", "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83"),
       external: true,
     },
     {
       icon: Heart,
-      titleKey: "getInvolved.donateTitle",
-      descKey: "getInvolved.donateDesc",
-      ctaKey: "getInvolved.donateCta",
+      title: cms.get("card-donate", "title", t("getInvolved.donateTitle")),
+      desc: cms.get("card-donate", "content", t("getInvolved.donateDesc")),
+      cta: cms.get("card-donate", "meta.btnText", t("getInvolved.donateCta")),
       color: "bg-lotus-purple",
       hoverColor: "hover:bg-lotus-purple/90",
       iconBg: "bg-lotus-purple/10",
       iconColor: "text-lotus-purple",
       borderColor: "border-lotus-purple/20",
       details: [
-        "getInvolved.donateDetail1",
-        "getInvolved.donateDetail2",
-        "getInvolved.donateDetail3",
+        cms.get("card-donate", "meta.detail1", t("getInvolved.donateDetail1")),
+        cms.get("card-donate", "meta.detail2", t("getInvolved.donateDetail2")),
+        cms.get("card-donate", "meta.detail3", t("getInvolved.donateDetail3")),
       ],
-      href: "https://www.justgiving.com/charity/lotuschildren-centre",
+      href: cms.get("card-donate", "meta.btnLink", "https://www.justgiving.com/charity/lotuschildren-centre"),
       external: true,
     },
   ];
@@ -135,18 +159,18 @@ export default function GetInvolved() {
                       className="text-xl font-bold text-lotus-dark mb-3"
                       style={{ fontFamily: "'Playfair Display', serif" }}
                     >
-                      {t(opp.titleKey)}
+                      {opp.title}
                     </h3>
 
                     <p
                       className="text-foreground/60 leading-relaxed mb-6"
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
-                      {t(opp.descKey)}
+                      {opp.desc}
                     </p>
 
                     <ul className="space-y-3 mb-8">
-                      {opp.details.map((detailKey, j) => (
+                      {opp.details.map((detail, j) => (
                         <li key={j} className="flex items-start gap-3">
                           <div className={`w-5 h-5 rounded-full ${opp.iconBg} flex items-center justify-center shrink-0 mt-0.5`}>
                             <ArrowRight className={`w-3 h-3 ${opp.iconColor}`} />
@@ -155,7 +179,7 @@ export default function GetInvolved() {
                             className="text-sm text-foreground/70"
                             style={{ fontFamily: "'DM Sans', sans-serif" }}
                           >
-                            {t(detailKey)}
+                            {detail}
                           </span>
                         </li>
                       ))}
@@ -168,7 +192,7 @@ export default function GetInvolved() {
                       className={`w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full ${opp.color} text-white font-semibold text-sm ${opp.hoverColor} transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5`}
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
-                      {t(opp.ctaKey)}
+                      {opp.cta}
                       <ArrowRight className="w-4 h-4" />
                     </a>
                   </div>
@@ -198,10 +222,10 @@ export default function GetInvolved() {
                     </div>
                     <div>
                       <span className="block text-2xl font-bold text-lotus-dark" style={{ fontFamily: "'Playfair Display', serif" }}>
-                        75+
+                        {badgeCount}
                       </span>
                       <span className="block text-xs text-foreground/60" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {t("getInvolved.childrenHelped")}
+                        {badgeLabel}
                       </span>
                     </div>
                   </div>
@@ -214,43 +238,39 @@ export default function GetInvolved() {
                   className="text-sm font-semibold uppercase tracking-widest text-lotus-green mb-4 block"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {cms.get("why-involved", "title", t("getInvolved.whyTitle"))}
+                  {whySectionLabel}
                 </span>
 
                 <h2
                   className="text-3xl sm:text-4xl font-bold text-lotus-dark leading-tight mb-6"
                   style={{ fontFamily: "'Playfair Display', serif" }}
                 >
-                  {t("getInvolved.whyHeading")}
+                  {whyHeading}
                 </h2>
 
                 <p
                   className="text-foreground/70 leading-relaxed mb-6"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {cms.get("why-involved", "content", t("getInvolved.whyDesc1"))}
+                  {whyParagraph1}
                 </p>
 
                 <p
                   className="text-foreground/70 leading-relaxed mb-8"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
-                  {t("getInvolved.whyDesc2")}
+                  {whyParagraph2}
                 </p>
 
                 {/* Quick stats */}
                 <div className="grid grid-cols-3 gap-4">
-                  {[
-                    { number: "75+", labelKey: "getInvolved.statChildren" },
-                    { number: "20+", labelKey: "getInvolved.statYears" },
-                    { number: "500+", labelKey: "getInvolved.statLives" },
-                  ].map((stat, i) => (
+                  {stats.map((stat, i) => (
                     <div key={i} className="text-center p-4 rounded-xl bg-white shadow-sm border border-border">
                       <span className="block text-2xl font-bold text-lotus-green" style={{ fontFamily: "'Playfair Display', serif" }}>
                         {stat.number}
                       </span>
                       <span className="block text-xs text-foreground/60 mt-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {t(stat.labelKey)}
+                        {stat.label}
                       </span>
                     </div>
                   ))}

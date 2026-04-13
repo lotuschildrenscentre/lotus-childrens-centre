@@ -359,24 +359,87 @@ export const CMS_PAGES: CmsPage[] = [
     pageKey: "get-involved",
     label: "Get Involved Page",
     sections: [
+      // ─── Hero ───
       {
         sectionKey: "hero",
         label: "Page Hero",
         description: "The hero banner at the top of Get Involved page",
         fields: [
           { key: "title", label: "Page Title", type: "text", storageKey: "title", placeholder: "e.g. Get Involved" },
-          { key: "description", label: "Page Description", type: "textarea", storageKey: "content", placeholder: "Brief intro" },
-          { key: "backgroundImage", label: "Hero Background Image", type: "image", storageKey: "imageUrl" },
+          { key: "description", label: "Page Description", type: "textarea", storageKey: "content", placeholder: "e.g. Every child deserves a chance..." },
         ],
       },
+      // ─── Volunteer Card ───
+      {
+        sectionKey: "card-volunteer",
+        label: "Volunteer Card",
+        description: "The Volunteer opportunity card — title, description, 3 bullet points, and button text",
+        fields: [
+          { key: "title", label: "Card Title", type: "text", storageKey: "title", placeholder: "e.g. Volunteer" },
+          { key: "description", label: "Card Description", type: "textarea", storageKey: "content", placeholder: "e.g. Join our team of dedicated volunteers..." },
+          { key: "detail1", label: "Bullet Point 1", type: "text", storageKey: "metadata.detail1", placeholder: "e.g. Teach English, art, or music" },
+          { key: "detail2", label: "Bullet Point 2", type: "text", storageKey: "metadata.detail2", placeholder: "e.g. Help with childcare and daily activities" },
+          { key: "detail3", label: "Bullet Point 3", type: "text", storageKey: "metadata.detail3", placeholder: "e.g. Support fundraising and awareness campaigns" },
+          { key: "btnText", label: "Button Text", type: "text", storageKey: "metadata.btnText", placeholder: "e.g. Register Now" },
+        ],
+      },
+      // ─── Fundraise Card ───
+      {
+        sectionKey: "card-fundraise",
+        label: "Fundraise Card",
+        description: "The Fundraise opportunity card — title, description, 3 bullet points, button text, and link",
+        fields: [
+          { key: "title", label: "Card Title", type: "text", storageKey: "title", placeholder: "e.g. Fundraise" },
+          { key: "description", label: "Card Description", type: "textarea", storageKey: "content", placeholder: "e.g. Organise a fundraising event..." },
+          { key: "detail1", label: "Bullet Point 1", type: "text", storageKey: "metadata.detail1", placeholder: "e.g. Organise a sponsored run or challenge" },
+          { key: "detail2", label: "Bullet Point 2", type: "text", storageKey: "metadata.detail2", placeholder: "e.g. Host a charity dinner or auction" },
+          { key: "detail3", label: "Bullet Point 3", type: "text", storageKey: "metadata.detail3", placeholder: "e.g. Create an online fundraising page" },
+          { key: "btnText", label: "Button Text", type: "text", storageKey: "metadata.btnText", placeholder: "e.g. Start Fundraising" },
+          { key: "btnLink", label: "Button Link", type: "text", storageKey: "metadata.btnLink", placeholder: "e.g. https://www.justgiving.com/create-page/in-memory" },
+        ],
+      },
+      // ─── Donate Card ───
+      {
+        sectionKey: "card-donate",
+        label: "Donate Card",
+        description: "The Donate opportunity card — title, description, 3 bullet points, button text, and link",
+        fields: [
+          { key: "title", label: "Card Title", type: "text", storageKey: "title", placeholder: "e.g. Donate" },
+          { key: "description", label: "Card Description", type: "textarea", storageKey: "content", placeholder: "e.g. Your donation makes a direct impact..." },
+          { key: "detail1", label: "Bullet Point 1", type: "text", storageKey: "metadata.detail1", placeholder: "e.g. Provide food and clothing for a child" },
+          { key: "detail2", label: "Bullet Point 2", type: "text", storageKey: "metadata.detail2", placeholder: "e.g. Fund education and school supplies" },
+          { key: "detail3", label: "Bullet Point 3", type: "text", storageKey: "metadata.detail3", placeholder: "e.g. Support medical care and wellbeing" },
+          { key: "btnText", label: "Button Text", type: "text", storageKey: "metadata.btnText", placeholder: "e.g. Donate Now" },
+          { key: "btnLink", label: "Button Link", type: "text", storageKey: "metadata.btnLink", placeholder: "e.g. https://www.justgiving.com/charity/lotuschildren-centre" },
+        ],
+      },
+      // ─── Why Get Involved ───
       {
         sectionKey: "why-involved",
-        label: "Why Get Involved",
-        description: "The section explaining why to get involved",
+        label: "Why Get Involved Section",
+        description: "The section explaining why to get involved — label, heading, two paragraphs, badge text, and photo",
         fields: [
-          { key: "title", label: "Section Title", type: "text", storageKey: "title", placeholder: "e.g. Why Get Involved?" },
-          { key: "content", label: "Description", type: "textarea", storageKey: "content", placeholder: "Explain why" },
+          { key: "sectionLabel", label: "Section Label (small badge text)", type: "text", storageKey: "title", placeholder: "e.g. Why Get Involved?" },
+          { key: "heading", label: "Section Heading", type: "text", storageKey: "metadata.heading", placeholder: "e.g. Make a Real Difference in a Child's Life" },
+          { key: "paragraph1", label: "Paragraph 1", type: "textarea", storageKey: "content", placeholder: "e.g. When you volunteer or donate..." },
+          { key: "paragraph2", label: "Paragraph 2", type: "textarea", storageKey: "metadata.paragraph2", placeholder: "e.g. Your contribution goes directly..." },
+          { key: "badgeCount", label: "Badge — Children Count", type: "text", storageKey: "metadata.badgeCount", placeholder: "e.g. 75+" },
+          { key: "badgeLabel", label: "Badge — Label Text", type: "text", storageKey: "metadata.badgeLabel", placeholder: "e.g. Children helped every year" },
           { key: "image", label: "Section Image", type: "image", storageKey: "imageUrl" },
+        ],
+      },
+      // ─── Quick Stats ───
+      {
+        sectionKey: "gi-stats",
+        label: "Quick Stats (3 numbers)",
+        description: "The three stat boxes at the bottom of the Why section",
+        fields: [
+          { key: "stat1Number", label: "Stat 1 — Number", type: "text", storageKey: "metadata.stat1Number", placeholder: "e.g. 75+" },
+          { key: "stat1Label", label: "Stat 1 — Label", type: "text", storageKey: "metadata.stat1Label", placeholder: "e.g. Children Supported" },
+          { key: "stat2Number", label: "Stat 2 — Number", type: "text", storageKey: "metadata.stat2Number", placeholder: "e.g. 20+" },
+          { key: "stat2Label", label: "Stat 2 — Label", type: "text", storageKey: "metadata.stat2Label", placeholder: "e.g. Years of Service" },
+          { key: "stat3Number", label: "Stat 3 — Number", type: "text", storageKey: "metadata.stat3Number", placeholder: "e.g. 500+" },
+          { key: "stat3Label", label: "Stat 3 — Label", type: "text", storageKey: "metadata.stat3Label", placeholder: "e.g. Lives Changed" },
         ],
       },
     ],

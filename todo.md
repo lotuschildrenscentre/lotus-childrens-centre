@@ -84,3 +84,9 @@
 - [ ] Add FAQ items (questions and answers)
 - [ ] Add CTA cards (Volunteer, Donate, Fundraise - titles, descriptions, button text, links)
 - [ ] Wire About page to load all content from CMS with fallback to defaults
+
+## Get Involved Page CMS Expansion
+- [ ] Audit full Get Involved page and map all editable sections
+- [ ] Update cmsConfig.ts with all missing Get Involved sections
+- [ ] Wire GetInvolved.tsx to CMS for all sections
+- [ ] Test all changes
