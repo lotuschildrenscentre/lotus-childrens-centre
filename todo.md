@@ -72,7 +72,3 @@
 - [x] Wire ContactSection.tsx fully to CMS
 - [x] Wire Footer.tsx to CMS
 - [x] Test all changes (24 tests pass)
-
-## Partners Section Fixes
-- [x] Fix duplicate logo bug in SponsorsSection display (filter base64 data URIs, only use CDN URLs)
-- [x] Allow admin to dynamically add unlimited new partners in AdminContent
