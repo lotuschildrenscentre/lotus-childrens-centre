@@ -564,7 +564,7 @@ export default function About() {
                         className="text-3xl font-bold text-foreground mb-4"
                         style={{ fontFamily: "'Playfair Display', serif" }}
                       >
-                        {cms.get("volunteers", "title", "Volunteering at Lotus")}
+                        {cms.get("volunteerInfo", "title", "Volunteering at Lotus")}
                       </h3>
                     </div>
 
@@ -573,7 +573,7 @@ export default function About() {
                         className="text-lg text-muted-foreground leading-relaxed mb-8"
                         style={{ fontFamily: "'DM Sans', sans-serif" }}
                       >
-                        {cms.get("volunteers", "content", "At Lotus we employ a small team of local staff, therefore there are many ways in which volunteers can help us throughout the year. The greatest need for volunteers is in the summer months June-August as this is when the children are on holiday from school. Our volunteers help out with a range of things from organising activities and events for the children, to teaching extra-curricular classes such as sports or languages, to helping with cooking, maintenance, administration and fundraising.")}
+                        {cms.get("volunteerInfo", "content", "At Lotus we employ a small team of local staff, therefore there are many ways in which volunteers can help us throughout the year. The greatest need for volunteers is in the summer months June-August as this is when the children are on holiday from school. Our volunteers help out with a range of things from organising activities and events for the children, to teaching extra-curricular classes such as sports or languages, to helping with cooking, maintenance, administration and fundraising.")}
                       </p>
 
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -602,13 +602,13 @@ export default function About() {
                         className="text-sm font-semibold uppercase tracking-widest text-lotus-purple"
                         style={{ fontFamily: "'DM Sans', sans-serif" }}
                       >
-                        {cms.get("volunteers", "meta.testimonialsLabel", "Testimonials")}
+                        {cms.get("volunteerInfo", "meta.testimonialsLabel", "Testimonials")}
                       </span>
                       <h4
                         className="text-2xl font-bold text-foreground mt-2"
                         style={{ fontFamily: "'Playfair Display', serif" }}
                       >
-                        {cms.get("volunteers", "meta.testimonialsTitle", "Stories from our volunteers")}
+                        {cms.get("volunteerInfo", "meta.testimonialsHeading", "Stories from our volunteers")}
                       </h4>
                     </div>
 
@@ -857,13 +857,13 @@ export default function About() {
                 className="text-3xl lg:text-4xl font-bold text-foreground mb-4"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                {cms.get("cta", "title", t("about.ctaTitle") || "Join Us in Making a Difference")}
+                {cms.get("aboutCta", "title", t("about.ctaTitle") || "Join Us in Making a Difference")}
               </h2>
               <p
                 className="text-lg text-muted-foreground max-w-2xl mx-auto"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
-                {cms.get("cta", "content", t("about.ctaDesc") ||
+                {cms.get("aboutCta", "content", t("about.ctaDesc") ||
                   "There are many ways to support Lotus Children's Centre and help vulnerable children")}
               </p>
             </div>
@@ -872,35 +872,35 @@ export default function About() {
               {[
                 {
                   icon: Users,
-                  title: cms.get("cta", "meta.volunteerTitle", t("services.volunteer.title") || "Volunteer"),
-                  desc: cms.get("cta", "meta.volunteerDesc", t("services.volunteer.desc") || "On-site or from further away, volunteers are always welcome at Lotus."),
+                  title: cms.get("aboutCta", "meta.volunteerTitle", t("services.volunteer.title") || "Volunteer"),
+                  desc: cms.get("aboutCta", "meta.volunteerDesc", t("services.volunteer.desc") || "On-site or from further away, volunteers are always welcome at Lotus."),
                   color: "text-lotus-yellow",
                   bgColor: "bg-lotus-yellow/10",
                   buttonColor: "bg-lotus-yellow hover:bg-lotus-yellow/90",
-                  cta: cms.get("cta", "meta.volunteerCta", t("services.volunteer.cta") || "Register Now"),
+                  cta: cms.get("aboutCta", "meta.volunteerBtnText", t("services.volunteer.cta") || "Register Now"),
                   href: "/about?tab=volunteers&view=form",
                   external: false,
                 },
                 {
                   icon: Heart,
-                  title: cms.get("cta", "meta.donateTitle", t("services.donation.title") || "Donation"),
-                  desc: cms.get("cta", "meta.donateDesc", t("services.donation.desc") || "Through money or objects, donations help with the running of Lotus."),
+                  title: cms.get("aboutCta", "meta.donateTitle", t("services.donation.title") || "Donation"),
+                  desc: cms.get("aboutCta", "meta.donateDesc", t("services.donation.desc") || "Through money or objects, donations help with the running of Lotus."),
                   color: "text-lotus-orange",
                   bgColor: "bg-lotus-orange/10",
                   buttonColor: "bg-lotus-orange hover:bg-lotus-orange/90",
-                  cta: cms.get("cta", "meta.donateCta", t("services.donation.cta") || "Donate Now"),
-                  href: cms.get("cta", "meta.donateLink", "https://www.justgiving.com/charity/lotuschildren-centre"),
+                  cta: cms.get("aboutCta", "meta.donateBtnText", t("services.donation.cta") || "Donate Now"),
+                  href: cms.get("aboutCta", "meta.donateLink", "https://www.justgiving.com/charity/lotuschildren-centre"),
                   external: true,
                 },
                 {
                   icon: Lightbulb,
-                  title: cms.get("cta", "meta.fundraiseTitle", t("services.fundraise.title") || "Fundraise"),
-                  desc: cms.get("cta", "meta.fundraiseDesc", t("services.fundraise.desc") || "Take a look at the different events organised for Lotus Children's Centre."),
+                  title: cms.get("aboutCta", "meta.fundraiseTitle", t("services.fundraise.title") || "Fundraise"),
+                  desc: cms.get("aboutCta", "meta.fundraiseDesc", t("services.fundraise.desc") || "Take a look at the different events organised for Lotus Children's Centre."),
                   color: "text-lotus-purple",
                   bgColor: "bg-lotus-purple/10",
                   buttonColor: "bg-lotus-purple hover:bg-lotus-purple/90",
-                  cta: cms.get("cta", "meta.fundraiseCta", t("services.fundraise.cta") || "Read More"),
-                  href: cms.get("cta", "meta.fundraiseLink", "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83"),
+                  cta: cms.get("aboutCta", "meta.fundraiseBtnText", t("services.fundraise.cta") || "Read More"),
+                  href: cms.get("aboutCta", "meta.fundraiseLink", "https://www.justgiving.com/create-page/in-memory?&sessionId=2552b83"),
                   external: true,
                 },
               ].map((item, idx) => {

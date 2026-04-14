@@ -115,3 +115,10 @@
 - [x] Register /admin/blog route in App.tsx
 - [x] Rewrite Blog.tsx to load posts from DB; fall back to static posts when no DB posts are published
 - [x] Write vitest tests for blog procedures (19 tests, 54 total)
+
+## Bug Fix: Volunteer Section MN Translation Not Displaying
+
+- [x] Fix sectionKey mismatch: About.tsx uses "volunteers" but cmsConfig/DB uses "volunteerInfo"
+- [x] Audit all About.tsx cms.get() calls and align sectionKeys with cmsConfig.ts
+- [x] Audit all other pages for similar sectionKey mismatches (GetInvolved and Home components are correct)
+- [x] Verify MN content displays correctly on UI after fix (54 tests pass)
