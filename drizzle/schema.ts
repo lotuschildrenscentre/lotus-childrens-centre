@@ -51,8 +51,11 @@ export type InsertVolunteerSubmission = typeof volunteerSubmissions.$inferInsert
 export const testimonials = mysqlTable("testimonials", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
+  nameMn: varchar("nameMn", { length: 255 }),
   duration: varchar("duration", { length: 255 }).notNull(),
+  durationMn: varchar("durationMn", { length: 255 }),
   quote: text("quote").notNull(),
+  quoteMn: text("quoteMn"),
   isPublished: boolean("isPublished").default(true).notNull(),
   sortOrder: int("sortOrder").default(0).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

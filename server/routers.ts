@@ -2,6 +2,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
 
@@ -130,14 +131,22 @@ export const appRouter = router({
         .input(
           z.object({
             name: z.string().min(1),
+            nameMn: z.string().optional(),
             duration: z.string().min(1),
+            durationMn: z.string().optional(),
             quote: z.string().min(1),
+            quoteMn: z.string().optional(),
             isPublished: z.boolean().optional(),
             sortOrder: z.number().optional(),
+            skipAutoTranslate: z.boolean().optional(),
           })
         )
         .mutation(async ({ input }) => {
-          await db.createTestimonial(input);
+          const { translateToMongolian } = await import("./translate");
+          const nameMn = input.nameMn ?? (input.skipAutoTranslate ? undefined : await translateToMongolian(input.name));
+          const durationMn = input.durationMn ?? (input.skipAutoTranslate ? undefined : await translateToMongolian(input.duration));
+          const quoteMn = input.quoteMn ?? (input.skipAutoTranslate ? undefined : await translateToMongolian(input.quote));
+          await db.createTestimonial({ ...input, nameMn, durationMn, quoteMn });
           return { success: true };
         }),
       update: adminProcedure
@@ -145,15 +154,32 @@ export const appRouter = router({
           z.object({
             id: z.number(),
             name: z.string().optional(),
+            nameMn: z.string().optional(),
             duration: z.string().optional(),
+            durationMn: z.string().optional(),
             quote: z.string().optional(),
+            quoteMn: z.string().optional(),
             isPublished: z.boolean().optional(),
             sortOrder: z.number().optional(),
+            skipAutoTranslate: z.boolean().optional(),
           })
         )
         .mutation(async ({ input }) => {
-          const { id, ...data } = input;
-          await db.updateTestimonial(id, data);
+          const { translateToMongolian } = await import("./translate");
+          const { id, skipAutoTranslate, ...fields } = input;
+          const updateData: Record<string, unknown> = { ...fields };
+          if (!skipAutoTranslate) {
+            if (fields.name && fields.nameMn === undefined) {
+              updateData.nameMn = await translateToMongolian(fields.name);
+            }
+            if (fields.duration && fields.durationMn === undefined) {
+              updateData.durationMn = await translateToMongolian(fields.duration);
+            }
+            if (fields.quote && fields.quoteMn === undefined) {
+              updateData.quoteMn = await translateToMongolian(fields.quote);
+            }
+          }
+          await db.updateTestimonial(id, updateData as Partial<typeof fields>);
           return { success: true };
         }),
       delete: adminProcedure
@@ -161,6 +187,18 @@ export const appRouter = router({
         .mutation(async ({ input }) => {
           await db.deleteTestimonial(input.id);
           return { success: true };
+        }),
+      retranslate: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          const { translateToMongolian } = await import("./translate");
+          const row = await db.getTestimonialById(input.id);
+          if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "Testimonial not found" });
+          const nameMn = await translateToMongolian(row.name);
+          const durationMn = await translateToMongolian(row.duration);
+          const quoteMn = await translateToMongolian(row.quote);
+          await db.updateTestimonial(input.id, { nameMn, durationMn, quoteMn });
+          return { nameMn, durationMn, quoteMn };
         }),
     }),
 

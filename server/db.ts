@@ -168,6 +168,13 @@ export async function createTestimonial(data: InsertTestimonial) {
   await db.insert(testimonials).values(data);
 }
 
+export async function getTestimonialById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(testimonials).where(eq(testimonials.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
 export async function updateTestimonial(id: number, data: Partial<InsertTestimonial>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

@@ -145,7 +145,7 @@ const historyTimeline = [
 ];
 
 export default function About() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const cms = useCmsContent("about");
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation(0.1);
   const { ref: aimsRef, isVisible: aimsVisible } = useScrollAnimation(0.1);
@@ -169,7 +169,14 @@ export default function About() {
     { id: -3, name: "Max", duration: "2 months, Summer 2015", quote: "I spent my time there to entertain the children and help in the centre as much as I could" },
     { id: -4, name: "Erica", duration: "2 months, Summer 2014", quote: "I learned patience and love. The children touched my heart with their positive energy and their affection" },
   ];
-  const displayTestimonials = dbTestimonials && dbTestimonials.length > 0 ? dbTestimonials : fallbackTestimonials;
+  const rawTestimonials = dbTestimonials && dbTestimonials.length > 0 ? dbTestimonials : fallbackTestimonials;
+  // Serve MN fields when language is Mongolian, fall back to EN if MN is missing
+  const displayTestimonials = rawTestimonials.map((t) => ({
+    ...t,
+    name: (language === "mn" && (t as { nameMn?: string | null }).nameMn) || t.name,
+    duration: (language === "mn" && (t as { durationMn?: string | null }).durationMn) || t.duration,
+    quote: (language === "mn" && (t as { quoteMn?: string | null }).quoteMn) || t.quote,
+  }));
 
   /* Volunteer form submission */
   const [formData, setFormData] = useState<Record<string, string>>({});

@@ -122,3 +122,12 @@
 - [x] Audit all About.tsx cms.get() calls and align sectionKeys with cmsConfig.ts
 - [x] Audit all other pages for similar sectionKey mismatches (GetInvolved and Home components are correct)
 - [x] Verify MN content displays correctly on UI after fix (54 tests pass)
+
+## Feature: Volunteer Testimonials Auto-Translation
+
+- [x] Understand current testimonials data structure in cmsConfig and About.tsx
+- [x] Add nameMn, durationMn, quoteMn columns to DB schema and push migration
+- [x] Update admin panel testimonials editor to show MN translations and allow manual correction
+- [x] Update About.tsx to serve MN testimonial content when language is MN
+- [x] Auto-translate testimonials on save using the LLM translation pipeline
+- [x] Add Re-translate button per testimonial card in admin panel
