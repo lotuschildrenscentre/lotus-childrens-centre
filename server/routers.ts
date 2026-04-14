@@ -72,6 +72,26 @@ export const appRouter = router({
       }),
   }),
 
+  // ─── Public: Volunteer form config + submission ──────────────
+  volunteerForm: router({
+    // Get active form fields for the public form
+    fields: publicProcedure.query(async () => {
+      return db.getFormFields(true);
+    }),
+
+    // Submit a volunteer application
+    submit: publicProcedure
+      .input(
+        z.object({
+          data: z.record(z.string(), z.string()),
+        })
+      )
+      .mutation(async ({ input }) => {
+        await db.createVolunteerApplication({ data: input.data });
+        return { success: true };
+      }),
+  }),
+
   // ─── Admin Panel ────────────────────────────────────────────
   admin: router({
     // Dashboard stats
@@ -489,6 +509,128 @@ export const appRouter = router({
           const key = `cms-images/${timestamp}-${randomSuffix}-${input.fileName}`;
           const { url } = await storagePut(key, buffer, input.contentType);
           return { url };
+        }),
+    }),
+
+    // ─── Volunteer Form Builder ─────────────────────────────────
+    form: router({
+      // List all fields (admin sees inactive too)
+      fields: adminProcedure.query(async () => {
+        return db.getFormFields(false);
+      }),
+
+      createField: adminProcedure
+        .input(
+          z.object({
+            fieldKey: z.string().min(1),
+            fieldType: z.enum(["text", "email", "textarea", "select", "date", "tel"]),
+            label: z.string().min(1),
+            labelMn: z.string().optional(),
+            placeholder: z.string().optional(),
+            placeholderMn: z.string().optional(),
+            options: z.any().optional(),
+            isRequired: z.boolean().optional(),
+            isActive: z.boolean().optional(),
+            sortOrder: z.number().optional(),
+            skipAutoTranslate: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { translateToMongolian } = await import("./translate");
+          const labelMn = input.labelMn ?? (input.skipAutoTranslate ? undefined : await translateToMongolian(input.label));
+          const placeholderMn = input.placeholderMn ?? (input.placeholder && !input.skipAutoTranslate ? await translateToMongolian(input.placeholder) : undefined);
+          await db.createFormField({ ...input, labelMn, placeholderMn });
+          return { success: true };
+        }),
+
+      updateField: adminProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            fieldKey: z.string().optional(),
+            fieldType: z.enum(["text", "email", "textarea", "select", "date", "tel"]).optional(),
+            label: z.string().optional(),
+            labelMn: z.string().optional(),
+            placeholder: z.string().optional(),
+            placeholderMn: z.string().optional(),
+            options: z.any().optional(),
+            isRequired: z.boolean().optional(),
+            isActive: z.boolean().optional(),
+            sortOrder: z.number().optional(),
+            skipAutoTranslate: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { translateToMongolian } = await import("./translate");
+          const { id, skipAutoTranslate, ...fields } = input;
+          const updateData: Record<string, unknown> = { ...fields };
+          if (!skipAutoTranslate) {
+            if (fields.label && fields.labelMn === undefined) {
+              updateData.labelMn = await translateToMongolian(fields.label);
+            }
+            if (fields.placeholder && fields.placeholderMn === undefined) {
+              updateData.placeholderMn = await translateToMongolian(fields.placeholder);
+            }
+          }
+          await db.updateFormField(id, updateData as Partial<typeof fields>);
+          return { success: true };
+        }),
+
+      deleteField: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          await db.deleteFormField(input.id);
+          return { success: true };
+        }),
+
+      reorderFields: adminProcedure
+        .input(z.object({ orderedIds: z.array(z.number()) }))
+        .mutation(async ({ input }) => {
+          await db.reorderFormFields(input.orderedIds);
+          return { success: true };
+        }),
+
+      retranslateField: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          const { translateToMongolian } = await import("./translate");
+          const row = await db.getFormFieldById(input.id);
+          if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "Field not found" });
+          const labelMn = await translateToMongolian(row.label);
+          const placeholderMn = row.placeholder ? await translateToMongolian(row.placeholder) : undefined;
+          await db.updateFormField(input.id, { labelMn, placeholderMn });
+          return { labelMn, placeholderMn };
+        }),
+
+      // List + update application submissions
+      applications: adminProcedure.query(async () => {
+        return db.getVolunteerApplications();
+      }),
+
+      getApplication: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .query(async ({ input }) => {
+          return db.getVolunteerApplicationById(input.id);
+        }),
+
+      updateApplicationStatus: adminProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            status: z.enum(["pending", "reviewed", "approved", "rejected"]),
+            adminNotes: z.string().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          await db.updateVolunteerApplicationStatus(input.id, input.status, input.adminNotes);
+          return { success: true };
+        }),
+
+      deleteApplication: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          await db.deleteVolunteerApplication(input.id);
+          return { success: true };
         }),
     }),
   }),

@@ -11,6 +11,10 @@ import {
   InsertPageContent,
   blogPosts,
   InsertBlogPost,
+  volunteerFormFields,
+  InsertVolunteerFormField,
+  volunteerApplications,
+  InsertVolunteerApplication,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -319,4 +323,86 @@ export async function getDashboardStats() {
     pendingSubmissions: pendingCount.count,
     totalTestimonials: testimonialCount.count,
   };
+}
+
+// ─── Volunteer Form Fields ───────────────────────────────────
+
+export async function getFormFields(activeOnly = true) {
+  const db = await getDb();
+  if (!db) return [];
+  const query = db.select().from(volunteerFormFields).orderBy(asc(volunteerFormFields.sortOrder), asc(volunteerFormFields.id));
+  if (activeOnly) {
+    return (await query).filter((f) => f.isActive);
+  }
+  return query;
+}
+
+export async function getFormFieldById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(volunteerFormFields).where(eq(volunteerFormFields.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function createFormField(data: InsertVolunteerFormField) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(volunteerFormFields).values(data);
+}
+
+export async function updateFormField(id: number, data: Partial<InsertVolunteerFormField>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(volunteerFormFields).set(data).where(eq(volunteerFormFields.id, id));
+}
+
+export async function deleteFormField(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(volunteerFormFields).where(eq(volunteerFormFields.id, id));
+}
+
+export async function reorderFormFields(orderedIds: number[]) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  for (let i = 0; i < orderedIds.length; i++) {
+    await db.update(volunteerFormFields).set({ sortOrder: i }).where(eq(volunteerFormFields.id, orderedIds[i]));
+  }
+}
+
+// ─── Volunteer Applications (dynamic submissions) ────────────
+
+export async function getVolunteerApplications() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(volunteerApplications).orderBy(desc(volunteerApplications.createdAt));
+}
+
+export async function getVolunteerApplicationById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(volunteerApplications).where(eq(volunteerApplications.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function createVolunteerApplication(data: InsertVolunteerApplication) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(volunteerApplications).values(data);
+}
+
+export async function updateVolunteerApplicationStatus(
+  id: number,
+  status: "pending" | "reviewed" | "approved" | "rejected",
+  adminNotes?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(volunteerApplications).set({ status, ...(adminNotes !== undefined ? { adminNotes } : {}) }).where(eq(volunteerApplications.id, id));
+}
+
+export async function deleteVolunteerApplication(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(volunteerApplications).where(eq(volunteerApplications.id, id));
 }

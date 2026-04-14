@@ -178,10 +178,12 @@ export default function About() {
     quote: (language === "mn" && (t as { quoteMn?: string | null }).quoteMn) || t.quote,
   }));
 
+  /* Dynamic volunteer form fields from DB */
+  const { data: formFields } = trpc.volunteerForm.fields.useQuery();
   /* Volunteer form submission */
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const submitMutation = trpc.volunteer.submit.useMutation({
+  const submitMutation = trpc.volunteerForm.submit.useMutation({
     onSuccess: () => {
       toast.success("Application submitted successfully! We will review it and get back to you.");
       setFormData({});
@@ -690,55 +692,64 @@ export default function About() {
 
                       <form className="space-y-6" onSubmit={(e) => {
                         e.preventDefault();
-                        if (!formData.fullName || !formData.email) {
-                          toast.error("Please fill in at least your name and email.");
+                        // Validate required fields
+                        const activeFields = (formFields && formFields.length > 0) ? formFields : applicationQuestions.map(q => ({ fieldKey: q.id, label: q.label, fieldType: q.type as string, isRequired: q.id === 'fullName' || q.id === 'email', labelMn: null, placeholder: null, placeholderMn: null, isActive: true, sortOrder: 0, id: 0, options: null, createdAt: new Date(), updatedAt: new Date() }));
+                        const missingRequired = activeFields.filter(f => f.isRequired && !formData[f.fieldKey]);
+                        if (missingRequired.length > 0) {
+                          toast.error(`Please fill in: ${missingRequired.map(f => f.label).join(", ")}`);
                           return;
                         }
                         setIsSubmitting(true);
-                        submitMutation.mutate({
-                          fullName: formData.fullName || "",
-                          email: formData.email || "",
-                          dateOfBirth: formData.dob || undefined,
-                          nationality: formData.nationality || undefined,
-                          languages: formData.languages || undefined,
-                          intendedDates: formData.dates || undefined,
-                          howHelp: formData.howHelp || undefined,
-                          experience: formData.experience || undefined,
-                          whyVolunteer: formData.whyVolunteer || undefined,
-                          criminalRecord: formData.criminalRecord || undefined,
-                          convictions: formData.convictions || undefined,
-                          codeOfConduct: formData.codeOfConduct || undefined,
-                          hearAbout: formData.hearAbout || undefined,
-                        });
+                        submitMutation.mutate({ data: formData });
                       }}>
-                        {applicationQuestions.map((q) => (
-                          <div key={q.id}>
+                        {/* Render dynamic fields from DB, fall back to static list */}
+                        {(formFields && formFields.length > 0 ? formFields : applicationQuestions.map(q => ({ fieldKey: q.id, label: q.label, fieldType: q.type as string, isRequired: q.id === 'fullName' || q.id === 'email', labelMn: null, placeholder: null, placeholderMn: null, isActive: true, sortOrder: 0, id: 0, options: null, createdAt: new Date(), updatedAt: new Date() }))).map((q) => {
+                          const displayLabel = (language === 'mn' && q.labelMn) ? q.labelMn : q.label;
+                          const displayPlaceholder = (language === 'mn' && q.placeholderMn) ? q.placeholderMn : (q.placeholder || (language === 'mn' ? 'Хариултаа оруулна уу...' : 'Enter your answer...'));
+                          return (
+                          <div key={q.fieldKey}>
                             <label
                               className="block text-sm font-semibold text-foreground mb-2"
                               style={{ fontFamily: "'DM Sans', sans-serif" }}
                             >
-                              {q.label}
+                              {displayLabel}
+                              {q.isRequired && <span className="text-red-500 ml-1">*</span>}
                             </label>
-                            {q.type === "textarea" ? (
+                            {q.fieldType === "textarea" ? (
                               <textarea
                                 className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-lotus-green/50 focus:border-lotus-green transition-colors min-h-[100px] resize-y"
                                 style={{ fontFamily: "'DM Sans', sans-serif" }}
-                                placeholder="Enter your answer..."
-                                value={formData[q.id] || ""}
-                                onChange={(e) => setFormData({ ...formData, [q.id]: e.target.value })}
+                                placeholder={displayPlaceholder}
+                                value={formData[q.fieldKey] || ""}
+                                onChange={(e) => setFormData({ ...formData, [q.fieldKey]: e.target.value })}
                               />
-                            ) : (
-                              <input
-                                type={q.type}
+                            ) : q.fieldType === "select" && q.options ? (
+                              <select
                                 className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-lotus-green/50 focus:border-lotus-green transition-colors"
                                 style={{ fontFamily: "'DM Sans', sans-serif" }}
-                                placeholder="Enter your answer..."
-                                value={formData[q.id] || ""}
-                                onChange={(e) => setFormData({ ...formData, [q.id]: e.target.value })}
+                                value={formData[q.fieldKey] || ""}
+                                onChange={(e) => setFormData({ ...formData, [q.fieldKey]: e.target.value })}
+                              >
+                                <option value="">{displayPlaceholder}</option>
+                                {(q.options as { value: string; label: string; labelMn?: string }[]).map(opt => (
+                                  <option key={opt.value} value={opt.value}>
+                                    {(language === 'mn' && opt.labelMn) ? opt.labelMn : opt.label}
+                                  </option>
+                                ))}
+                              </select>
+                            ) : (
+                              <input
+                                type={q.fieldType}
+                                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-lotus-green/50 focus:border-lotus-green transition-colors"
+                                style={{ fontFamily: "'DM Sans', sans-serif" }}
+                                placeholder={displayPlaceholder}
+                                value={formData[q.fieldKey] || ""}
+                                onChange={(e) => setFormData({ ...formData, [q.fieldKey]: e.target.value })}
                               />
                             )}
                           </div>
-                        ))}
+                          );
+                        })}
 
                         <div className="flex gap-4 pt-4">
                           <Button

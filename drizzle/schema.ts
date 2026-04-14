@@ -138,3 +138,55 @@ export const blogPosts = mysqlTable("blog_posts", {
 
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type InsertBlogPost = typeof blogPosts.$inferInsert;
+
+/**
+ * Volunteer application form field configuration.
+ * Each row defines one field in the dynamic volunteer form.
+ * Admin can add, reorder, and toggle fields.
+ * Bilingual: label (EN) + labelMn (auto-translated MN).
+ */
+export const volunteerFormFields = mysqlTable("volunteer_form_fields", {
+  id: int("id").autoincrement().primaryKey(),
+
+  // Field identity
+  fieldKey: varchar("fieldKey", { length: 128 }).notNull().unique(), // e.g. "fullName", "whyVolunteer"
+  fieldType: mysqlEnum("fieldType", ["text", "email", "textarea", "select", "date", "tel"]).default("text").notNull(),
+
+  // English label (admin-entered)
+  label: varchar("label", { length: 512 }).notNull(),
+  placeholder: varchar("placeholder", { length: 512 }),
+
+  // Mongolian label (auto-translated + admin-editable)
+  labelMn: varchar("labelMn", { length: 512 }),
+  placeholderMn: varchar("placeholderMn", { length: 512 }),
+
+  // Select options (JSON array of {value, label, labelMn})
+  options: json("options"),
+
+  // Field behaviour
+  isRequired: boolean("isRequired").default(false).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type VolunteerFormField = typeof volunteerFormFields.$inferSelect;
+export type InsertVolunteerFormField = typeof volunteerFormFields.$inferInsert;
+
+/**
+ * Dynamic volunteer application submissions.
+ * Stores the raw JSON payload of field values keyed by fieldKey.
+ */
+export const volunteerApplications = mysqlTable("volunteer_applications", {
+  id: int("id").autoincrement().primaryKey(),
+  data: json("data").notNull(), // Record<fieldKey, string>
+  status: mysqlEnum("status", ["pending", "reviewed", "approved", "rejected"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type VolunteerApplication = typeof volunteerApplications.$inferSelect;
+export type InsertVolunteerApplication = typeof volunteerApplications.$inferInsert;

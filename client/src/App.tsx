@@ -18,6 +18,7 @@ import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminBlogPosts from "./pages/admin/AdminBlogPosts";
+import AdminFormBuilder from "./pages/admin/AdminFormBuilder";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -36,6 +37,7 @@ function AdminRoutes() {
         <Route path="/admin/testimonials" component={AdminTestimonials} />
         <Route path="/admin/content" component={AdminContent} />
         <Route path="/admin/blog" component={AdminBlogPosts} />
+        <Route path="/admin/form-builder" component={AdminFormBuilder} />
         <Route path="/admin/users" component={AdminUsers} />
         <Route component={AdminDashboard} />
       </Switch>

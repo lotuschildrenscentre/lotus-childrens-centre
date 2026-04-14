@@ -131,3 +131,14 @@
 - [x] Update About.tsx to serve MN testimonial content when language is MN
 - [x] Auto-translate testimonials on save using the LLM translation pipeline
 - [x] Add Re-translate button per testimonial card in admin panel
+
+## Feature: Dynamic Volunteer Application Form Builder
+
+- [x] Read current volunteer form, submissions schema, router, and all volunteer button locations
+- [x] Add volunteer_form_fields table to DB schema and push migration
+- [x] Add DB helpers: getFormFields, createFormField, updateFormField, deleteFormField, reorderFormFields, createVolunteerApplication, getVolunteerApplications
+- [x] Add tRPC procedures: volunteerForm.fields (public), volunteerForm.submit (public), admin.form CRUD with auto-translate
+- [x] Build admin Form Builder UI — add/edit/reorder/delete fields with EN+MN labels, Re-translate button, applications tab
+- [x] Rebuild public volunteer form to render dynamically from field config (bilingual EN/MN)
+- [x] All volunteer buttons already link to /about?tab=volunteers&view=form (no changes needed)
+- [x] Write vitest tests for form builder procedures (12 new tests, 66 total)
