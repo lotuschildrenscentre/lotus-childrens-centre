@@ -190,3 +190,20 @@ export const volunteerApplications = mysqlTable("volunteer_applications", {
 
 export type VolunteerApplication = typeof volunteerApplications.$inferSelect;
 export type InsertVolunteerApplication = typeof volunteerApplications.$inferInsert;
+
+/**
+ * Contact Us form submissions from the public website.
+ */
+export const contactMessages = mysqlTable("contact_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  subject: varchar("subject", { length: 500 }).notNull(),
+  message: text("message").notNull(),
+  status: mysqlEnum("status", ["unread", "read", "replied"]).default("unread").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ContactMessage = typeof contactMessages.$inferSelect;
+export type InsertContactMessage = typeof contactMessages.$inferInsert;

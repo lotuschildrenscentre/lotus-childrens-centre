@@ -64,6 +64,13 @@
       "when": 1776147269955,
       "tag": "0008_melted_hellion",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1776149873338,
+      "tag": "0009_fearless_anthem",
+      "breakpoints": true
     }
   ]
 }

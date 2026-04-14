@@ -406,3 +406,53 @@ export async function deleteVolunteerApplication(id: number) {
   if (!db) throw new Error("Database not available");
   await db.delete(volunteerApplications).where(eq(volunteerApplications.id, id));
 }
+
+// ─── Contact Message Helpers ─────────────────────────────────
+
+export async function createContactMessage(data: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}) {
+  const { contactMessages: cm } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(cm).values(data);
+}
+
+export async function getContactMessages() {
+  const { contactMessages: cm } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(cm).orderBy(desc(cm.createdAt));
+}
+
+export async function getContactMessageById(id: number) {
+  const { contactMessages: cm } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(cm).where(eq(cm.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function updateContactMessageStatus(
+  id: number,
+  status: "unread" | "read" | "replied",
+  adminNotes?: string
+) {
+  const { contactMessages: cm } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db
+    .update(cm)
+    .set({ status, ...(adminNotes !== undefined ? { adminNotes } : {}) })
+    .where(eq(cm.id, id));
+}
+
+export async function deleteContactMessage(id: number) {
+  const { contactMessages: cm } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(cm).where(eq(cm.id, id));
+}

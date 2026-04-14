@@ -102,6 +102,23 @@ export const appRouter = router({
       }),
   }),
 
+  // ─── Contact Messages ─────────────────────────────────────
+  contact: router({
+    submit: publicProcedure
+      .input(
+        z.object({
+          name: z.string().min(1).max(255),
+          email: z.string().email().max(320),
+          subject: z.string().min(1).max(500),
+          message: z.string().min(1),
+        })
+      )
+      .mutation(async ({ input }) => {
+        await db.createContactMessage(input);
+        return { success: true };
+      }),
+  }),
+
   // ─── Admin Panel ────────────────────────────────────────────
   admin: router({
     // Dashboard stats
@@ -677,6 +694,36 @@ export const appRouter = router({
         .input(z.object({ id: z.number() }))
         .mutation(async ({ input }) => {
           await db.deleteVolunteerApplication(input.id);
+          return { success: true };
+        }),
+    }),
+
+    // Contact message management
+    messages: router({
+      list: adminProcedure.query(async () => {
+        return db.getContactMessages();
+      }),
+      getById: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .query(async ({ input }) => {
+          return db.getContactMessageById(input.id);
+        }),
+      updateStatus: adminProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            status: z.enum(["unread", "read", "replied"]),
+            adminNotes: z.string().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          await db.updateContactMessageStatus(input.id, input.status, input.adminNotes);
+          return { success: true };
+        }),
+      delete: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          await db.deleteContactMessage(input.id);
           return { success: true };
         }),
     }),

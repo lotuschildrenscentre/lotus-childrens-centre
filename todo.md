@@ -151,3 +151,14 @@
 - [ ] Update AdminFormBuilder UI: editable intro text field with MN translation + live preview
 - [ ] Update public volunteer form to display configurable intro text (EN or MN based on language)
 - [ ] Write/update vitest tests
+
+## Feature: Contact Messages Admin Panel
+
+- [ ] Read current Contact Us form and admin panel structure
+- [ ] Add contact_messages table to DB schema (name, email, subject, message, status, createdAt)
+- [ ] Push DB migration for new table
+- [ ] Add DB helpers: createContactMessage, getContactMessages, updateContactMessageStatus, deleteContactMessage
+- [ ] Add tRPC procedures: public contact.submit + admin contact CRUD
+- [ ] Update Contact Us form to submit via tRPC (store in DB)
+- [ ] Build admin Contact Messages UI with list, read, status management, delete
+- [ ] Write vitest tests for contact message procedures

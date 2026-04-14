@@ -9,6 +9,7 @@ import { useCmsContent } from "@/hooks/useCmsContent";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Flower2, Mail, MapPin, Phone, Send, Package } from "lucide-react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 export default function ContactSection() {
   const { t, language } = useLanguage();
@@ -20,11 +21,28 @@ export default function ContactSection() {
     subject: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submitMutation = trpc.contact.submit.useMutation({
+    onSuccess: () => {
+      toast.success(
+        language === "mn"
+          ? "Таны мессеж амжилттай илгээгдлээ! Бид удахгүй холбоо барина."
+          : "Thank you for your message! We'll get back to you soon."
+      );
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      setIsSubmitting(false);
+    },
+    onError: (error) => {
+      toast.error(error.message || (language === "mn" ? "Мессеж илгээхэд алдаа гарлаа. Дахин оролдоно уу." : "Failed to send message. Please try again."));
+      setIsSubmitting(false);
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thank you for your message! We'll get back to you soon.");
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setIsSubmitting(true);
+    submitMutation.mutate(formData);
   };
 
   // CMS-driven contact details with defaults
@@ -243,11 +261,14 @@ export default function ContactSection() {
 
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-lotus-green text-white font-semibold hover:bg-lotus-green-dark transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                disabled={isSubmitting}
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-lotus-green text-white font-semibold hover:bg-lotus-green-dark transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
                 <Send className="w-4 h-4" />
-                {t("contact.submit")}
+                {isSubmitting
+                  ? (language === "mn" ? "Илгээж байна..." : "Sending...")
+                  : t("contact.submit")}
               </button>
             </form>
           </div>

@@ -30,6 +30,7 @@ import {
   FileEdit,
   Newspaper,
   ClipboardList,
+  Mail,
   LogOut,
   PanelLeft,
   ArrowLeft,
@@ -46,6 +47,7 @@ const menuItems = [
   { icon: FileEdit, label: "Page Content", path: "/admin/content" },
   { icon: Newspaper, label: "Blog Posts", path: "/admin/blog" },
   { icon: ClipboardList, label: "Form Builder", path: "/admin/form-builder" },
+  { icon: Mail, label: "Messages", path: "/admin/messages" },
   { icon: Users, label: "Users", path: "/admin/users" },
 ];
 
