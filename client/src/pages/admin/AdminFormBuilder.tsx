@@ -171,9 +171,39 @@ export default function AdminFormBuilder() {
   const [retranslatingId, setRetranslatingId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<"builder" | "applications">("builder");
 
+  // Intro text state
+  const [introText, setIntroText] = useState("");
+  const [introTextMn, setIntroTextMn] = useState("");
+  const [introSaved, setIntroSaved] = useState(false);
+  const [isRetranslatingIntro, setIsRetranslatingIntro] = useState(false);
+
   const utils = trpc.useUtils();
   const { data: fields, isLoading } = trpc.admin.form.fields.useQuery();
   const { data: applications, isLoading: appsLoading } = trpc.admin.form.applications.useQuery();
+  const { data: settings } = trpc.admin.form.getSettings.useQuery();
+
+  // Populate intro text fields when settings load (only if not dirty)
+  const [introInitialized, setIntroInitialized] = useState(false);
+  if (settings && !introInitialized) {
+    setIntroText(settings.introText);
+    setIntroTextMn(settings.introTextMn ?? "");
+    setIntroInitialized(true);
+  }
+
+  const updateSettingsMutation = trpc.admin.form.updateSettings.useMutation({
+    onSuccess: (data) => {
+      utils.admin.form.getSettings.invalidate();
+      utils.volunteerForm.settings.invalidate();
+      if (data.introTextMn) setIntroTextMn(data.introTextMn);
+      setIntroSaved(false);
+      setIsRetranslatingIntro(false);
+      toast.success("Form intro text saved with Mongolian translation");
+    },
+    onError: (err) => {
+      setIsRetranslatingIntro(false);
+      toast.error(err.message);
+    },
+  });
 
   const createMutation = trpc.admin.form.createField.useMutation({
     onSuccess: () => {
@@ -356,6 +386,76 @@ export default function AdminFormBuilder() {
 
         {/* ── Form Builder Tab ── */}
         <TabsContent value="builder" className="mt-4">
+
+          {/* ── Intro Text Editor ── */}
+          <Card className="mb-6 border-lotus-green/30">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+                Form Introduction Text
+                <span className="text-xs font-normal text-muted-foreground">(shown above the form fields)</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                  <span className="bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">EN</span>
+                  English
+                </Label>
+                <Textarea
+                  value={introText}
+                  onChange={(e) => { setIntroText(e.target.value); setIntroSaved(true); }}
+                  placeholder="Please complete the form below and send it to volunteering@lotuschild.org"
+                  className="resize-none text-sm"
+                  rows={2}
+                />
+              </div>
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground mb-1 flex items-center gap-1">
+                  <span className="bg-orange-100 text-orange-700 text-[10px] font-bold px-1.5 py-0.5 rounded">МН</span>
+                  Mongolian translation
+                  {introTextMn && <span className="text-green-600 text-[10px] ml-1">✓ Translated</span>}
+                </Label>
+                <Textarea
+                  value={introTextMn}
+                  onChange={(e) => { setIntroTextMn(e.target.value); setIntroSaved(true); }}
+                  placeholder="Mongolian translation will appear here after saving..."
+                  className="resize-none text-sm bg-orange-50/50 border-orange-200"
+                  rows={2}
+                />
+              </div>
+              <div className="flex items-center gap-2 pt-1">
+                <Button
+                  size="sm"
+                  className="bg-lotus-green hover:bg-lotus-green/90 gap-1.5"
+                  disabled={updateSettingsMutation.isPending || !introText.trim()}
+                  onClick={() => updateSettingsMutation.mutate({ introText, introTextMn: introTextMn || undefined })}
+                >
+                  {updateSettingsMutation.isPending && !isRetranslatingIntro ? (
+                    <><RefreshCw className="h-3.5 w-3.5 animate-spin" /> Saving...</>
+                  ) : (
+                    <><CheckCircle2 className="h-3.5 w-3.5" /> Save Intro Text</>
+                  )}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5"
+                  disabled={updateSettingsMutation.isPending || !introText.trim()}
+                  onClick={() => {
+                    setIsRetranslatingIntro(true);
+                    updateSettingsMutation.mutate({ introText, skipAutoTranslate: false });
+                  }}
+                >
+                  <RefreshCw className={`h-3.5 w-3.5 ${isRetranslatingIntro ? "animate-spin" : ""}`} />
+                  Re-translate
+                </Button>
+                {introSaved && !updateSettingsMutation.isPending && (
+                  <span className="text-xs text-amber-600">Unsaved changes</span>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
             {/* Field list */}
             <div className="lg:col-span-3 space-y-3">
@@ -496,6 +596,12 @@ export default function AdminFormBuilder() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 max-h-[70vh] overflow-y-auto">
+                  {/* Intro text preview */}
+                  {introText && (
+                    <p className="text-sm text-muted-foreground pb-2 border-b border-border/50">
+                      {introText}
+                    </p>
+                  )}
                   {activeFields.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4">
                       Add active fields to see a preview

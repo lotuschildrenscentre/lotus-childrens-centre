@@ -79,6 +79,16 @@ export const appRouter = router({
       return db.getFormFields(true);
     }),
 
+    // Get form settings (intro text) for the public form
+    settings: publicProcedure.query(async () => {
+      const rows = await db.getPageContent("volunteerForm");
+      const introRow = rows.find((r) => r.sectionKey === "introText");
+      return {
+        introText: introRow?.content ?? "Please complete the form below and send it to volunteering@lotuschild.org",
+        introTextMn: introRow?.contentMn ?? null,
+      };
+    }),
+
     // Submit a volunteer application
     submit: publicProcedure
       .input(
@@ -514,6 +524,43 @@ export const appRouter = router({
 
     // ─── Volunteer Form Builder ─────────────────────────────────
     form: router({
+      // Get form settings (intro text)
+      getSettings: adminProcedure.query(async () => {
+        const rows = await db.getPageContent("volunteerForm");
+        const introRow = rows.find((r) => r.sectionKey === "introText");
+        return {
+          introText: introRow?.content ?? "Please complete the form below and send it to volunteering@lotuschild.org",
+          introTextMn: introRow?.contentMn ?? null,
+        };
+      }),
+
+      // Update form settings (intro text) with auto-translation
+      updateSettings: adminProcedure
+        .input(
+          z.object({
+            introText: z.string().min(1),
+            introTextMn: z.string().optional(),
+            skipAutoTranslate: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { translateToMongolian } = await import("./translate");
+          const introTextMn =
+            input.introTextMn !== undefined
+              ? input.introTextMn
+              : input.skipAutoTranslate
+              ? undefined
+              : await translateToMongolian(input.introText);
+          await db.upsertPageContent({
+            pageKey: "volunteerForm",
+            sectionKey: "introText",
+            title: "Form Intro Text",
+            content: input.introText,
+            contentMn: introTextMn,
+          });
+          return { success: true, introTextMn };
+        }),
+
       // List all fields (admin sees inactive too)
       fields: adminProcedure.query(async () => {
         return db.getFormFields(false);

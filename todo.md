@@ -142,3 +142,12 @@
 - [x] Rebuild public volunteer form to render dynamically from field config (bilingual EN/MN)
 - [x] All volunteer buttons already link to /about?tab=volunteers&view=form (no changes needed)
 - [x] Write vitest tests for form builder procedures (12 new tests, 66 total)
+
+## Feature: Configurable Volunteer Form Intro Text
+
+- [ ] Read AdminFormBuilder, About.tsx volunteer form, DB schema to understand structure
+- [ ] Add form_settings table (or reuse page_content) to store intro text EN + MN
+- [ ] Add DB helpers and tRPC procedures for form settings CRUD
+- [ ] Update AdminFormBuilder UI: editable intro text field with MN translation + live preview
+- [ ] Update public volunteer form to display configurable intro text (EN or MN based on language)
+- [ ] Write/update vitest tests

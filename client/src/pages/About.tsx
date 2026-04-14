@@ -180,6 +180,8 @@ export default function About() {
 
   /* Dynamic volunteer form fields from DB */
   const { data: formFields } = trpc.volunteerForm.fields.useQuery();
+  /* Volunteer form settings (intro text) */
+  const { data: formSettings } = trpc.volunteerForm.settings.useQuery();
   /* Volunteer form submission */
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -681,13 +683,22 @@ export default function About() {
                         className="text-muted-foreground mb-8"
                         style={{ fontFamily: "'DM Sans', sans-serif" }}
                       >
-                        Please complete the form below and send it to{" "}
-                        <a
-                          href="mailto:volunteering@lotuschild.org"
-                          className="text-lotus-green font-semibold underline"
-                        >
-                          volunteering@lotuschild.org
-                        </a>
+                        {formSettings
+                          ? (language === "mn" && formSettings.introTextMn
+                              ? formSettings.introTextMn
+                              : formSettings.introText)
+                          : (
+                            <>
+                              Please complete the form below and send it to{" "}
+                              <a
+                                href="mailto:volunteering@lotuschild.org"
+                                className="text-lotus-green font-semibold underline"
+                              >
+                                volunteering@lotuschild.org
+                              </a>
+                            </>
+                          )
+                        }
                       </p>
 
                       <form className="space-y-6" onSubmit={(e) => {
