@@ -188,3 +188,10 @@
 - [x] Add "Photos & Videos" nav link to Navbar (key: nav.photos, href: /gallery)
 - [x] Register /gallery route in App.tsx
 - [x] Write vitest tests for gallery procedures (8 new tests, 85 total)
+
+## Feature: Footer Social Links — Replace Twitter with Instagram, Add YouTube
+
+- [x] Replace Twitter icon with Instagram in Footer.tsx; add YouTube icon
+- [x] Add instagramUrl and youtubeUrl CMS fields; rename twitterUrl → instagramUrl in cmsConfig.ts
+- [x] Update Footer.tsx to read instagramUrl and youtubeUrl from CMS
+- [x] Update admin CMS panel label/field for Instagram and YouTube

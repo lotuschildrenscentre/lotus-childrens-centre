@@ -7,7 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useCmsContent } from "@/hooks/useCmsContent";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
-import { Heart, Facebook, Twitter, Mail, LogIn, LogOut, User, Shield } from "lucide-react";
+import { Heart, Facebook, Instagram, Youtube, Mail, LogIn, LogOut, User, Shield } from "lucide-react";
 
 const DEFAULT_LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/lotus-logo_b560f626.png";
 
@@ -23,7 +23,8 @@ export default function Footer() {
   const description = cms.get("footer", "content", t("footer.description"));
   const logoUrl = cms.get("footer", "imageUrl", DEFAULT_LOGO_URL);
   const facebookUrl = cms.get("footer", "meta.facebookUrl", "https://www.facebook.com");
-  const twitterUrl = cms.get("footer", "meta.twitterUrl", "https://www.twitter.com");
+  const instagramUrl = cms.get("footer", "meta.instagramUrl", "https://www.instagram.com");
+  const youtubeUrl = cms.get("footer", "meta.youtubeUrl", "https://www.youtube.com");
   const contactEmail = cms.get("footer", "meta.email", "lotuschildrenscentre@gmail.com");
   const copyrightText = cms.get("footer", "meta.copyrightText", "Lotus Children's Centre");
   const tagline = cms.get("footer", "meta.tagline", "Made with love for the children");
@@ -79,12 +80,22 @@ export default function Footer() {
                 <Facebook className="w-4 h-4" />
               </a>
               <a
-                href={twitterUrl}
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-lotus-green transition-colors duration-200"
+                aria-label="Instagram"
               >
-                <Twitter className="w-4 h-4" />
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                href={youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-lotus-green transition-colors duration-200"
+                aria-label="YouTube"
+              >
+                <Youtube className="w-4 h-4" />
               </a>
               <a
                 href={`mailto:${contactEmail}`}
