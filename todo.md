@@ -172,3 +172,19 @@
 - [ ] Build admin Team Members UI with EN/MN fields, Re-translate, add/edit/delete
 - [ ] Update About.tsx to load team members from DB, show only active members
 - [ ] Remove hardcoded staff slots from cmsConfig.ts
+
+## Feature: Photos & Videos Gallery
+
+- [x] Add media_items table to DB schema (id, type, title, titleMn, description, descriptionMn, url, thumbnailUrl, sortOrder, isPublished, createdAt, updatedAt)
+- [x] Push DB migration for media_items
+- [x] Add DB helpers: getMediaItems, getMediaItemById, createMediaItem, updateMediaItem, deleteMediaItem
+- [x] Add public tRPC procedure: gallery.list (published only)
+- [x] Add admin tRPC procedures: admin.gallery.list, create, update, retranslate, delete, uploadImage
+- [x] Auto-translate EN title/description to MN on create/update
+- [x] Build AdminGallery.tsx — photo/video grid, add/edit dialog with upload, EN+MN fields, Re-translate, delete
+- [x] Add Gallery nav item to AdminLayout sidebar
+- [x] Register /admin/gallery route in App.tsx
+- [x] Build public Gallery.tsx — masonry grid, filter tabs (All/Photos/Videos), modal with description + navigation
+- [x] Add "Photos & Videos" nav link to Navbar (key: nav.photos, href: /gallery)
+- [x] Register /gallery route in App.tsx
+- [x] Write vitest tests for gallery procedures (8 new tests, 85 total)

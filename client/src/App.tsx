@@ -21,6 +21,8 @@ import AdminBlogPosts from "./pages/admin/AdminBlogPosts";
 import AdminFormBuilder from "./pages/admin/AdminFormBuilder";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminTeamMembers from "./pages/admin/AdminTeamMembers";
+import AdminGallery from "./pages/admin/AdminGallery";
+import Gallery from "./pages/Gallery";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -42,6 +44,7 @@ function AdminRoutes() {
         <Route path="/admin/form-builder" component={AdminFormBuilder} />
         <Route path="/admin/messages" component={AdminMessages} />
         <Route path="/admin/team" component={AdminTeamMembers} />
+        <Route path="/admin/gallery" component={AdminGallery} />
         <Route path="/admin/users" component={AdminUsers} />
         <Route component={AdminDashboard} />
       </Switch>
@@ -62,6 +65,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/about"} component={About} />
       <Route path={"/blog"} component={Blog} />
+      <Route path={"/gallery"} component={Gallery} />
       <Route path={"/get-involved"} component={GetInvolved} />
       <Route path={"/login"} component={Login} />
       <Route path={"/404"} component={NotFound} />

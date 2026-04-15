@@ -119,6 +119,13 @@ export const appRouter = router({
       }),
   }),
 
+  // ─── Public Media Gallery ──────────────────────────────────
+  gallery: router({
+    list: publicProcedure.query(async () => {
+      return await db.getMediaItems(true); // publishedOnly
+    }),
+  }),
+
   // ─── Public Team Members ──────────────────────────────────
   team: router({
     list: publicProcedure.query(async () => {
@@ -809,6 +816,102 @@ export const appRouter = router({
         .mutation(async ({ input }) => {
           await db.deleteTeamMember(input.id);
           return { success: true };
+        }),
+    }),
+
+    // ─── Admin: Media Gallery ───────────────────────────────────────────────
+    gallery: router({
+      list: adminProcedure.query(async () => {
+        return await db.getMediaItems(false); // all items
+      }),
+      create: adminProcedure
+        .input(
+          z.object({
+            type: z.enum(["photo", "video"]),
+            title: z.string().optional(),
+            titleMn: z.string().optional(),
+            description: z.string().optional(),
+            descriptionMn: z.string().optional(),
+            url: z.string().min(1),
+            thumbnailUrl: z.string().optional(),
+            sortOrder: z.number().optional(),
+            isPublished: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { translateToMongolian } = await import("./translate");
+          let titleMn = input.titleMn;
+          let descriptionMn = input.descriptionMn;
+          if (input.title && !titleMn) {
+            titleMn = await translateToMongolian(input.title);
+          }
+          if (input.description && !descriptionMn) {
+            descriptionMn = await translateToMongolian(input.description);
+          }
+          await db.createMediaItem({ ...input, titleMn, descriptionMn });
+          return { success: true };
+        }),
+      update: adminProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            type: z.enum(["photo", "video"]).optional(),
+            title: z.string().nullable().optional(),
+            titleMn: z.string().nullable().optional(),
+            description: z.string().nullable().optional(),
+            descriptionMn: z.string().nullable().optional(),
+            url: z.string().optional(),
+            thumbnailUrl: z.string().nullable().optional(),
+            sortOrder: z.number().optional(),
+            isPublished: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { id, ...fields } = input;
+          const { translateToMongolian } = await import("./translate");
+          if (fields.title !== undefined && fields.title !== null && fields.titleMn === undefined) {
+            fields.titleMn = await translateToMongolian(fields.title);
+          }
+          if (fields.description !== undefined && fields.description !== null && fields.descriptionMn === undefined) {
+            fields.descriptionMn = await translateToMongolian(fields.description);
+          }
+          await db.updateMediaItem(id, fields);
+          return { success: true };
+        }),
+      retranslate: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          const item = await db.getMediaItemById(input.id);
+          if (!item) throw new TRPCError({ code: "NOT_FOUND" });
+          const { translateToMongolian } = await import("./translate");
+          const updates: Record<string, string | null> = {};
+          if (item.title) updates.titleMn = await translateToMongolian(item.title);
+          if (item.description) updates.descriptionMn = await translateToMongolian(item.description);
+          await db.updateMediaItem(input.id, updates);
+          return { success: true, ...updates };
+        }),
+      delete: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          await db.deleteMediaItem(input.id);
+          return { success: true };
+        }),
+      uploadImage: adminProcedure
+        .input(
+          z.object({
+            base64: z.string(),
+            fileName: z.string(),
+            contentType: z.string(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { storagePut } = await import("./storage");
+          const buffer = Buffer.from(input.base64, "base64");
+          const timestamp = Date.now();
+          const randomSuffix = Math.random().toString(36).substring(2, 8);
+          const key = `gallery/${timestamp}-${randomSuffix}-${input.fileName}`;
+          const { url } = await storagePut(key, buffer, input.contentType);
+          return { url };
         }),
     }),
   }),

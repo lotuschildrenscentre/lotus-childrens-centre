@@ -226,3 +226,25 @@ export const teamMembers = mysqlTable("team_members", {
 });
 export type TeamMember = typeof teamMembers.$inferSelect;
 export type InsertTeamMember = typeof teamMembers.$inferInsert;
+
+/**
+ * Media Gallery — photos and videos for the Photos & Videos page.
+ * type: "photo" = image (URL), "video" = YouTube embed URL
+ * Bilingual: title/description (EN) + titleMn/descriptionMn (auto-translated MN)
+ */
+export const mediaItems = mysqlTable("media_items", {
+  id: int("id").autoincrement().primaryKey(),
+  type: mysqlEnum("type", ["photo", "video"]).notNull().default("photo"),
+  title: varchar("title", { length: 500 }),
+  titleMn: varchar("titleMn", { length: 500 }),
+  description: text("description"),
+  descriptionMn: text("descriptionMn"),
+  url: text("url").notNull(), // S3 URL for photos, YouTube URL for videos
+  thumbnailUrl: text("thumbnailUrl"), // optional custom thumbnail
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isPublished: boolean("isPublished").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MediaItem = typeof mediaItems.$inferSelect;
+export type InsertMediaItem = typeof mediaItems.$inferInsert;

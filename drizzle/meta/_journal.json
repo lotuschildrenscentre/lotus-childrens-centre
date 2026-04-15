@@ -78,6 +78,13 @@
       "when": 1776232622118,
       "tag": "0010_lumpy_franklin_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1776236430573,
+      "tag": "0011_happy_red_hulk",
+      "breakpoints": true
     }
   ]
 }

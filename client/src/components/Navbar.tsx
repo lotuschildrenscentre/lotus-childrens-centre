@@ -25,6 +25,7 @@ export default function Navbar() {
     { key: "nav.home", href: "/" , isRoute: true },
     { key: "nav.about", href: "/about", isRoute: true },
     { key: "nav.news", href: "/blog", isRoute: true },
+    { key: "nav.photos", href: "/gallery", isRoute: true },
     { key: "nav.getInvolved", href: "/get-involved", isRoute: true },
     { key: "nav.contact", href: "/#contact" },
   ];

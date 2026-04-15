@@ -530,3 +530,78 @@ export async function deleteTeamMember(id: number) {
   if (!db) throw new Error("Database not available");
   await db.delete(teamMembers).where(eq(teamMembers.id, id));
 }
+
+// ─── Media Gallery helpers ───────────────────────────────────────────────────
+export async function getMediaItems(publishedOnly = false) {
+  const { mediaItems } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db
+    .select()
+    .from(mediaItems)
+    .orderBy(mediaItems.sortOrder, mediaItems.createdAt);
+  return publishedOnly ? rows.filter((r) => r.isPublished) : rows;
+}
+
+export async function getMediaItemById(id: number) {
+  const { mediaItems } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(mediaItems).where(eq(mediaItems.id, id));
+  return rows[0] ?? null;
+}
+
+export async function createMediaItem(data: {
+  type: "photo" | "video";
+  title?: string | null;
+  titleMn?: string | null;
+  description?: string | null;
+  descriptionMn?: string | null;
+  url: string;
+  thumbnailUrl?: string | null;
+  sortOrder?: number;
+  isPublished?: boolean;
+}) {
+  const { mediaItems } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [result] = await db.insert(mediaItems).values({
+    type: data.type,
+    title: data.title ?? null,
+    titleMn: data.titleMn ?? null,
+    description: data.description ?? null,
+    descriptionMn: data.descriptionMn ?? null,
+    url: data.url,
+    thumbnailUrl: data.thumbnailUrl ?? null,
+    sortOrder: data.sortOrder ?? 0,
+    isPublished: data.isPublished ?? true,
+  });
+  return result;
+}
+
+export async function updateMediaItem(
+  id: number,
+  data: Partial<{
+    type: "photo" | "video";
+    title: string | null;
+    titleMn: string | null;
+    description: string | null;
+    descriptionMn: string | null;
+    url: string;
+    thumbnailUrl: string | null;
+    sortOrder: number;
+    isPublished: boolean;
+  }>
+) {
+  const { mediaItems } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(mediaItems).set(data).where(eq(mediaItems.id, id));
+}
+
+export async function deleteMediaItem(id: number) {
+  const { mediaItems } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(mediaItems).where(eq(mediaItems.id, id));
+}
