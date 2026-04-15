@@ -71,6 +71,13 @@
       "when": 1776149873338,
       "tag": "0009_fearless_anthem",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1776232622118,
+      "tag": "0010_lumpy_franklin_storm",
+      "breakpoints": true
     }
   ]
 }

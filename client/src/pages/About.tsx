@@ -159,6 +159,9 @@ export default function About() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const teamSectionRef = useRef<HTMLDivElement>(null);
 
+  /* Team members from DB */
+  const { data: dbTeamMembers } = trpc.team.list.useQuery();
+
   /* Testimonials from DB */
   const { data: dbTestimonials } = trpc.testimonials.list.useQuery();
 
@@ -511,11 +514,16 @@ export default function About() {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                  {dailyStaff.map((member, idx) => {
-                    const n = idx + 1;
-                    const cmsName = cms.get("staff", `meta.staff${n}Name`, member.name);
-                    const cmsRole = cms.get("staff", `meta.staff${n}Role`, member.role);
-                    const initials = cmsName.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
+                  {(dbTeamMembers && dbTeamMembers.length > 0 ? dbTeamMembers : dailyStaff).map((member, idx) => {
+                    const isDbMember = dbTeamMembers && dbTeamMembers.length > 0;
+                    const displayName = isDbMember
+                      ? ((language === "mn" && (member as { nameMn?: string | null }).nameMn) || member.name)
+                      : member.name;
+                    const displayRole = isDbMember
+                      ? ((language === "mn" && (member as { roleMn?: string | null }).roleMn) || (member as { role: string }).role)
+                      : (member as { role: string }).role;
+                    const initials = displayName.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
+                    const color = (member as { color?: string }).color || "bg-lotus-green";
                     return (
                     <div
                       key={idx}
@@ -526,7 +534,7 @@ export default function About() {
                     >
                       {/* Avatar with initials */}
                       <div
-                        className={`w-20 h-20 rounded-full ${member.color} flex items-center justify-center mx-auto mb-4 shadow-md`}
+                        className={`w-20 h-20 rounded-full ${color} flex items-center justify-center mx-auto mb-4 shadow-md`}
                       >
                         <span
                           className="text-white text-xl font-bold"
@@ -539,13 +547,13 @@ export default function About() {
                         className="text-base font-bold text-foreground mb-1 leading-tight"
                         style={{ fontFamily: "'Playfair Display', serif" }}
                       >
-                        {cmsName}
+                        {displayName}
                       </h4>
                       <p
                         className="text-sm text-lotus-green font-semibold"
                         style={{ fontFamily: "'DM Sans', sans-serif" }}
                       >
-                        {cmsRole}
+                        {displayRole}
                       </p>
                     </div>
                   );

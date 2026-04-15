@@ -207,3 +207,22 @@ export const contactMessages = mysqlTable("contact_messages", {
 });
 export type ContactMessage = typeof contactMessages.$inferSelect;
 export type InsertContactMessage = typeof contactMessages.$inferInsert;
+
+/**
+ * Team Members — dynamic list of staff shown on the About page
+ */
+export const teamMembers = mysqlTable("team_members", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameMn: varchar("nameMn", { length: 255 }),
+  role: varchar("role", { length: 255 }).notNull(),
+  roleMn: varchar("roleMn", { length: 255 }),
+  photoUrl: text("photoUrl"),
+  color: varchar("color", { length: 50 }).default("bg-lotus-green").notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type TeamMember = typeof teamMembers.$inferSelect;
+export type InsertTeamMember = typeof teamMembers.$inferInsert;

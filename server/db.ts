@@ -15,6 +15,8 @@ import {
   InsertVolunteerFormField,
   volunteerApplications,
   InsertVolunteerApplication,
+  contactMessages,
+  InsertContactMessage,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -455,4 +457,76 @@ export async function deleteContactMessage(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(cm).where(eq(cm.id, id));
+}
+
+// ─── Team Members ────────────────────────────────────────────────────────────
+export async function getTeamMembers(activeOnly = false) {
+  const { teamMembers } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db
+    .select()
+    .from(teamMembers)
+    .orderBy(teamMembers.sortOrder, teamMembers.id);
+  return activeOnly ? rows.filter((r) => r.isActive) : rows;
+}
+
+export async function getTeamMemberById(id: number) {
+  const { teamMembers } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(teamMembers).where(eq(teamMembers.id, id));
+  return rows[0] ?? null;
+}
+
+export async function createTeamMember(data: {
+  name: string;
+  nameMn?: string;
+  role: string;
+  roleMn?: string;
+  photoUrl?: string;
+  color?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+}) {
+  const { teamMembers } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [result] = await db.insert(teamMembers).values({
+    name: data.name,
+    nameMn: data.nameMn ?? null,
+    role: data.role,
+    roleMn: data.roleMn ?? null,
+    photoUrl: data.photoUrl ?? null,
+    color: data.color ?? "bg-lotus-green",
+    sortOrder: data.sortOrder ?? 0,
+    isActive: data.isActive ?? true,
+  });
+  return result;
+}
+
+export async function updateTeamMember(
+  id: number,
+  data: Partial<{
+    name: string;
+    nameMn: string | null;
+    role: string;
+    roleMn: string | null;
+    photoUrl: string | null;
+    color: string;
+    sortOrder: number;
+    isActive: boolean;
+  }>
+) {
+  const { teamMembers } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(teamMembers).set(data).where(eq(teamMembers.id, id));
+}
+
+export async function deleteTeamMember(id: number) {
+  const { teamMembers } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(teamMembers).where(eq(teamMembers.id, id));
 }

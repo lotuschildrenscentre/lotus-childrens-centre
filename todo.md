@@ -162,3 +162,13 @@
 - [ ] Update Contact Us form to submit via tRPC (store in DB)
 - [ ] Build admin Contact Messages UI with list, read, status management, delete
 - [ ] Write vitest tests for contact message procedures
+
+## Feature: Dynamic Team Members
+
+- [ ] Add team_members table to DB schema (id, name, nameMn, role, roleMn, photo, color, sortOrder, isActive)
+- [ ] Push DB migration
+- [ ] Add DB helpers: getTeamMembers, createTeamMember, updateTeamMember, deleteTeamMember
+- [ ] Add tRPC procedures: public team.list + admin team CRUD with auto-translation
+- [ ] Build admin Team Members UI with EN/MN fields, Re-translate, add/edit/delete
+- [ ] Update About.tsx to load team members from DB, show only active members
+- [ ] Remove hardcoded staff slots from cmsConfig.ts

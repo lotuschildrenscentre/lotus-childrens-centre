@@ -119,6 +119,13 @@ export const appRouter = router({
       }),
   }),
 
+  // ─── Public Team Members ──────────────────────────────────
+  team: router({
+    list: publicProcedure.query(async () => {
+      return await db.getTeamMembers(true); // activeOnly
+    }),
+  }),
+
   // ─── Admin Panel ────────────────────────────────────────────
   admin: router({
     // Dashboard stats
@@ -724,6 +731,83 @@ export const appRouter = router({
         .input(z.object({ id: z.number() }))
         .mutation(async ({ input }) => {
           await db.deleteContactMessage(input.id);
+          return { success: true };
+        }),
+    }),
+
+    // ─── Team Members ───────────────────────────────────────────────────────
+    team: router({
+      list: adminProcedure.query(async () => {
+        return await db.getTeamMembers();
+      }),
+      create: adminProcedure
+        .input(
+          z.object({
+            name: z.string().min(1),
+            nameMn: z.string().optional(),
+            role: z.string().min(1),
+            roleMn: z.string().optional(),
+            photoUrl: z.string().optional(),
+            color: z.string().optional(),
+            sortOrder: z.number().optional(),
+            isActive: z.boolean().optional(),
+            skipAutoTranslate: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { skipAutoTranslate, ...fields } = input;
+          if (!skipAutoTranslate) {
+            const { translateToMongolian } = await import("./translate");
+            if (!fields.nameMn) fields.nameMn = await translateToMongolian(fields.name);
+            if (!fields.roleMn) fields.roleMn = await translateToMongolian(fields.role);
+          }
+          await db.createTeamMember(fields);
+          return { success: true };
+        }),
+      update: adminProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            name: z.string().min(1).optional(),
+            nameMn: z.string().nullable().optional(),
+            role: z.string().min(1).optional(),
+            roleMn: z.string().nullable().optional(),
+            photoUrl: z.string().nullable().optional(),
+            color: z.string().optional(),
+            sortOrder: z.number().optional(),
+            isActive: z.boolean().optional(),
+            skipAutoTranslate: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { id, skipAutoTranslate, ...fields } = input;
+          if (!skipAutoTranslate) {
+            const { translateToMongolian } = await import("./translate");
+            if (fields.name && fields.nameMn === undefined) {
+              fields.nameMn = await translateToMongolian(fields.name);
+            }
+            if (fields.role && fields.roleMn === undefined) {
+              fields.roleMn = await translateToMongolian(fields.role);
+            }
+          }
+          await db.updateTeamMember(id, fields);
+          return { success: true };
+        }),
+      retranslate: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          const member = await db.getTeamMemberById(input.id);
+          if (!member) throw new TRPCError({ code: "NOT_FOUND" });
+          const { translateToMongolian } = await import("./translate");
+          const nameMn = await translateToMongolian(member.name);
+          const roleMn = await translateToMongolian(member.role);
+          await db.updateTeamMember(input.id, { nameMn, roleMn });
+          return { success: true, nameMn, roleMn };
+        }),
+      delete: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          await db.deleteTeamMember(input.id);
           return { success: true };
         }),
     }),
