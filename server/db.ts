@@ -605,3 +605,65 @@ export async function deleteMediaItem(id: number) {
   if (!db) throw new Error("Database not available");
   await db.delete(mediaItems).where(eq(mediaItems.id, id));
 }
+
+// ─── Partners / Sponsors helpers ─────────────────────────────────────────────
+export async function getPartners(activeOnly = false) {
+  const { partners } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db
+    .select()
+    .from(partners)
+    .orderBy(asc(partners.sortOrder), asc(partners.createdAt));
+  return activeOnly ? rows.filter((r) => r.isActive) : rows;
+}
+
+export async function getPartnerById(id: number) {
+  const { partners } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(partners).where(eq(partners.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function createPartner(data: {
+  name: string;
+  logoUrl: string;
+  websiteUrl?: string | null;
+  sortOrder?: number;
+  isActive?: boolean;
+}) {
+  const { partners } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(partners).values({
+    name: data.name,
+    logoUrl: data.logoUrl,
+    websiteUrl: data.websiteUrl ?? null,
+    sortOrder: data.sortOrder ?? 0,
+    isActive: data.isActive ?? true,
+  });
+}
+
+export async function updatePartner(
+  id: number,
+  data: Partial<{
+    name: string;
+    logoUrl: string;
+    websiteUrl: string | null;
+    sortOrder: number;
+    isActive: boolean;
+  }>
+) {
+  const { partners } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(partners).set(data).where(eq(partners.id, id));
+}
+
+export async function deletePartner(id: number) {
+  const { partners } = await import("../drizzle/schema");
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(partners).where(eq(partners.id, id));
+}

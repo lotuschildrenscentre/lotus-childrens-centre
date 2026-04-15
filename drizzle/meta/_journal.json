@@ -85,6 +85,13 @@
       "when": 1776236430573,
       "tag": "0011_happy_red_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1776241066328,
+      "tag": "0012_black_ser_duncan",
+      "breakpoints": true
     }
   ]
 }

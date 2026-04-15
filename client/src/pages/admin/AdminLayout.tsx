@@ -36,6 +36,7 @@ import {
   PanelLeft,
   ArrowLeft,
   Images,
+  Handshake,
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -50,6 +51,7 @@ const menuItems = [
   { icon: Newspaper, label: "Blog Posts", path: "/admin/blog" },
   { icon: UserSquare2, label: "Team Members", path: "/admin/team" },
   { icon: Images, label: "Gallery", path: "/admin/gallery" },
+  { icon: Handshake, label: "Our Partners", path: "/admin/partners" },
   { icon: ClipboardList, label: "Form Builder", path: "/admin/form-builder" },
   { icon: Mail, label: "Messages", path: "/admin/messages" },
   { icon: Users, label: "Users", path: "/admin/users" },

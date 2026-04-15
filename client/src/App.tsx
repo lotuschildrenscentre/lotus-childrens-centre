@@ -22,6 +22,7 @@ import AdminFormBuilder from "./pages/admin/AdminFormBuilder";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminTeamMembers from "./pages/admin/AdminTeamMembers";
 import AdminGallery from "./pages/admin/AdminGallery";
+import AdminPartners from "./pages/admin/AdminPartners";
 import Gallery from "./pages/Gallery";
 
 function ScrollToTop() {
@@ -45,6 +46,7 @@ function AdminRoutes() {
         <Route path="/admin/messages" component={AdminMessages} />
         <Route path="/admin/team" component={AdminTeamMembers} />
         <Route path="/admin/gallery" component={AdminGallery} />
+        <Route path="/admin/partners" component={AdminPartners} />
         <Route path="/admin/users" component={AdminUsers} />
         <Route component={AdminDashboard} />
       </Switch>

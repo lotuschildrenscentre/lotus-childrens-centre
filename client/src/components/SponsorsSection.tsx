@@ -1,49 +1,60 @@
 /*
  * Design: "Warm Embrace" — Organic Warmth
  * Sponsors: Horizontal auto-scrolling logo marquee
- * CMS-enabled: section title, partner names and logos editable from admin
+ * Partners are now fully dynamic — managed via Admin → Page Content → Our Partners
+ * Falls back to hardcoded defaults when no DB partners exist yet.
  */
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCmsContent } from "@/hooks/useCmsContent";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { trpc } from "@/lib/trpc";
 import { Flower2 } from "lucide-react";
 
 const defaultSponsors = [
   {
     name: "Ulaanbaatar Elite International School",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/elite-international-school_1cc7eabc.webp",
+    websiteUrl: null,
   },
   {
     name: "Hobby School",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/hobby-school_35883076.jpg",
+    websiteUrl: null,
   },
   {
     name: "The English School of Mongolia",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/english-school-mongolia_b49b001f.png",
+    websiteUrl: null,
   },
   {
     name: "Gulf for Good",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/gulf-for-good_3c9f8719.jpg",
+    websiteUrl: null,
   },
   {
     name: "Holiday Inn Ulaanbaatar",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/holiday-inn_c355577f.jpg",
+    websiteUrl: null,
   },
   {
     name: "Алтан Тариа (Altan Taria)",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/altan-taria_671e2c1c.jpg",
+    websiteUrl: null,
   },
   {
     name: "IVCO Joint Venture Company",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/ivco_e526e4c8.jpg",
+    websiteUrl: null,
   },
   {
     name: "AMURT",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/amurt_dad6328d.png",
+    websiteUrl: null,
   },
   {
     name: "Misheel Kids Foundation",
     logo: "https://d2xsxph8kpxj0f.cloudfront.net/310519663419187993/ZwYupVgqLLQCNHGqjFQxE2/misheel-kids-foundation_79a57fcd.jpg",
+    websiteUrl: null,
   },
 ];
 
@@ -52,17 +63,14 @@ export default function SponsorsSection() {
   const cms = useCmsContent("home");
   const { ref, isVisible } = useScrollAnimation(0.1);
 
-  // Build sponsors list from CMS with fallback to defaults
-  const sponsors: { name: string; logo: string }[] = [];
-  for (let i = 1; i <= 10; i++) {
-    const cmsName = cms.get("sponsors", `meta.partner${i}Name`, "");
-    const cmsLogo = cms.get("sponsors", `meta.partner${i}Logo`, "");
-    if (cmsName && cmsLogo) {
-      sponsors.push({ name: cmsName, logo: cmsLogo });
-    }
-  }
-  // If no CMS sponsors, use defaults
-  const displaySponsors = sponsors.length > 0 ? sponsors : defaultSponsors;
+  // Load partners from DB
+  const { data: dbPartners } = trpc.partners.list.useQuery();
+
+  // Use DB partners if available, otherwise fall back to hardcoded defaults
+  const displaySponsors =
+    dbPartners && dbPartners.length > 0
+      ? dbPartners.map((p) => ({ name: p.name, logo: p.logoUrl, websiteUrl: p.websiteUrl ?? null }))
+      : defaultSponsors;
 
   // Duplicate the sponsors array for seamless infinite scroll
   const duplicatedSponsors = [...displaySponsors, ...displaySponsors];
@@ -103,11 +111,8 @@ export default function SponsorsSection() {
 
         {/* Scrolling track */}
         <div className="flex animate-marquee hover:[animation-play-state:paused]">
-          {duplicatedSponsors.map((sponsor, index) => (
-            <div
-              key={`${sponsor.name}-${index}`}
-              className="flex-shrink-0 mx-6 sm:mx-10"
-            >
+          {duplicatedSponsors.map((sponsor, index) => {
+            const card = (
               <div className="w-36 h-36 sm:w-44 sm:h-44 bg-white rounded-2xl shadow-md border border-border/50 flex items-center justify-center p-5 hover:shadow-lg hover:scale-105 transition-all duration-300 group">
                 <img
                   src={sponsor.logo}
@@ -116,14 +121,28 @@ export default function SponsorsSection() {
                   loading="lazy"
                 />
               </div>
-              <p
-                className="text-xs text-muted-foreground text-center mt-3 max-w-36 sm:max-w-44 mx-auto leading-tight"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
+            );
+            return (
+              <div
+                key={`${sponsor.name}-${index}`}
+                className="flex-shrink-0 mx-6 sm:mx-10"
               >
-                {sponsor.name}
-              </p>
-            </div>
-          ))}
+                {sponsor.websiteUrl ? (
+                  <a href={sponsor.websiteUrl} target="_blank" rel="noopener noreferrer">
+                    {card}
+                  </a>
+                ) : (
+                  card
+                )}
+                <p
+                  className="text-xs text-muted-foreground text-center mt-3 max-w-36 sm:max-w-44 mx-auto leading-tight"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  {sponsor.name}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
 

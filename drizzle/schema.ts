@@ -248,3 +248,18 @@ export const mediaItems = mysqlTable("media_items", {
 });
 export type MediaItem = typeof mediaItems.$inferSelect;
 export type InsertMediaItem = typeof mediaItems.$inferInsert;
+
+/**
+ * Partners / Sponsors — dynamic list shown in the Our Partners marquee section.
+ */
+export const partners = mysqlTable("partners", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 500 }).notNull(),
+  logoUrl: text("logoUrl").notNull(),
+  websiteUrl: varchar("websiteUrl", { length: 1000 }),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type Partner = typeof partners.$inferSelect;
+export type InsertPartner = typeof partners.$inferInsert;

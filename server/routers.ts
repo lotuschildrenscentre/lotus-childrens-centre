@@ -126,6 +126,12 @@ export const appRouter = router({
     }),
   }),
 
+  // ─── Public Partners ───────────────────────────────────────
+  partners: router({
+    list: publicProcedure.query(async () => {
+      return await db.getPartners(true); // activeOnly
+    }),
+  }),
   // ─── Public Team Members ──────────────────────────────────
   team: router({
     list: publicProcedure.query(async () => {
@@ -819,6 +825,65 @@ export const appRouter = router({
         }),
     }),
 
+    // ─── Admin: Partners ───────────────────────────────────────────────────
+    partners: router({
+      list: adminProcedure.query(async () => {
+        return await db.getPartners(false);
+      }),
+      create: adminProcedure
+        .input(
+          z.object({
+            name: z.string().min(1),
+            logoUrl: z.string().min(1),
+            websiteUrl: z.string().nullable().optional(),
+            sortOrder: z.number().optional(),
+            isActive: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          await db.createPartner(input);
+          return { success: true };
+        }),
+      update: adminProcedure
+        .input(
+          z.object({
+            id: z.number(),
+            name: z.string().min(1).optional(),
+            logoUrl: z.string().optional(),
+            websiteUrl: z.string().nullable().optional(),
+            sortOrder: z.number().optional(),
+            isActive: z.boolean().optional(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { id, ...fields } = input;
+          await db.updatePartner(id, fields);
+          return { success: true };
+        }),
+      delete: adminProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input }) => {
+          await db.deletePartner(input.id);
+          return { success: true };
+        }),
+      uploadLogo: adminProcedure
+        .input(
+          z.object({
+            base64: z.string(),
+            fileName: z.string(),
+            contentType: z.string(),
+          })
+        )
+        .mutation(async ({ input }) => {
+          const { storagePut } = await import("./storage");
+          const buffer = Buffer.from(input.base64, "base64");
+          const timestamp = Date.now();
+          const randomSuffix = Math.random().toString(36).substring(2, 8);
+          const key = `partners/${timestamp}-${randomSuffix}-${input.fileName}`;
+          const { url } = await storagePut(key, buffer, input.contentType);
+          return { url };
+        }),
+    }),
     // ─── Admin: Media Gallery ───────────────────────────────────────────────
     gallery: router({
       list: adminProcedure.query(async () => {

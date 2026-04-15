@@ -195,3 +195,14 @@
 - [x] Add instagramUrl and youtubeUrl CMS fields; rename twitterUrl → instagramUrl in cmsConfig.ts
 - [x] Update Footer.tsx to read instagramUrl and youtubeUrl from CMS
 - [x] Update admin CMS panel label/field for Instagram and YouTube
+
+## Feature: Dynamic Partners / Sponsors Section
+
+- [x] Add partners table to DB schema (id, name, logoUrl, websiteUrl, sortOrder, isActive, createdAt)
+- [x] Push DB migration for partners table
+- [x] Add DB helpers: getPartners, getPartnerById, createPartner, updatePartner, deletePartner, reorderPartners
+- [x] Add public tRPC procedure: partners.list (active only)
+- [x] Add admin tRPC procedures: admin.partners CRUD + uploadLogo
+- [x] Build admin Partners UI (Admin → Our Partners) — add/edit/delete/reorder with logo upload
+- [x] Update SponsorsSection.tsx to load partners from DB with fallback to defaults
+- [x] Write vitest tests for partners procedures
