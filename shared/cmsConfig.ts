@@ -208,6 +208,7 @@ export const CMS_PAGES: CmsPage[] = [
           { key: "paragraph1", label: "Paragraph 1", type: "textarea", storageKey: "metadata.paragraph1", placeholder: "e.g. The Lotus Children's Centre is an official Mongolian NGO..." },
           { key: "paragraph2", label: "Paragraph 2", type: "textarea", storageKey: "metadata.paragraph2", placeholder: "e.g. Located in Gachuurt in the suburbs of Ulaanbaatar..." },
           { key: "image", label: "Side Image", type: "image", storageKey: "imageUrl" },
+          { key: "youtubeUrl", label: "YouTube Video URL", type: "text", storageKey: "metadata.youtubeUrl", placeholder: "e.g. https://www.youtube.com/watch?v=oBo_8J0uJuc" },
         ],
       },
       // ─── Aims & Beliefs ───

@@ -311,6 +311,46 @@ export default function About() {
           </div>
         </section>
 
+        {/* YouTube Video Section */}
+        {(() => {
+          const rawUrl = cms.get("whoWeAre", "meta.youtubeUrl", "https://www.youtube.com/watch?v=oBo_8J0uJuc");
+          const getEmbedUrl = (url: string) => {
+            try {
+              if (url.includes("youtu.be/")) {
+                const id = url.split("youtu.be/")[1]?.split("?")[0];
+                return id ? `https://www.youtube.com/embed/${id}` : null;
+              }
+              const urlObj = new URL(url);
+              const videoId = urlObj.searchParams.get("v");
+              return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+            } catch {
+              return null;
+            }
+          };
+          const embedUrl = getEmbedUrl(rawUrl);
+          if (!embedUrl) return null;
+          return (
+            <section className="py-12 lg:py-16 bg-background">
+              <div className="container">
+                <div className="max-w-4xl mx-auto">
+                  <div
+                    className="relative w-full rounded-2xl overflow-hidden shadow-xl"
+                    style={{ paddingBottom: "56.25%" }}
+                  >
+                    <iframe
+                      className="absolute inset-0 w-full h-full"
+                      src={embedUrl}
+                      title="Lotus Children's Centre Video"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+          );
+        })()}
+
         {/* Aims & Beliefs Section */}
         <section ref={aimsRef} className="py-20 lg:py-28 bg-lotus-cream">
           <div className="container">
