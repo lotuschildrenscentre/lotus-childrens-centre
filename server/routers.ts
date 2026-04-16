@@ -5,6 +5,8 @@ import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
+import { sdk } from "./_core/sdk";
+import bcrypt from "bcryptjs";
 
 export const appRouter = router({
   system: systemRouter,
@@ -16,6 +18,57 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+    staffLogin: publicProcedure
+      .input(z.object({ email: z.string().email(), password: z.string().min(1) }))
+      .mutation(async ({ input, ctx }) => {
+        const user = await db.getUserByEmail(input.email);
+        if (!user || !user.passwordHash) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid email or password" });
+        }
+        const valid = await bcrypt.compare(input.password, user.passwordHash);
+        if (!valid) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid email or password" });
+        }
+        if (user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Access denied: admin only" });
+        }
+        const token = await sdk.createSessionToken(user.openId, { name: user.name ?? "" });
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, httpOnly: true });
+        await db.upsertUser({ openId: user.openId, lastSignedIn: new Date() });
+        return { success: true, user };
+      }),
+    setupAdmin: publicProcedure
+      .input(z.object({ email: z.string().email(), password: z.string().min(8), setupKey: z.string() }))
+      .mutation(async ({ input }) => {
+        // Only allow if ADMIN_SETUP_KEY env var matches
+        const setupKey = process.env.ADMIN_SETUP_KEY;
+        if (!setupKey || input.setupKey !== setupKey) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Invalid setup key" });
+        }
+        const existing = await db.getUserByEmail(input.email);
+        const passwordHash = await bcrypt.hash(input.password, 12);
+        if (existing) {
+          await db.updateUserPassword(existing.openId, passwordHash);
+          await db.updateUserRole(existing.id, "admin");
+          return { success: true, message: "Admin password updated" };
+        }
+        // Create new admin user
+        const openId = `staff-${Date.now()}`;
+        await db.upsertUser({
+          openId,
+          email: input.email,
+          name: "Admin",
+          loginMethod: "password",
+          role: "admin",
+          lastSignedIn: new Date(),
+        });
+        const newUser = await db.getUserByEmail(input.email);
+        if (newUser) {
+          await db.updateUserPassword(newUser.openId, passwordHash);
+        }
+        return { success: true, message: "Admin account created" };
+      }),
   }),
 
   // ─── Public: Volunteer form submission ──────────────────────

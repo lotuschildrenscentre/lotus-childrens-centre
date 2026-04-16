@@ -20,7 +20,6 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
 import {
   LayoutDashboard,
@@ -104,7 +103,7 @@ export default function AdminLayout({
           </div>
           <Button
             onClick={() => {
-              window.location.href = getLoginUrl("/admin");
+              window.location.href = "/login";
             }}
             size="lg"
             className="w-full bg-lotus-green hover:bg-lotus-green/90"
