@@ -501,10 +501,9 @@ export async function createTeamMember(data: {
     color: data.color ?? "bg-lotus-green",
     sortOrder: data.sortOrder ?? 0,
     isActive: data.isActive ?? true,
-  });
+  }).$returningId();
   return result;
 }
-
 export async function updateTeamMember(
   id: number,
   data: Partial<{
@@ -575,10 +574,9 @@ export async function createMediaItem(data: {
     thumbnailUrl: data.thumbnailUrl ?? null,
     sortOrder: data.sortOrder ?? 0,
     isPublished: data.isPublished ?? true,
-  });
+  }).$returningId();
   return result;
 }
-
 export async function updateMediaItem(
   id: number,
   data: Partial<{
