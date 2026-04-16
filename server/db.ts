@@ -1,5 +1,6 @@
 import { eq, desc, asc, sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import {
   InsertUser,
   users,
@@ -20,12 +21,17 @@ import {
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
+let _pool: Pool | null = null;
 let _db: ReturnType<typeof drizzle> | null = null;
 
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      _pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.DATABASE_URL?.includes("supabase") ? { rejectUnauthorized: false } : false,
+      });
+      _db = drizzle(_pool);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -84,7 +90,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       updateSet.lastSignedIn = new Date();
     }
 
-    await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateSet });
+    await db.insert(users).values(values).onConflictDoUpdate({ target: users.openId, set: updateSet });
   } catch (error) {
     console.error("[Database] Failed to upsert user:", error);
     throw error;
@@ -501,7 +507,7 @@ export async function createTeamMember(data: {
     color: data.color ?? "bg-lotus-green",
     sortOrder: data.sortOrder ?? 0,
     isActive: data.isActive ?? true,
-  }).$returningId();
+  }).returning({ id: teamMembers.id });
   return result;
 }
 export async function updateTeamMember(
@@ -574,7 +580,7 @@ export async function createMediaItem(data: {
     thumbnailUrl: data.thumbnailUrl ?? null,
     sortOrder: data.sortOrder ?? 0,
     isPublished: data.isPublished ?? true,
-  }).$returningId();
+  }).returning({ id: mediaItems.id });
   return result;
 }
 export async function updateMediaItem(

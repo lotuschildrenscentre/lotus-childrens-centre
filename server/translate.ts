@@ -1,17 +1,18 @@
 /**
  * Translation helper: English → Mongolian
- * Uses the built-in LLM (Gemini) to translate CMS content.
  *
- * Design notes:
- * - Translates text fields only; image URLs and numeric values are passed through unchanged.
- * - Metadata objects are translated field-by-field.
- * - Returns empty string on failure so the frontend can fall back to English.
+ * Uses Google Cloud Translation API (free tier: 500,000 chars/month).
+ * Falls back gracefully if the API key is not set.
+ *
+ * Required env var:
+ *   GOOGLE_TRANSLATION_API_KEY - API key with Cloud Translation API enabled
  */
 
-import { invokeLLM } from "./_core/llm";
+const GOOGLE_TRANSLATE_URL =
+  "https://translation.googleapis.com/language/translate/v2";
 
 /**
- * Translate a single English string to Mongolian.
+ * Translate a single English string to Mongolian using Google Translate.
  * Returns the original string on error so callers always get a usable value.
  */
 export async function translateToMongolian(text: string): Promise<string> {
@@ -21,33 +22,40 @@ export async function translateToMongolian(text: string): Promise<string> {
   if (/^https?:\/\//.test(text.trim())) return text;
   if (/^\d+[+%]?$/.test(text.trim())) return text;
 
+  const apiKey = process.env.GOOGLE_TRANSLATION_API_KEY;
+  if (!apiKey) {
+    console.warn("[translate] GOOGLE_TRANSLATION_API_KEY not set, skipping translation");
+    return text;
+  }
+
   try {
-    const result = await invokeLLM({
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a professional translator specializing in English to Mongolian translation for a children's charity website. " +
-            "Translate the given English text to Mongolian (Cyrillic script). " +
-            "Return ONLY the translated text with no explanations, quotes, or additional commentary. " +
-            "Preserve any HTML tags, line breaks, or special formatting exactly as-is. " +
-            "Keep proper nouns like 'Lotus Children's Centre', 'Ulaanbaatar', 'Gachuurt' unchanged.",
-        },
-        {
-          role: "user",
-          content: text,
-        },
-      ],
-      maxTokens: 2048,
+    const response = await fetch(`${GOOGLE_TRANSLATE_URL}?key=${apiKey}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        q: text,
+        source: "en",
+        target: "mn",
+        format: "text",
+      }),
     });
 
-    const translated = result.choices?.[0]?.message?.content;
+    if (!response.ok) {
+      const errText = await response.text().catch(() => response.statusText);
+      throw new Error(`Google Translate API error (${response.status}): ${errText}`);
+    }
+
+    const json = await response.json() as {
+      data?: { translations?: Array<{ translatedText?: string }> };
+    };
+    const translated = json?.data?.translations?.[0]?.translatedText;
+
     if (typeof translated === "string" && translated.trim()) {
       return translated.trim();
     }
     return text; // fallback to original
   } catch (error) {
-    console.error("[translate] LLM translation failed:", error);
+    console.error("[translate] Google Translate failed:", error);
     return text; // fallback to original
   }
 }
