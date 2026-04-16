@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: lotus-childrens-centre
+    runtime: node
+    region: singapore  # closest to Mongolia; change to "oregon" or "frankfurt" if preferred
+    plan: starter       # free tier; upgrade to "standard" for production
+    buildCommand: npm install -g pnpm && pnpm install --frozen-lockfile && pnpm build
+    startCommand: node dist/index.js
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      # ── Required secrets — set these in the Render dashboard ──
+      - key: DATABASE_URL
+        sync: false   # set manually in dashboard
+      - key: JWT_SECRET
+        sync: false
+      - key: VITE_APP_ID
+        sync: false
+      - key: OAUTH_SERVER_URL
+        sync: false
+      - key: VITE_OAUTH_PORTAL_URL
+        sync: false
+      - key: OWNER_OPEN_ID
+        sync: false
+      - key: OWNER_NAME
+        sync: false
+      # ── File storage (S3-compatible) ──
+      - key: BUILT_IN_FORGE_API_URL
+        sync: false
+      - key: BUILT_IN_FORGE_API_KEY
+        sync: false
+      # ── Frontend env vars (baked into the build) ──
+      - key: VITE_FRONTEND_FORGE_API_KEY
+        sync: false
+      - key: VITE_FRONTEND_FORGE_API_URL
+        sync: false
+      - key: VITE_ANALYTICS_ENDPOINT
+        sync: false
+      - key: VITE_ANALYTICS_WEBSITE_ID
+        sync: false
+      - key: VITE_APP_TITLE
+        value: "Lotus Children's Centre"
+      - key: VITE_APP_LOGO
+        sync: false
