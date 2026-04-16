@@ -644,6 +644,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "passwordHash": {
+          "name": "passwordHash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "loginMethod": {
           "name": "loginMethod",
           "type": "varchar(64)",

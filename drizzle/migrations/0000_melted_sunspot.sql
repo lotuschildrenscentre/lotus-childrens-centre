@@ -112,6 +112,7 @@ CREATE TABLE "users" (
 	"openId" varchar(64) NOT NULL,
 	"name" text,
 	"email" varchar(320),
+	"passwordHash" text,
 	"loginMethod" varchar(64),
 	"role" "role" DEFAULT 'user' NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
